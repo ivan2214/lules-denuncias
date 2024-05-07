@@ -19,14 +19,17 @@ import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {db} from "@/lib/db";
 import {type ComplaintExtends} from "@/actions/complaints/get-filtered-complaints";
 import ImageSkeleton from "@/components/image-skeleton";
+import {type CreateComplaimentFormValues} from "@/components/modals/create-complaiment-modal";
 
 import {Comment} from "./components/comment";
+import {ButtonOpenModalEdit} from "./components/button-open-modal-edit";
 
 interface ComplaintPageProps {
   params: {complaintId: string};
 }
 
 const ComplaintPage: React.FC<ComplaintPageProps> = async ({params}) => {
+  const userId = 1;
   const {complaintId} = params;
 
   const complaint: ComplaintExtends | null = await db.complaint.findUnique({
@@ -51,8 +54,26 @@ const ComplaintPage: React.FC<ComplaintPageProps> = async ({params}) => {
     return <div>Complaint not found</div>;
   }
 
+  const isAuthor = userId === complaint.user.id;
+
+  const values: CreateComplaimentFormValues = {
+    description: complaint.description,
+    latitude: complaint.location?.latitude ?? 0,
+    longitude: complaint.location?.longitude ?? 0,
+    address: complaint.location?.address ?? "",
+    city: complaint.location?.city ?? "",
+    country: complaint.location?.country ?? "",
+    title: complaint.title,
+    categoriesNames: complaint.categories.map((category) => ({
+      name: category.name,
+    })),
+    images: complaint.images.map((image) => ({
+      url: image.url || "https://via.placeholder.com/600x400",
+    })),
+  };
+
   return (
-    <div className="px-4 py-6 md:px-6 lg:py-12">
+    <div className="relative px-4 py-6 md:px-6 lg:py-12">
       <div className="mx-auto max-w-4xl">
         <div className="space-y-6">
           <div>
@@ -67,7 +88,7 @@ const ComplaintPage: React.FC<ComplaintPageProps> = async ({params}) => {
           <picture className="grid grid-cols-2 gap-4">
             {complaint.images.map((image) => (
               <ImageSkeleton
-                key={image.id}
+                key={image.url}
                 alt={complaint.title}
                 className="aspect-video rounded-lg object-cover"
                 src={image.url || "https://via.placeholder.com/600x400"}
@@ -154,23 +175,22 @@ const ComplaintPage: React.FC<ComplaintPageProps> = async ({params}) => {
             )}
           </div>
           <div className="flex justify-between gap-2">
-            {
-              // TODO: VALIDAR SI EL USUARIO ES EL CREADOR DE LA QUEJA
-              /*   <div className="flex gap-2">
-              <Button size="sm" variant="outline">
-                <PencilIcon className="h-4 w-4" />
-                Edit
-              </Button>
-              <Button size="sm" variant="outline">
-                <CheckIcon className="h-4 w-4" />
-                Mark as Resolved
-              </Button>
-              <Button size="sm" variant="outline">
-                <TrashIcon className="h-4 w-4" />
-                Delete
-              </Button>
-            </div> */
-            }
+            {isAuthor ? (
+              <div className="flex gap-2">
+                <Button size="sm" variant="outline">
+                  <PencilIcon className="h-4 w-4" />
+                  Edit
+                </Button>
+                <Button size="sm" variant="outline">
+                  <CheckIcon className="h-4 w-4" />
+                  Mark as Resolved
+                </Button>
+                <Button size="sm" variant="outline">
+                  <TrashIcon className="h-4 w-4" />
+                  Delete
+                </Button>
+              </div>
+            ) : null}
             <div className="flex gap-2">
               <Button size="sm" variant="outline">
                 <ShareIcon className="h-4 w-4" />
@@ -184,6 +204,7 @@ const ComplaintPage: React.FC<ComplaintPageProps> = async ({params}) => {
           </div>
         </div>
       </div>
+      {isAuthor ? <ButtonOpenModalEdit complaintId={complaint.id} values={values} /> : null}
     </div>
   );
 };

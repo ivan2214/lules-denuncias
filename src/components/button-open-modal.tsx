@@ -4,7 +4,16 @@ import {useCreateComplaimentModal} from "@/store/use-create-complaint-modal";
 import {Button} from "./ui/button";
 
 export const ButtonOpenModal = () => {
-  const createComplaimentModal = useCreateComplaimentModal();
+  const {open, clearData, data} = useCreateComplaimentModal();
 
-  return <Button onClick={createComplaimentModal.open}>Crear queja</Button>;
+  return (
+    <Button
+      onClick={() => {
+        clearData();
+        open();
+      }}
+    >
+      Crear queja
+    </Button>
+  );
 };

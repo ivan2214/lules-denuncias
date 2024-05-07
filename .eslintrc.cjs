@@ -96,5 +96,6 @@ module.exports = {
     "typescript-eslint/no-unsafe-call": "off",
     "@typescript-eslint/no-misused-promises": "off",
     "@typescript-eslint/restrict-template-expressions": "off",
+    "@typescript-eslint/no-unnecessary-condition": "off",
   },
 };

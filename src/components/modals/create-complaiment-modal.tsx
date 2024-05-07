@@ -6,6 +6,7 @@ import {useEffect, useState, useTransition} from "react";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {type z} from "zod";
 import {useFieldArray, useForm} from "react-hook-form";
+import {Loader} from "lucide-react";
 
 import {
   Dialog,
@@ -35,20 +36,20 @@ import {Textarea} from "../ui/textarea";
 
 export type CreateComplaimentFormValues = z.infer<typeof CreateComplainSchema>;
 
-const defaultValues: CreateComplaimentFormValues = {
-  title: "",
-  description: "",
-  categoriesNames: [],
-  images: [],
-  latitude: 0,
-  longitude: 0,
-  address: "",
-  city: "",
-  country: "",
-};
-
 export const CreateComplaimentModal = () => {
+  const {isOpen, close, data} = useCreateComplaimentModal();
   const [isPending, startTransition] = useTransition();
+  const defaultValues: CreateComplaimentFormValues = {
+    title: data?.values?.title ?? "",
+    description: data?.values?.description ?? "",
+    categoriesNames: data?.values?.categoriesNames ?? [],
+    images: data?.values?.images ?? [],
+    latitude: data?.values?.latitude ?? 0,
+    longitude: data?.values?.longitude ?? 0,
+    address: data?.values?.address ?? "",
+    city: data?.values?.city ?? "",
+    country: data?.values?.country ?? "",
+  };
 
   const form = useForm<CreateComplaimentFormValues>({
     resolver: zodResolver(CreateComplainSchema),
@@ -57,7 +58,6 @@ export const CreateComplaimentModal = () => {
   });
   const router = useRouter();
   const [isClient, setIsClient] = useState(false);
-  const {isOpen, close} = useCreateComplaimentModal();
 
   const {
     fields: categoryFields,
@@ -80,6 +80,12 @@ export const CreateComplaimentModal = () => {
   useEffect(() => {
     setIsClient(true);
   }, []);
+
+  useEffect(() => {
+    if (data?.values) {
+      form.reset(data?.values);
+    }
+  }, [data?.values]);
 
   if (!isClient) {
     return null;
@@ -233,7 +239,7 @@ export const CreateComplaimentModal = () => {
 
             <section className="grid w-full grid-cols-1 gap-6">
               <div>
-                {imageFields.map((field, index) => (
+                {imageFields?.map((field, index) => (
                   <FormField
                     key={field.id}
                     control={form.control}
@@ -263,7 +269,7 @@ export const CreateComplaimentModal = () => {
                     Add image
                   </Button>
 
-                  {images.length > 0 ? (
+                  {images && images?.length > 0 ? (
                     <Button
                       className="mt-2"
                       size="sm"
@@ -278,7 +284,7 @@ export const CreateComplaimentModal = () => {
               </div>
 
               <div>
-                {categoryFields.map((field, index) => (
+                {categoryFields?.map((field, index) => (
                   <FormField
                     key={field.id}
                     control={form.control}
@@ -324,16 +330,12 @@ export const CreateComplaimentModal = () => {
             </section>
 
             <DialogFooter>
-              <Button
-                variant="outline"
-                onClick={() => {
-                  router.push("/");
-                }}
-              >
+              <Button type="reset" variant="destructive">
                 Cancelar
               </Button>
-              <Button type="submit" variant="outline">
-                Crear
+              <Button disabled={isPending} type="submit">
+                {isPending ? <Loader className="mr-2 h-4 w-4 animate-spin" /> : null}
+                {isPending ? "Creando..." : "Crear"}
               </Button>
             </DialogFooter>
           </form>
