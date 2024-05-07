@@ -17,11 +17,12 @@ datasource db {
 // archivo schema.prisma
 
 model User {
-  id         Int      @id @default(autoincrement())
-  username   String
-  email      String   @unique
-  password   String
-  isAdmin    Boolean  @default(false)
+  id       Int     @id @default(autoincrement())
+  username String
+  email    String  @unique
+  password String
+  image    String?
+
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   reputation Int      @default(0)

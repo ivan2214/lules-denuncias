@@ -54,10 +54,14 @@ interface WhereClause {
       }[];
 }
 
+export interface CommentExtends extends Comment {
+  author: User;
+}
+
 export interface ComplaintExtends extends Complaint {
   user: User;
   location?: Location | null;
-  comments: Comment[];
+  comments: CommentExtends[];
   votes: Vote[];
   categories: Category[];
   images: Image[];
@@ -111,7 +115,11 @@ export const getFilteredComplaints = async (
       include: {
         user: true,
         categories: true,
-        comments: true,
+        comments: {
+          include: {
+            author: true,
+          },
+        },
         images: true,
         location: true,
         votes: true,

@@ -1,4 +1,4 @@
-import {fa, faker} from "@faker-js/faker";
+import {faker} from "@faker-js/faker";
 import {StatusComplaint} from "@prisma/client";
 
 import {db} from "../src/lib/db";
@@ -27,6 +27,7 @@ export const createManyComplaints = async () => {
     username: name.toLowerCase(),
     email: `${name.toLowerCase()}@example.com`,
     password: "123",
+    image: faker.image.avatar(),
   }));
 
   await db.user.createMany({data: usersData});
