@@ -22,7 +22,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
           </Link>
           <nav className="ml-auto flex items-center gap-4 sm:gap-6">
             <Button>
-              <Link href="/complaint/create">Crear queja</Link>
+              <Link href="/create">Crear queja</Link>
             </Button>
             <Link className="text-sm font-medium underline-offset-4 hover:underline" href="#">
               FAQs
