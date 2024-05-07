@@ -18,6 +18,7 @@ import {Button} from "@/components/ui/button";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {db} from "@/lib/db";
 import {type ComplaintExtends} from "@/actions/complaints/get-filtered-complaints";
+import ImageSkeleton from "@/components/image-skeleton";
 
 import {Comment} from "./components/comment";
 
@@ -65,14 +66,11 @@ const ComplaintPage: React.FC<ComplaintPageProps> = async ({params}) => {
           </div>
           <picture className="grid grid-cols-2 gap-4">
             {complaint.images.map((image) => (
-              <img
+              <ImageSkeleton
                 key={image.id}
                 alt={complaint.title}
                 className="aspect-video rounded-lg object-cover"
-                height={400}
-                loading="lazy"
                 src={image.url || "https://via.placeholder.com/600x400"}
-                width={600}
               />
             ))}
           </picture>

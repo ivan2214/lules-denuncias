@@ -15,6 +15,8 @@ import {Badge} from "@/components/ui/badge";
 import {cn} from "@/lib/utils";
 import {type ComplaintExtends} from "@/actions/complaints/get-filtered-complaints";
 
+import ImageSkeleton from "./image-skeleton";
+
 interface ComplaintCardProps {
   complaint: ComplaintExtends;
 }
@@ -26,13 +28,11 @@ export const ComplaintCard: React.FC<ComplaintCardProps> = ({complaint}) => {
       className="flex flex-col overflow-hidden transition hover:scale-105 lg:flex-row"
     >
       <picture className="h-full w-full lg:w-1/2">
-        <img
+        <ImageSkeleton
           alt={complaint.title}
-          className="aspect-video h-full w-full object-cover"
-          height={400}
-          loading="lazy"
+          className="aspect-video h-full w-full object-cover object-center"
+          classNameDiv="h-full w-full"
           src={complaint.images[0]?.url ?? "https://via.placeholder.com/600x400"}
-          width={600}
         />
       </picture>
       <section className="flex h-full w-full flex-col items-start justify-between">
