@@ -1,7 +1,8 @@
 "use client";
 
+import {toast} from "sonner";
 import {useRouter} from "next/navigation";
-import {useEffect, useState} from "react";
+import {useEffect, useState, useTransition} from "react";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {type z} from "zod";
 import {useFieldArray, useForm} from "react-hook-form";
@@ -28,6 +29,7 @@ import {
 import {CreateComplainSchema} from "@/schemas";
 import {Input} from "@/components/ui/input";
 import {cn} from "@/lib/utils";
+import {createComplaint} from "@/actions/server-actions/create-complaiment";
 
 import {Textarea} from "../ui/textarea";
 
@@ -46,6 +48,8 @@ const defaultValues: CreateComplaimentFormValues = {
 };
 
 export const CreateComplaimentModal = () => {
+  const [isPending, startTransition] = useTransition();
+
   const form = useForm<CreateComplaimentFormValues>({
     resolver: zodResolver(CreateComplainSchema),
     defaultValues,
@@ -81,8 +85,30 @@ export const CreateComplaimentModal = () => {
     return null;
   }
 
-  function onSubmit(data: CreateComplaimentFormValues) {
-    console.log("onSubmit", data);
+  function onSubmit(values: CreateComplaimentFormValues) {
+    startTransition(() => {
+      createComplaint(values).then((res) => {
+        if (res.error) {
+          toast("Error", {
+            description: "Error al crear la queja",
+            action: {
+              label: "Reintentar",
+              onClick: () => {
+                onSubmit(values);
+              },
+            },
+          });
+        }
+
+        if (res.success) {
+          toast("Success", {
+            description: "Queja creada correctamente",
+          });
+          close();
+          router.refresh();
+        }
+      });
+    });
   }
 
   const images = form.watch("images") as {url: string}[];

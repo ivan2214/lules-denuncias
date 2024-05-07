@@ -8,6 +8,7 @@ import {ThemeProvider} from "@/providers/theme-provider";
 import {ButtonOpenModal} from "@/components/button-open-modal";
 import ModeToggle from "@/components/mode-toggle";
 import {ModalProvider} from "@/providers/modal-provider";
+import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
   title: "lules-denuncias",
@@ -20,6 +21,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
       <body>
         <ThemeProvider enableSystem attribute="class" defaultTheme="dark">
           <ModalProvider />
+          <Toaster />
           <header className="container flex items-center border-b px-4 lg:px-6 lg:py-5">
             <Link className="flex items-center justify-center" href="/">
               <MountainIcon className="h-6 w-6" />
