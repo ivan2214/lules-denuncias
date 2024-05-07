@@ -1,6 +1,7 @@
 import type {Metadata} from "next";
 
 import Link from "next/link";
+import {MountainIcon} from "lucide-react";
 
 import "./globals.css";
 
@@ -12,9 +13,23 @@ export const metadata: Metadata = {
 export default function RootLayout({children}: {children: React.ReactNode}) {
   return (
     <html lang="en">
-      <body className="container m-auto grid min-h-screen grid-rows-[auto,1fr,auto] bg-background px-4 font-sans antialiased">
-        <header className="text-xl font-bold leading-[4rem]">
-          <Link href="/">lules-denuncias</Link>
+      <body className="container bg-background text-foreground">
+        <header className="flex h-14 items-center px-4 lg:px-6">
+          <Link className="flex items-center justify-center" href="#">
+            <MountainIcon className="h-6 w-6" />
+            <span className="sr-only">Community Complaints</span>
+          </Link>
+          <nav className="ml-auto flex gap-4 sm:gap-6">
+            <Link className="text-sm font-medium underline-offset-4 hover:underline" href="#">
+              About
+            </Link>
+            <Link className="text-sm font-medium underline-offset-4 hover:underline" href="#">
+              FAQs
+            </Link>
+            <Link className="text-sm font-medium underline-offset-4 hover:underline" href="#">
+              Contact
+            </Link>
+          </nav>
         </header>
         <main className="py-8">{children}</main>
         <footer className="text-center leading-[4rem] opacity-70">
