@@ -75,6 +75,7 @@ export const ComplaintCard: React.FC<ComplaintCardProps> = ({complaint}) => {
           <div className="flex items-center justify-between gap-x-2">
             <Badge
               className={cn(
+                "text-primary-foreground dark:text-secondary-foreground",
                 complaint.isResolved
                   ? "bg-green-500"
                   : complaint.status === StatusComplaint.IN_PROGRESS ||

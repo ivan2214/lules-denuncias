@@ -92,5 +92,9 @@ module.exports = {
     "@typescript-eslint/no-unsafe-member-access": "off",
     "react/function-component-definition": "off",
     "@typescript-eslint/no-unsafe-assignment": "off",
+    "@typescript-eslint/no-unsafe-call": "off",
+    "typescript-eslint/no-unsafe-call": "off",
+    "@typescript-eslint/no-misused-promises": "off",
+    "@typescript-eslint/restrict-template-expressions": "off",
   },
 };

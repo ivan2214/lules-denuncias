@@ -1,5 +1,5 @@
 import Link from "next/link";
-import {LinkedinIcon, TwitterIcon, FacebookIcon} from "lucide-react";
+import {LinkedinIcon, TwitterIcon, FacebookIcon, ShareIcon} from "lucide-react";
 
 import {
   SelectValue,
@@ -38,7 +38,7 @@ export async function Home() {
                 </p>
                 <div className="mt-6 space-x-4">
                   <Link
-                    className="inline-flex h-9 items-center justify-center rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90 dark:focus-visible:ring-gray-300"
+                    className="inline-flex h-9 items-center justify-center rounded-md  px-4 py-2 text-sm font-medium text-gray-50 shadow transition-colors  focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50  dark:text-gray-900  dark:focus-visible:ring-gray-300"
                     href="#"
                   >
                     Submit a Complaint
@@ -46,7 +46,7 @@ export async function Home() {
                 </div>
               </div>
               <div className="flex flex-col items-start space-y-4">
-                <div className="inline-block rounded-lg px-3 py-1 text-sm dark:bg-gray-800">
+                <div className="dark: inline-block rounded-lg px-3 py-1 text-sm">
                   Community Empowerment
                 </div>
                 <p className="mx-auto max-w-[700px] text-gray-500 dark:text-gray-400 md:text-xl">
@@ -67,7 +67,7 @@ export async function Home() {
             <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1fr_300px]">
               <div>
                 <div className="flex flex-col items-start space-y-4">
-                  <div className="inline-block rounded-lg  px-3 py-1 text-sm dark:bg-gray-800">
+                  <div className="dark: inline-block  rounded-lg px-3 py-1 text-sm">
                     Explore Complaints
                   </div>
                   <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
@@ -156,13 +156,11 @@ export async function Home() {
             </div>
           </div>
         </section>
-        <section className="w-full  py-12 dark:bg-gray-800 md:py-24 lg:py-32">
+        <section className="w-full  py-12  md:py-24 lg:py-32">
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
-                <div className="inline-block rounded-lg  px-3 py-1 text-sm dark:bg-gray-800">
-                  Get Involved
-                </div>
+                <div className="inline-block rounded-lg  px-3 py-1 text-sm ">Get Involved</div>
                 <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
                   Join the Movement for Change
                 </h2>
@@ -172,12 +170,10 @@ export async function Home() {
                 </p>
               </div>
               <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                <Link
-                  className="inline-flex h-10 items-center justify-center rounded-md bg-gray-900 px-8 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90 dark:focus-visible:ring-gray-300"
-                  href="#"
-                >
-                  Submit a Complaint
-                </Link>
+                <Button size="icon" variant="ghost">
+                  <ShareIcon className="h-5 w-5" />
+                  <span className="sr-only">Share</span>
+                </Button>
                 <div className="flex gap-2">
                   <Button size="icon" variant="ghost">
                     <TwitterIcon className="h-5 w-5" />

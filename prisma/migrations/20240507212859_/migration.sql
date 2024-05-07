@@ -1,10 +1,13 @@
+-- CreateEnum
+CREATE TYPE "StatusComplaint" AS ENUM ('OPEN', 'CLOSED', 'IN_PROGRESS', 'RESOLVED', 'UNRESOLVED', 'PENDING');
+
 -- CreateTable
 CREATE TABLE "User" (
     "id" SERIAL NOT NULL,
     "username" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
-    "isAdmin" BOOLEAN NOT NULL DEFAULT false,
+    "image" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "reputation" INTEGER NOT NULL DEFAULT 0,
@@ -19,10 +22,19 @@ CREATE TABLE "Complaint" (
     "description" TEXT NOT NULL,
     "priority" INTEGER NOT NULL DEFAULT 0,
     "isResolved" BOOLEAN NOT NULL DEFAULT false,
+    "status" "StatusComplaint" NOT NULL DEFAULT 'PENDING',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "locationId" INTEGER,
 
     CONSTRAINT "Complaint_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Image" (
+    "url" TEXT NOT NULL,
+    "complaintId" INTEGER
 );
 
 -- CreateTable
@@ -53,24 +65,39 @@ CREATE TABLE "Category" (
     "name" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "complaintId" INTEGER,
 
     CONSTRAINT "Category_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "_ComplaintToUser" (
-    "A" INTEGER NOT NULL,
-    "B" INTEGER NOT NULL
-);
+CREATE TABLE "Location" (
+    "id" SERIAL NOT NULL,
+    "latitude" DOUBLE PRECISION NOT NULL,
+    "longitude" DOUBLE PRECISION NOT NULL,
+    "address" TEXT,
+    "city" TEXT,
+    "country" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
--- CreateTable
-CREATE TABLE "_CategoryToComplaint" (
-    "A" INTEGER NOT NULL,
-    "B" INTEGER NOT NULL
+    CONSTRAINT "Location_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+
+-- CreateIndex
+CREATE INDEX "Complaint_userId_idx" ON "Complaint"("userId");
+
+-- CreateIndex
+CREATE INDEX "Complaint_locationId_idx" ON "Complaint"("locationId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Image_url_key" ON "Image"("url");
+
+-- CreateIndex
+CREATE INDEX "Image_complaintId_idx" ON "Image"("complaintId");
 
 -- CreateIndex
 CREATE INDEX "Comment_complaintId_idx" ON "Comment"("complaintId");
@@ -85,13 +112,4 @@ CREATE INDEX "Vote_userId_idx" ON "Vote"("userId");
 CREATE UNIQUE INDEX "Vote_complaintId_userId_key" ON "Vote"("complaintId", "userId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "_ComplaintToUser_AB_unique" ON "_ComplaintToUser"("A", "B");
-
--- CreateIndex
-CREATE INDEX "_ComplaintToUser_B_index" ON "_ComplaintToUser"("B");
-
--- CreateIndex
-CREATE UNIQUE INDEX "_CategoryToComplaint_AB_unique" ON "_CategoryToComplaint"("A", "B");
-
--- CreateIndex
-CREATE INDEX "_CategoryToComplaint_B_index" ON "_CategoryToComplaint"("B");
+CREATE INDEX "Category_complaintId_idx" ON "Category"("complaintId");

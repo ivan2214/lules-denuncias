@@ -4,7 +4,10 @@ import Link from "next/link";
 import {MountainIcon} from "lucide-react";
 
 import "./globals.css";
-import {Button} from "@/components/ui/button";
+import {ThemeProvider} from "@/providers/theme-provider";
+import {ButtonOpenModal} from "@/components/button-open-modal";
+import ModeToggle from "@/components/mode-toggle";
+import {ModalProvider} from "@/providers/modal-provider";
 
 export const metadata: Metadata = {
   title: "lules-denuncias",
@@ -14,28 +17,30 @@ export const metadata: Metadata = {
 export default function RootLayout({children}: {children: React.ReactNode}) {
   return (
     <html lang="en">
-      <body className="container bg-background text-foreground">
-        <header className="flex items-center border-b px-4 lg:px-6 lg:py-5">
-          <Link className="flex items-center justify-center" href="/">
-            <MountainIcon className="h-6 w-6" />
-            <span className="sr-only">Community Complaints</span>
-          </Link>
-          <nav className="ml-auto flex items-center gap-4 sm:gap-6">
-            <Button>
-              <Link href="/create">Crear queja</Link>
-            </Button>
-            <Link className="text-sm font-medium underline-offset-4 hover:underline" href="#">
-              FAQs
+      <body>
+        <ThemeProvider enableSystem attribute="class" defaultTheme="dark">
+          <ModalProvider />
+          <header className="container flex items-center border-b px-4 lg:px-6 lg:py-5">
+            <Link className="flex items-center justify-center" href="/">
+              <MountainIcon className="h-6 w-6" />
+              <span className="sr-only">Community Complaints</span>
             </Link>
-            <Link className="text-sm font-medium underline-offset-4 hover:underline" href="#">
-              Contact
-            </Link>
-          </nav>
-        </header>
-        <main className="py-8">{children}</main>
-        <footer className="text-center leading-[4rem] opacity-70">
-          © {new Date().getFullYear()} lules-denuncias
-        </footer>
+            <nav className="ml-auto flex items-center gap-4 sm:gap-6">
+              <ButtonOpenModal />
+              <Link className="text-sm font-medium underline-offset-4 hover:underline" href="#">
+                FAQs
+              </Link>
+              <Link className="text-sm font-medium underline-offset-4 hover:underline" href="#">
+                Contact
+              </Link>
+              <ModeToggle />
+            </nav>
+          </header>
+          <main>{children}</main>
+          <footer className="text-center leading-[4rem] opacity-70">
+            © {new Date().getFullYear()} lules-denuncias
+          </footer>
+        </ThemeProvider>
       </body>
     </html>
   );

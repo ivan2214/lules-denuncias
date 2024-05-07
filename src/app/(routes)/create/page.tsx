@@ -7,7 +7,7 @@ const CreateComplaintPage = async () => {
 
   return (
     <section>
-      <CreateComplaintForm userId={1} />
+      <CreateComplaintForm categories={categories} userId={1} />
     </section>
   );
 };

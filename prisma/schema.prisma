@@ -39,7 +39,7 @@ model Complaint {
 
   priority   Int             @default(0)
   isResolved Boolean         @default(false)
-  status     StatusComplaint @default(OPEN)
+  status     StatusComplaint @default(PENDING)
   createdAt  DateTime        @default(now())
   updatedAt  DateTime        @updatedAt
 
@@ -58,10 +58,10 @@ model Complaint {
 }
 
 model Image {
-  id          Int       @id @default(autoincrement())
-  url         String
-  complaint   Complaint @relation(fields: [complaintId], references: [id])
-  complaintId Int
+  url String @unique
+
+  Complaint   Complaint? @relation(fields: [complaintId], references: [id])
+  complaintId Int?
 
   @@index([complaintId])
 }
@@ -122,4 +122,6 @@ enum StatusComplaint {
   CLOSED
   IN_PROGRESS
   RESOLVED
+  UNRESOLVED
+  PENDING
 }

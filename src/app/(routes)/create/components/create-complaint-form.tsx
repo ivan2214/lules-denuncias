@@ -3,6 +3,7 @@
 import {zodResolver} from "@hookform/resolvers/zod";
 import {useFieldArray, useForm} from "react-hook-form";
 import {type z} from "zod";
+import {type Category} from "@prisma/client";
 
 import {Button} from "@/components/ui/button";
 import {
@@ -17,12 +18,30 @@ import {
 import {CreateComplainSchema} from "@/schemas";
 import {Input} from "@/components/ui/input";
 import {cn} from "@/lib/utils";
+import {
+  CardTitle,
+  CardDescription,
+  CardHeader,
+  CardContent,
+  CardFooter,
+  Card,
+} from "@/components/ui/card";
+import {Label} from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {Textarea} from "@/components/ui/textarea";
 
 interface CreateComplaintFormProps {
   userId: number;
+  categories: Category[];
 }
 
-export const CreateComplaintForm: React.FC<CreateComplaintFormProps> = ({userId}) => {
+export const CreateComplaintForm: React.FC<CreateComplaintFormProps> = ({userId, categories}) => {
   const form = useForm<z.infer<typeof CreateComplainSchema>>({
     resolver: zodResolver(CreateComplainSchema),
     defaultValues: {
@@ -69,199 +88,62 @@ export const CreateComplaintForm: React.FC<CreateComplaintFormProps> = ({userId}
   return (
     <Form {...form}>
       <form className="flex w-full flex-col gap-y-5" onSubmit={form.handleSubmit(onSubmit)}>
-        <section className="grid w-full grid-cols-1 gap-6 border-b pb-5 lg:grid-cols-2">
-          <section className="grid w-full grid-cols-1 gap-6 border-r pr-5 lg:grid-cols-2">
-            <FormField
-              control={form.control}
-              name="title"
-              render={({field}) => (
-                <FormItem>
-                  <FormLabel>Title</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Title" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="description"
-              render={({field}) => (
-                <FormItem>
-                  <FormLabel>Description</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Description" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="address"
-              render={({field}) => (
-                <FormItem>
-                  <FormLabel>Address</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Address" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="city"
-              render={({field}) => (
-                <FormItem>
-                  <FormLabel>City</FormLabel>
-                  <FormControl>
-                    <Input placeholder="City" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="country"
-              render={({field}) => (
-                <FormItem>
-                  <FormLabel>Country</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Country" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="latitude"
-              render={({field}) => (
-                <FormItem>
-                  <FormLabel>Latitude</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Latitude" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="longitude"
-              render={({field}) => (
-                <FormItem>
-                  <FormLabel>Longitude</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Longitude" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </section>
-
-          <section>
-            <div>
-              {imageFields.map((field, index) => (
-                <FormField
-                  key={field.id}
-                  control={form.control}
-                  name={`images.${index}.url`}
-                  render={({field}) => (
-                    <FormItem>
-                      <FormLabel className={cn(index !== 0 && "sr-only")}>images</FormLabel>
-                      <FormDescription className={cn(index !== 0 && "sr-only")}>
-                        Add links to your website, blog, or social media profiles.
-                      </FormDescription>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+        <Card className="w-full max-w-3xl">
+          <CardHeader>
+            <CardTitle>Report a Complaint</CardTitle>
+            <CardDescription>
+              Help us improve our city by reporting any issues you encounter.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form className="grid gap-6">
+              <div className="grid gap-2">
+                <Label htmlFor="title">Title</Label>
+                <Input id="title" placeholder="Enter a brief title for your complaint" />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="description">Description</Label>
+                <Textarea
+                  className="min-h-[150px]"
+                  id="description"
+                  placeholder="Provide more details about the issue you're reporting"
                 />
-              ))}
-
-              <section className="flex items-center gap-2">
-                <Button
-                  className="mt-2"
-                  size="sm"
-                  type="button"
-                  onClick={() => appendImage({url: ""})}
-                >
-                  Add image
-                </Button>
-
-                {form.getValues().images.length > 0 && (
-                  <Button
-                    className="mt-2"
-                    size="sm"
-                    type="button"
-                    variant="destructive"
-                    onClick={() => removeImage(form.getValues().images.length - 1)}
-                  >
-                    Remove image
-                  </Button>
-                )}
-              </section>
-            </div>
-
-            <div>
-              {categoryFields.map((field, index) => (
-                <FormField
-                  key={field.id}
-                  control={form.control}
-                  name={`categories.${index}.name`}
-                  render={({field}) => (
-                    <FormItem>
-                      <FormLabel className={cn(index !== 0 && "sr-only")}>Categories</FormLabel>
-                      <FormDescription className={cn(index !== 0 && "sr-only")}>
-                        Add links to your website, blog, or social media profiles.
-                      </FormDescription>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              ))}
-
-              <section className="flex items-center gap-2">
-                <Button
-                  className="mt-2"
-                  size="sm"
-                  type="button"
-                  onClick={() => appendCategory({name: ""})}
-                >
-                  Add category
-                </Button>
-
-                {form.getValues().categories?.length > 0 && (
-                  <Button
-                    className="mt-2"
-                    size="sm"
-                    type="button"
-                    variant="destructive"
-                    onClick={() => removeCategory(form.getValues().categories.length - 1)}
-                  >
-                    Remove category
-                  </Button>
-                )}
-              </section>
-            </div>
-          </section>
-        </section>
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="categories">Categories</Label>
+                <Select id="categories">
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select categories" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {categories.map((category) => (
+                      <SelectItem key={category.id} value={category.name}>
+                        {category.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="images">Images</Label>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="grid gap-2">
+                  <Label htmlFor="latitude">Latitude</Label>
+                  <Input readOnly id="latitude" />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="longitude">Longitude</Label>
+                  <Input readOnly id="longitude" />
+                </div>
+              </div>
+              <div className="h-[400px] rounded-lg border" />
+            </form>
+          </CardContent>
+          <CardFooter className="justify-end">
+            <Button type="submit">Submit Complaint</Button>
+          </CardFooter>
+        </Card>
         <Button className="ml-auto" type="submit">
           Update account
         </Button>
