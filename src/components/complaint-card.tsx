@@ -16,6 +16,7 @@ import {cn} from "@/lib/utils";
 import {type ComplaintExtends} from "@/actions/complaints/get-filtered-complaints";
 
 import ImageSkeleton from "./image-skeleton";
+import {ArrowPrioriry} from "./arrow-priority";
 
 interface ComplaintCardProps {
   complaint: ComplaintExtends;
@@ -25,7 +26,7 @@ export const ComplaintCard: React.FC<ComplaintCardProps> = ({complaint}) => {
   return (
     <Card
       key={complaint.id}
-      className="flex flex-col overflow-hidden transition hover:scale-105 lg:flex-row"
+      className="relative flex flex-col overflow-hidden transition hover:scale-105 lg:flex-row"
     >
       <picture className="h-full w-full lg:w-1/2">
         <ImageSkeleton
@@ -46,7 +47,10 @@ export const ComplaintCard: React.FC<ComplaintCardProps> = ({complaint}) => {
         <CardContent>
           <div className="flex items-center gap-2">
             <MapPinIcon className="h-5 w-5 text-gray-500" />
-            <span className="text-sm text-gray-500">123 Main St, Anytown USA</span>
+            <span className="text-sm text-gray-500">
+              {complaint.location?.country} {complaint.location?.city} -{" "}
+              {complaint.location?.address}
+            </span>
           </div>
           <p className="mt-2 text-gray-500">
             {complaint.description ||
@@ -91,6 +95,11 @@ export const ComplaintCard: React.FC<ComplaintCardProps> = ({complaint}) => {
           </div>
         </CardFooter>
       </section>
+      <div className="absolute right-2 top-2">
+        <ArrowPrioriry
+          priority={complaint.priority === 0 ? "LOW" : complaint.priority === 1 ? "MEDIUM" : "HIGH"}
+        />
+      </div>
     </Card>
   );
 };

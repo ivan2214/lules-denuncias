@@ -4,7 +4,25 @@ import {StatusComplaint} from "@prisma/client";
 import {db} from "../src/lib/db";
 
 export const createManyComplaints = async () => {
-  const userNames = faker.helpers.uniqueArray(() => faker.person.firstName(), 10);
+  // Usuarios
+
+  const randomUsers = faker.number.int({min: 5, max: 10});
+
+  for (let i = 0; i < randomUsers; i++) {
+    await db.user.create({
+      data: {
+        username: faker.internet.userName(),
+        email: faker.internet.email(),
+        password: "123",
+        image: faker.image.avatar(),
+        reputation: faker.number.int({min: 0, max: 100}),
+      },
+    });
+    console.log(`👤 Generando usuarios ${i.toString()}/${randomUsers.toString()}`);
+    console.log("*-------------------------------------------*");
+  }
+
+  const users = await db.user.findMany();
 
   // Categorías
   const categoriesData = [
@@ -14,25 +32,19 @@ export const createManyComplaints = async () => {
     "Tráfico",
     "Medio Ambiente",
     "Transporte",
+    "Vivienda",
+    "Educación",
+    "Salud",
+    "Comercio",
+    "Otro",
   ];
 
   await db.category.createMany({
     data: categoriesData.map((name) => ({name})),
+    skipDuplicates: true,
   });
 
   const categories = await db.category.findMany();
-
-  // Usuarios
-  const usersData = userNames.map((name) => ({
-    username: name.toLowerCase(),
-    email: `${name.toLowerCase()}@example.com`,
-    password: "123",
-    image: faker.image.avatar(),
-  }));
-
-  await db.user.createMany({data: usersData});
-
-  const users = await db.user.findMany();
 
   // Títulos y descripciones realistas de quejas
   const complaintsData = [
@@ -85,27 +97,57 @@ export const createManyComplaints = async () => {
       description:
         "Falta de mantenimiento en parques y plazas, reduciendo su atractivo y utilidad para la comunidad.",
     },
+    {
+      title: "Problemas de estacionamiento en el centro comercial",
+      description:
+        "El centro comercial carece de suficientes espacios de estacionamiento, lo que dificulta encontrar un lugar para estacionar.",
+    },
+    {
+      title: "Alumbrado público defectuoso en el vecindario",
+      description:
+        "Las luces de la calle en el vecindario están defectuosas, lo que aumenta la inseguridad durante la noche.",
+    },
   ];
 
-  const locationsData = faker.helpers.uniqueArray(() => {
-    return {
-      latitude: faker.location.latitude(),
-      longitude: faker.location.longitude(),
-      address: faker.location.streetAddress(),
-      city: faker.location.city(),
-      country: faker.location.country(),
-    };
-  }, 10);
+  // Ubicaciones
+  const randomLocations = faker.number.int({min: 2, max: 20});
 
-  await db.location.createMany({
-    data: locationsData,
-    skipDuplicates: true,
-  });
+  for (let i = 0; i < randomLocations; i++) {
+    const latitude = faker.location.latitude();
+    const longitude = faker.location.longitude();
+    const address = faker.location.streetAddress();
+    const city = faker.location.city();
+    const country = faker.location.country();
+
+    await db.location.create({
+      data: {
+        latitude,
+        longitude,
+        address,
+        city,
+        country,
+      },
+    });
+    console.log(`📍 Generando ubicaciones ${i.toString()}/${randomLocations.toString()}`);
+    console.log("*-------------------------------------------*");
+  }
 
   const locations = await db.location.findMany();
 
   // Quejas y comentarios
   for (const complaintData of complaintsData) {
+    // Seleccionamos un conjunto aleatorio de categorías
+    const randomCategories = faker.helpers
+      .shuffle(categories)
+      .slice(0, faker.number.int({min: 0, max: 3}));
+
+    // Creamos un array de objetos de conexión para las categorías seleccionadas
+    const complaintCategories = randomCategories.map((category) => {
+      return {
+        id: category.id,
+      };
+    });
+
     const status = faker.helpers.enumValue(StatusComplaint);
     const complaint = await db.complaint.create({
       data: {
@@ -129,11 +171,6 @@ export const createManyComplaints = async () => {
             id: users[Math.floor(Math.random() * users.length)].id,
           },
         },
-        categories: {
-          connect: {
-            id: categories[Math.floor(Math.random() * categories.length)].id,
-          },
-        },
         location: {
           connectOrCreate: {
             where: {
@@ -148,18 +185,63 @@ export const createManyComplaints = async () => {
             },
           },
         },
+        categories: {
+          connect: complaintCategories,
+        },
       },
     });
 
-    // Comentarios realistas
-    for (let i = 0; i < 3; i++) {
+    // Comentarios
+    const randomComments = faker.number.int({min: 0, max: 20});
+
+    for (let i = 0; i < randomComments; i++) {
       await db.comment.create({
         data: {
-          text: `Este es un comentario realista de ejemplo sobre la queja "${complaintData.title}".`,
+          text: faker.lorem.paragraphs(3),
           authorId: users[Math.floor(Math.random() * users.length)].id,
           complaintId: complaint.id,
         },
       });
     }
+
+    // Votos
+    const randomVotes = faker.number.int({min: 0, max: 10}); // Número aleatorio de votos
+    const userIds = users.map((user) => user.id); // Array de todos los IDs de usuarios
+    const usersWithVotes = new Set(); // Conjunto para almacenar IDs de usuarios que ya han votado
+
+    for (let i = 0; i < randomVotes; i++) {
+      // Escoger un ID de usuario aleatorio
+      const userId = userIds[Math.floor(Math.random() * userIds.length)];
+
+      // Verificar si este usuario ya ha votado
+      if (!usersWithVotes.has(userId)) {
+        // Agregar el usuario al conjunto de usuarios que han votado
+        usersWithVotes.add(userId);
+
+        // Crear el voto
+        await db.vote.create({
+          data: {
+            userId: userId,
+            complaintId: complaint.id,
+          },
+        });
+      }
+    }
+    // Contar los votos recibidos por la queja
+    const votesCount = await db.vote.count({
+      where: {
+        complaintId: complaint.id,
+      },
+    });
+
+    // Actualizar la prioridad de la queja en función de los votos recibidos
+    await db.complaint.update({
+      where: {
+        id: complaint.id,
+      },
+      data: {
+        priority: votesCount,
+      },
+    });
   }
 };

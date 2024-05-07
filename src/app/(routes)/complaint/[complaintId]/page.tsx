@@ -89,7 +89,8 @@ const ComplaintPage: React.FC<ComplaintPageProps> = async ({params}) => {
                 <FlagIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />
                 <span className="text-sm font-medium">Priority:</span>
                 <span className="text-sm text-gray-500 dark:text-gray-400">
-                  {complaint.priority === 0 ? "Low" : complaint.priority === 1 ? "Medium" : "High"}
+                  {complaint.priority === 0 ? "Low" : complaint.priority === 1 ? "Medium" : "High"}{" "}
+                  ({complaint.priority})
                 </span>
               </div>
               <div className="flex items-center gap-2">
