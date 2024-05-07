@@ -54,7 +54,10 @@ export const ComplaintCard: React.FC<ComplaintCardProps> = ({complaint}) => {
           >
             {complaint.status}
           </Badge>
-          <Link className="text-sm text-gray-500 hover:underline" href="#">
+          <Link
+            className="text-sm text-gray-500 hover:underline"
+            href={`/complaint/${complaint.id.toString()}`}
+          >
             View Details
           </Link>
         </div>

@@ -4,6 +4,7 @@ import Link from "next/link";
 import {MountainIcon} from "lucide-react";
 
 import "./globals.css";
+import {Button} from "@/components/ui/button";
 
 export const metadata: Metadata = {
   title: "lules-denuncias",
@@ -14,15 +15,15 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
   return (
     <html lang="en">
       <body className="container bg-background text-foreground">
-        <header className="flex h-14 items-center px-4 lg:px-6">
-          <Link className="flex items-center justify-center" href="#">
+        <header className="flex items-center border-b px-4 lg:px-6 lg:py-5">
+          <Link className="flex items-center justify-center" href="/">
             <MountainIcon className="h-6 w-6" />
             <span className="sr-only">Community Complaints</span>
           </Link>
-          <nav className="ml-auto flex gap-4 sm:gap-6">
-            <Link className="text-sm font-medium underline-offset-4 hover:underline" href="#">
-              About
-            </Link>
+          <nav className="ml-auto flex items-center gap-4 sm:gap-6">
+            <Button>
+              <Link href="/complaint/create">Crear queja</Link>
+            </Button>
             <Link className="text-sm font-medium underline-offset-4 hover:underline" href="#">
               FAQs
             </Link>
