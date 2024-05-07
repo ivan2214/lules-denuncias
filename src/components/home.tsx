@@ -55,7 +55,7 @@ export async function Home() {
                 </p>
               </div>
             </div>
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3">
               {complaints.map((complaint) => (
                 <ComplaintCard key={complaint.id} complaint={complaint} />
               ))}

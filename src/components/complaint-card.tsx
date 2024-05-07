@@ -1,5 +1,5 @@
 import Link from "next/link";
-import {MapPinIcon} from "lucide-react";
+import {FlagIcon, MapPinIcon} from "lucide-react";
 import {type User, type Complaint, StatusComplaint} from "@prisma/client";
 import React from "react";
 
@@ -53,6 +53,20 @@ export const ComplaintCard: React.FC<ComplaintCardProps> = ({complaint}) => {
               "There is a large pothole on the corner that is causing damage to vehicles. Please fix it as soon as possible."}
           </p>
         </CardContent>
+        <CardFooter className="mt-auto flex flex-col items-start gap-y-5 ">
+          <div className="flex items-center gap-2">
+            <FlagIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />
+            <span className="text-sm font-medium">Priority:</span>
+            <span className="text-sm text-gray-500 dark:text-gray-400">
+              {complaint.priority === 0 ? "Low" : complaint.priority === 1 ? "Medium" : "High"}
+            </span>
+          </div>
+          {complaint.categories.map((category) => (
+            <Badge key={category.id} className="text-xs" variant="secondary">
+              {category.name}
+            </Badge>
+          ))}
+        </CardFooter>
         <CardFooter className="mt-auto">
           <div className="flex items-center justify-between gap-x-2">
             <Badge
