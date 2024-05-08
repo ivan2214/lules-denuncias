@@ -10,14 +10,7 @@ export const CreateComplainSchema = z.object({
       }),
     )
     .optional(),
-  images: z
-    .array(
-      z.object({
-        url: z.string(),
-      }),
-    )
-    .max(3)
-    .optional(),
+  images: z.object({url: z.string()}).array().optional(),
   latitude: z.coerce.number(),
   longitude: z.coerce.number(),
   address: z.string().optional(),

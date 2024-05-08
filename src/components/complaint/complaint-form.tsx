@@ -26,6 +26,7 @@ import {cn} from "@/lib/utils";
 import {createComplaint} from "@/actions/server-actions/create-complaiment";
 
 import {Textarea} from "../ui/textarea";
+import ImageUpload from "../image-upload";
 
 export type CreateComplaimentFormValues = z.infer<typeof CreateComplainSchema>;
 
@@ -58,15 +59,6 @@ export const ComplaintForm = () => {
     remove: removeCategory,
   } = useFieldArray({
     name: "categoriesNames",
-    control: form.control,
-  });
-
-  const {
-    fields: imageFields,
-    append: appendImage,
-    remove: removeImage,
-  } = useFieldArray({
-    name: "images",
     control: form.control,
   });
 
@@ -110,8 +102,11 @@ export const ComplaintForm = () => {
     });
   }
 
-  const images = form.watch("images") as {url: string}[];
   const categories = form.watch("categoriesNames") as {name: string}[];
+
+  console.log({
+    ...form.getValues(),
+  });
 
   return (
     <Form {...form}>
@@ -218,97 +213,79 @@ export const ComplaintForm = () => {
             />
           </div>
         </section>
-
-        <section className="grid w-full grid-cols-1 gap-6">
-          <div>
-            {imageFields?.map((field, index) => (
-              <FormField
-                key={field.id}
-                control={form.control}
-                name={`images.${index}.url`}
-                render={({field}) => (
-                  <FormItem>
-                    <FormLabel className={cn(index !== 0 && "sr-only")}>images</FormLabel>
-                    <FormDescription className={cn(index !== 0 && "sr-only")}>
-                      Add links to your website, blog, or social media profiles.
-                    </FormDescription>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            ))}
-
-            <section className="flex items-center gap-2">
-              <Button
-                className="mt-2"
-                size="sm"
-                type="button"
-                onClick={() => appendImage({url: ""})}
-              >
-                Add image
-              </Button>
-
-              {images && images?.length > 0 ? (
-                <Button
-                  className="mt-2"
-                  size="sm"
-                  type="button"
-                  variant="destructive"
-                  onClick={() => removeImage(images.length - 1)}
-                >
-                  Remove image
-                </Button>
-              ) : null}
-            </section>
-          </div>
-
-          <div>
-            {categoryFields?.map((field, index) => (
-              <FormField
-                key={field.id}
-                control={form.control}
-                name={`categoriesNames.${index}.name`}
-                render={({field}) => (
-                  <FormItem>
-                    <FormLabel className={cn(index !== 0 && "sr-only")}>Categories</FormLabel>
-                    <FormDescription className={cn(index !== 0 && "sr-only")}>
-                      Add links to your website, blog, or social media profiles.
-                    </FormDescription>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            ))}
-
-            <section className="flex items-center gap-2">
-              <Button
-                className="mt-2"
-                size="sm"
-                type="button"
-                onClick={() => appendCategory({name: ""})}
-              >
-                Add category
-              </Button>
-
-              {categories.length > 0 && (
-                <Button
-                  className="mt-2"
-                  size="sm"
-                  type="button"
-                  variant="destructive"
-                  onClick={() => removeCategory(categories.length - 1)}
-                >
-                  Remove category
-                </Button>
+        {/* Categories */}
+        <section>
+          {categoryFields?.map((field, index) => (
+            <FormField
+              key={field.id}
+              control={form.control}
+              name={`categoriesNames.${index}.name`}
+              render={({field}) => (
+                <FormItem>
+                  <FormLabel className={cn(index !== 0 && "sr-only")}>Categories</FormLabel>
+                  <FormDescription className={cn(index !== 0 && "sr-only")}>
+                    Add links to your website, blog, or social media profiles.
+                  </FormDescription>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
               )}
-            </section>
-          </div>
+            />
+          ))}
+
+          <section className="flex items-center gap-2">
+            <Button
+              className="mt-2"
+              size="sm"
+              type="button"
+              onClick={() => appendCategory({name: ""})}
+            >
+              Add category
+            </Button>
+
+            {categories.length > 0 && (
+              <Button
+                className="mt-2"
+                size="sm"
+                type="button"
+                variant="destructive"
+                onClick={() => removeCategory(categories.length - 1)}
+              >
+                Remove category
+              </Button>
+            )}
+          </section>
+        </section>
+
+        {/* Images */}
+        <section>
+          <FormField
+            control={form.control}
+            name="images"
+            render={({field}) => {
+              return (
+                <FormItem>
+                  <FormLabel>Imagenes</FormLabel>
+                  <FormControl>
+                    <ImageUpload
+                      value={field.value?.map((image) => image?.url)}
+                      onChange={(url) => {
+                        if (!field?.value) return;
+                        field.onChange([...field?.value, {url}]);
+                      }}
+                      onRemove={(url) => {
+                        if (!field?.value) return;
+                        field.onChange([...field?.value.filter((current) => current?.url !== url)]);
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              );
+            }}
+          />
         </section>
 
         <DialogFooter>
