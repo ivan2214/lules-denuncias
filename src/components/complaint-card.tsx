@@ -26,7 +26,7 @@ export const ComplaintCard: React.FC<ComplaintCardProps> = ({complaint}) => {
   return (
     <Card
       key={complaint.id}
-      className="relative flex flex-col overflow-hidden transition hover:scale-105 lg:flex-row"
+      className="relative flex h-full flex-col overflow-hidden transition hover:scale-105 lg:flex-row"
     >
       <picture className="h-full w-full lg:w-1/2">
         <ImageSkeleton
@@ -38,9 +38,9 @@ export const ComplaintCard: React.FC<ComplaintCardProps> = ({complaint}) => {
       </picture>
       <section className="flex h-full w-full flex-col items-start justify-between">
         <CardHeader>
-          <CardTitle>{complaint.title || "Pothole Complaint"}</CardTitle>
+          <CardTitle className="capitalize">{complaint.title || "Pothole Complaint"}</CardTitle>
           <CardDescription>
-            Reported by {complaint.user.username} on{" "}
+            Repordado por {complaint.user.username} el{" "}
             {new Date(complaint.createdAt).toLocaleDateString()}
           </CardDescription>
         </CardHeader>
@@ -60,18 +60,20 @@ export const ComplaintCard: React.FC<ComplaintCardProps> = ({complaint}) => {
         <CardFooter className="mt-auto flex flex-col items-start gap-y-5 ">
           <div className="flex items-center gap-2">
             <FlagIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />
-            <span className="text-sm font-medium">Priority:</span>
+            <span className="text-sm font-medium">Prioridad:</span>
             <span className="text-sm text-gray-500 dark:text-gray-400">
-              {complaint.priority === 0 ? "Low" : complaint.priority === 1 ? "Medium" : "High"}
+              {complaint.priority === 0 ? "Baja" : complaint.priority === 1 ? "Media" : "Alta"}
             </span>
           </div>
-          {complaint.categories.map((category) => (
-            <Badge key={category.id} className="text-xs" variant="secondary">
-              {category.name}
-            </Badge>
-          ))}
+          <section className="flex flex-wrap gap-2">
+            {complaint.categories.map((category) => (
+              <Badge key={category.name} className="text-xs" variant="secondary">
+                {category.name}
+              </Badge>
+            ))}
+          </section>
         </CardFooter>
-        <CardFooter className="mt-auto">
+        <CardFooter>
           <div className="flex items-center justify-between gap-x-2">
             <Badge
               className={cn(
@@ -91,14 +93,14 @@ export const ComplaintCard: React.FC<ComplaintCardProps> = ({complaint}) => {
               className="text-sm text-gray-500 hover:underline"
               href={`/complaint/${complaint.id.toString()}`}
             >
-              View Details
+              Ver detalles
             </Link>
           </div>
         </CardFooter>
       </section>
       <div className="absolute right-2 top-2">
         <ArrowPrioriry
-          priority={complaint.priority === 0 ? "LOW" : complaint.priority === 1 ? "MEDIUM" : "HIGH"}
+          priority={complaint.priority === 0 ? "Baja" : complaint.priority === 1 ? "Media" : "Alta"}
         />
       </div>
     </Card>
