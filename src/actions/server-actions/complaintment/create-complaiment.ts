@@ -13,8 +13,18 @@ export const createComplaint = async (values: CreateComplaimentFormValues) => {
     return {error: "Invalid fields!"};
   }
 
-  const {description, latitude, longitude, title, address, categoriesNames, city, country, images} =
-    validatedFields.data;
+  const {
+    description,
+    latitude,
+    longitude,
+    title,
+    address,
+    categoriesNames,
+    city,
+    country,
+    images,
+    userId,
+  } = validatedFields.data;
 
   if (
     !description ||
@@ -56,27 +66,54 @@ export const createComplaint = async (values: CreateComplaimentFormValues) => {
     });
   }
 
-  await db.complaint.create({
-    data: {
-      title,
-      description,
-      categories: {
-        connectOrCreate: categoriesNames.map((category) => ({
-          where: {name: category.name},
-          create: {name: category.name},
-        })),
+  if (userId && userId > 0 && userId !== undefined && userId !== null) {
+    await db.complaint.create({
+      data: {
+        title,
+        description,
+        categories: {
+          connectOrCreate: categoriesNames.map((category) => ({
+            where: {name: category.name},
+            create: {name: category.name},
+          })),
+        },
+        images: {
+          connectOrCreate: images.map((imageUrl) => ({
+            where: {url: imageUrl.url},
+            create: {url: imageUrl.url},
+          })),
+        },
+        userId,
+        anonymous: false,
+        status: StatusComplaint.PENDING,
+        locationId: locationId ?? locationCreate?.id,
       },
-      images: {
-        connectOrCreate: images.map((imageUrl) => ({
-          where: {url: imageUrl.url},
-          create: {url: imageUrl.url},
-        })),
+    });
+  }
+
+  if (!userId || userId === 0 || userId === undefined || userId === null || userId < 0) {
+    await db.complaint.create({
+      data: {
+        title,
+        description,
+        categories: {
+          connectOrCreate: categoriesNames.map((category) => ({
+            where: {name: category.name},
+            create: {name: category.name},
+          })),
+        },
+        images: {
+          connectOrCreate: images.map((imageUrl) => ({
+            where: {url: imageUrl.url},
+            create: {url: imageUrl.url},
+          })),
+        },
+        anonymous: true,
+        status: StatusComplaint.PENDING,
+        locationId: locationId ?? locationCreate?.id,
       },
-      userId: 1,
-      status: StatusComplaint.PENDING,
-      locationId: locationId ?? locationCreate?.id,
-    },
-  });
+    });
+  }
 
   return {success: "Complaint created successfully!"};
 };

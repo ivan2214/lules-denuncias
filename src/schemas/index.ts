@@ -1,6 +1,7 @@
 import * as z from "zod";
 
 export const CreateComplainSchema = z.object({
+  userId: z.coerce.number().optional(),
   title: z.string(),
   description: z.string(),
   categoriesNames: z
