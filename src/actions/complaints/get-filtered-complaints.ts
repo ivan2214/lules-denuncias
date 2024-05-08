@@ -6,6 +6,7 @@ import {
   type Vote,
   type Location,
   type Image,
+  type StatusComplaint,
 } from "@prisma/client";
 
 import {db} from "@/lib/db";
@@ -19,6 +20,7 @@ interface QueryProps {
   keyword?: string;
   sortBy?: "date" | "priority" | "votes";
   sortOrder?: "asc" | "desc";
+  status?: StatusComplaint;
 }
 
 interface LocationFilter {
@@ -43,6 +45,9 @@ interface WhereClause {
     lte?: number;
   };
   location?: LocationFilter;
+  status?: {
+    equals?: StatusComplaint;
+  };
   OR?:
     | {
         title: {
@@ -73,8 +78,17 @@ export const getFilteredComplaints = async (
   query?: QueryProps,
 ): Promise<{complaints: ComplaintExtends[] | []}> => {
   try {
-    const {category, minPriority, maxPriority, latitude, longitude, keyword, sortBy, sortOrder} =
-      query ?? {};
+    const {
+      category,
+      minPriority,
+      maxPriority,
+      latitude,
+      longitude,
+      keyword,
+      sortBy,
+      sortOrder,
+      status,
+    } = query ?? {};
 
     const where: WhereClause = {};
 
@@ -103,6 +117,12 @@ export const getFilteredComplaints = async (
           lte: parseFloat(longitude) + 0.1,
           gte: parseFloat(longitude) - 0.1,
         },
+      };
+    }
+
+    if (status) {
+      where.status = {
+        equals: status,
       };
     }
 

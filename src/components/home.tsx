@@ -16,11 +16,10 @@ import {Button} from "./ui/button";
 import {Label} from "./ui/label";
 import {BarChart} from "./ba-chart";
 import {ComplaintCard} from "./complaint-card";
+import {ButtonOpenModal} from "./button-open-modal";
 
 export async function Home() {
   const {complaints} = await getFilteredComplaints();
-
-  if (!complaints.length) return <div>No complaints</div>;
 
   return (
     <div className="flex min-h-[100dvh] flex-col">
@@ -30,35 +29,35 @@ export async function Home() {
             <div className="mx-auto grid max-w-[1300px] gap-4 px-4 sm:px-6 md:grid-cols-2 md:gap-16 md:px-10">
               <div>
                 <h1 className="lg:leading-tighter text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl xl:text-[3.4rem] 2xl:text-[3.75rem]">
-                  Empower Your Community with Our Complaints Platform
+                  Empodere a su comunidad con nuestra plataforma de quejas
                 </h1>
                 <p className="mx-auto max-w-[700px] text-gray-500 dark:text-gray-400 md:text-xl">
-                  Easily report and track community issues, from potholes to illegal dumping. Our
-                  platform connects residents with local authorities to drive real change.
+                  Informe y realice un seguimiento fácilmente de los problemas de la comunidad,
+                  desde baches hasta vertidos ilegales. Nuestra plataforma conecta a los residentes
+                  con las autoridades locales para impulsar un cambio real.
                 </p>
                 <div className="mt-6 space-x-4">
-                  <Link
-                    className="inline-flex h-9 items-center justify-center rounded-md  px-4 py-2 text-sm font-medium text-gray-50 shadow transition-colors  focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50  dark:text-gray-900  dark:focus-visible:ring-gray-300"
-                    href="#"
-                  >
-                    Submit a Complaint
-                  </Link>
+                  <ButtonOpenModal />
                 </div>
               </div>
               <div className="flex flex-col items-start space-y-4">
                 <div className="dark: inline-block rounded-lg px-3 py-1 text-sm">
-                  Community Empowerment
+                  Empoderamiento comunitario
                 </div>
                 <p className="mx-auto max-w-[700px] text-gray-500 dark:text-gray-400 md:text-xl">
-                  Our platform gives residents a voice and a way to drive positive change in their
-                  neighborhoods.
+                  Nuestra plataforma brinda a los residentes una voz y una forma de impulsar cambios
+                  positivos en sus vecindarios.
                 </p>
               </div>
             </div>
             <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3">
-              {complaints.map((complaint) => (
-                <ComplaintCard key={complaint.id} complaint={complaint} />
-              ))}
+              {complaints.length ? (
+                complaints.map((complaint) => (
+                  <ComplaintCard key={complaint.id} complaint={complaint} />
+                ))
+              ) : (
+                <p>No hay quejas</p>
+              )}
             </div>
           </div>
         </section>
@@ -68,14 +67,14 @@ export async function Home() {
               <div>
                 <div className="flex flex-col items-start space-y-4">
                   <div className="dark: inline-block  rounded-lg px-3 py-1 text-sm">
-                    Explore Complaints
+                    Explorar quejas
                   </div>
                   <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-                    See What s Happening in Your Community
+                    Vea lo que está sucediendo en su comunidad
                   </h2>
                   <p className="max-w-[600px] text-gray-500 dark:text-gray-400 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                    Browse through recent community complaints and filter by location, category, or
-                    status to stay informed.
+                    Explore las quejas recientes de la comunidad y filtre por ubicación, categoría o
+                    estado para mantenerse informado.
                   </p>
                 </div>
                 <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2">
@@ -105,35 +104,36 @@ export async function Home() {
               <div className="space-y-6">
                 <Card>
                   <CardHeader>
-                    <CardTitle>About Our Platform</CardTitle>
+                    <CardTitle>Acerca de nuestra plataforma</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <p className="text-gray-500 dark:text-gray-400">
-                      Our community complaints platform empowers residents to report and track
-                      issues in their neighborhoods. We work closely with local authorities to
-                      ensure your concerns are addressed.
+                      Nuestra plataforma de quejas comunitarias permite a los residentes informar y
+                      realizar un seguimiento de los problemas en sus vecindarios. Trabajamos en
+                      estrecha colaboración con las autoridades locales para garantizar que se
+                      aborden sus inquietudes.
                     </p>
                   </CardContent>
                   <CardFooter>
                     <Link className="text-sm text-gray-500 hover:underline" href="#">
-                      Learn More
+                      Leer más
                     </Link>
                   </CardFooter>
                 </Card>
                 <Card>
                   <CardHeader>
-                    <CardTitle>How It Works</CardTitle>
+                    <CardTitle>Cómo funciona</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <p className="text-gray-500 dark:text-gray-400">
-                      Submitting a complaint is easy. Simply provide details about the issue,
-                      including its location, and our platform will route it to the appropriate
-                      authorities.
+                      Presentar una queja es fácil. Simplemente proporcione detalles sobre el
+                      problema, incluida su ubicación, y nuestra plataforma lo dirigirá a las
+                      autoridades correspondientes.
                     </p>
                   </CardContent>
                   <CardFooter>
                     <Link className="text-sm text-gray-500 hover:underline" href="#">
-                      Learn More
+                      Leer más
                     </Link>
                   </CardFooter>
                 </Card>
@@ -143,12 +143,13 @@ export async function Home() {
                   </CardHeader>
                   <CardContent>
                     <p className="text-gray-500 dark:text-gray-400">
-                      Find answers to common questions about our platform and the complaint process.
+                      Encuentre respuestas a preguntas comunes sobre nuestra plataforma y el proceso
+                      de quejas.
                     </p>
                   </CardContent>
                   <CardFooter>
                     <Link className="text-sm text-gray-500 hover:underline" href="#">
-                      Learn More
+                      Leer más
                     </Link>
                   </CardFooter>
                 </Card>
@@ -160,13 +161,12 @@ export async function Home() {
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
-                <div className="inline-block rounded-lg  px-3 py-1 text-sm ">Get Involved</div>
                 <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-                  Join the Movement for Change
+                  Únete al Movimiento por el Cambio
                 </h2>
                 <p className="max-w-[700px] text-gray-500 dark:text-gray-400 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  Help us build a better community by reporting issues, sharing our platform, and
-                  getting involved with local initiatives.
+                  Ayúdenos a construir una mejor comunidad informando problemas, compartiendo
+                  nuestra plataforma e involucrándose en iniciativas locales.
                 </p>
               </div>
               <div className="flex flex-col gap-2 min-[400px]:flex-row">
@@ -195,14 +195,14 @@ export async function Home() {
       </main>
       <footer className="flex w-full shrink-0 flex-col items-center gap-2 border-t px-4 py-6 sm:flex-row md:px-6">
         <p className="text-xs text-gray-500 dark:text-gray-400">
-          © 2024 Community Complaints. All rights reserved.
+          {new Date().getFullYear()} Quejas de la Comunidad. Reservados todos los derechos.
         </p>
         <nav className="flex gap-4 sm:ml-auto sm:gap-6">
           <Link className="text-xs underline-offset-4 hover:underline" href="#">
-            Terms of Service
+            Términos de servicio
           </Link>
           <Link className="text-xs underline-offset-4 hover:underline" href="#">
-            Privacy Policy
+            política de privacidad
           </Link>
         </nav>
       </footer>
