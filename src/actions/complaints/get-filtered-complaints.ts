@@ -154,8 +154,6 @@ export const getFilteredComplaints = async (
 
     return {complaints};
   } catch (error) {
-    console.error("Error al obtener las quejas filtradas:", error);
-
     return {complaints: []};
   }
 };
