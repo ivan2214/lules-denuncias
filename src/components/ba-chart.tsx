@@ -1,9 +1,25 @@
 "use client";
 import {ResponsiveBar} from "@nivo/bar";
+import {type HTMLAttributes} from "react";
 
-export function BarChart(props: React.ComponentPropsWithoutRef<"div">) {
+import {cn} from "@/lib/utils";
+import {type ComplaintExtends} from "@/actions/complaints/get-filtered-complaints";
+
+interface BaChartProp {
+  data: ComplaintExtends[];
+  className?: HTMLAttributes<HTMLDivElement>["className"];
+}
+
+export function BarChart({data, className}: BaChartProp) {
+  const dataParsed = data.map((complaint) => {
+    return {
+      name: complaint.categories.map((category) => category.name).join(", "),
+      count: complaint.categories.length,
+    };
+  });
+
   return (
-    <div {...props}>
+    <div className={cn("flex flex-col", className)}>
       <ResponsiveBar
         ariaLabel="A bar chart showing data"
         axisBottom={{
@@ -16,14 +32,7 @@ export function BarChart(props: React.ComponentPropsWithoutRef<"div">) {
           tickPadding: 16,
         }}
         colors={["#2563eb"]}
-        data={[
-          {name: "Jan", count: 111},
-          {name: "Feb", count: 157},
-          {name: "Mar", count: 129},
-          {name: "Apr", count: 150},
-          {name: "May", count: 119},
-          {name: "Jun", count: 72},
-        ]}
+        data={dataParsed}
         enableLabel={false}
         gridYValues={4}
         indexBy="name"
