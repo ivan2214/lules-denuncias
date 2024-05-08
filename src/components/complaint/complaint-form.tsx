@@ -106,19 +106,11 @@ export const ComplaintForm = () => {
       }
 
       if (data?.complaintId && data.values) {
-        console.log({values});
-
         startTransition(() => {
           updateComplaint(values, data.complaintId).then((res) => {
             if (res.error) {
               toast("Error", {
-                description: "Error al actualizar la queja",
-                action: {
-                  label: "Reintentar",
-                  onClick: () => {
-                    onSubmit(values);
-                  },
-                },
+                description: res.error,
               });
             }
             if (res.success) {
@@ -127,8 +119,6 @@ export const ComplaintForm = () => {
                 closeButton: true,
                 position: "top-center",
               });
-              close();
-              router.refresh();
             }
           });
         });
@@ -322,7 +312,7 @@ export const ComplaintForm = () => {
         </section>
 
         <DialogFooter>
-          <Button type="reset" variant="destructive">
+          <Button disabled={isPending} type="button" variant="destructive" onClick={() => close()}>
             Cancelar
           </Button>
           <Button disabled={isPending} type="submit">

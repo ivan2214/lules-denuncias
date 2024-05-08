@@ -11,15 +11,17 @@ export const updateComplaint = async (values: UpdateComplaimentFormValues, compl
 
   // Verificar si la validación es exitosa
   if (!validatedFields.success) {
-    return {error: "Invalid fields!"};
+    return {error: "Algo salio mal!"};
   }
 
   // Verificar si se proporcionó el ID de la queja
-  if (!complaintId) return {error: "Required fields!"};
+  if (!complaintId) return {error: "Algo salio mal!"};
 
   // Extraer los campos validados
   const {description, latitude, longitude, title, address, categoriesNames, city, country, images} =
     validatedFields.data;
+
+  if (!title || !description) return {error: "Los campos title y description son requeridos!"};
 
   try {
     //verificar la localizacion ya existe sino crearla
@@ -89,14 +91,9 @@ export const updateComplaint = async (values: UpdateComplaimentFormValues, compl
     });
 
     // Devolver un mensaje de éxito
-    return {success: "Complaint updated successfully!"};
+    return {success: "Queja actualizada correctamente!"};
   } catch (error) {
-    // Capturar cualquier error y devolver un mensaje de error
-    console.log(error);
-
-    console.error("Error updating complaint:", error);
-
-    return {error: "An error occurred while updating the complaint."};
+    return {error: "Se produjo un error al actualizar la queja"};
   } finally {
     revalidatePath("/complaint/[complaintId]");
   }
