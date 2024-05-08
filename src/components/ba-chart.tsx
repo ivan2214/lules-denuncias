@@ -1,7 +1,7 @@
 "use client";
 import {ResponsiveBar} from "@nivo/bar";
 
-export function BarChart(props) {
+export function BarChart(props: React.ComponentPropsWithoutRef<"div">) {
   return (
     <div {...props}>
       <ResponsiveBar

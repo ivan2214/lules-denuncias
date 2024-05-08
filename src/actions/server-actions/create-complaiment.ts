@@ -2,9 +2,9 @@
 
 import {StatusComplaint} from "@prisma/client";
 
-import {type CreateComplaimentFormValues} from "@/components/modals/create-complaiment-modal";
 import {db} from "@/lib/db";
 import {CreateComplainSchema} from "@/schemas";
+import {type CreateComplaimentFormValues} from "@/components/complaint/complaint-form";
 
 export const createComplaint = async (values: CreateComplaimentFormValues) => {
   const validatedFields = CreateComplainSchema.safeParse(values);
@@ -61,13 +61,11 @@ export const createComplaint = async (values: CreateComplaimentFormValues) => {
   const imageUrls = imagesIsAlreadyCreated.map((image) => image.url);
   const locationId = locationIsAlreadyCreated?.id;
 
-  let complaint;
-
   // Casos
 
   // 1. Categorías y ubicación existen, pero no hay imágenes
   if (categoryIds.length > 0 && locationId && !imageUrls.length) {
-    complaint = await db.complaint.create({
+    await db.complaint.create({
       data: {
         title,
         description,
@@ -89,7 +87,7 @@ export const createComplaint = async (values: CreateComplaimentFormValues) => {
 
   // 2. Imágenes y ubicación existen, pero no hay categorías
   if (imageUrls.length > 0 && locationId && !categoryIds.length) {
-    complaint = await db.complaint.create({
+    await db.complaint.create({
       data: {
         title,
         description,
@@ -121,7 +119,7 @@ export const createComplaint = async (values: CreateComplaimentFormValues) => {
       },
     });
 
-    complaint = await db.complaint.create({
+    await db.complaint.create({
       data: {
         title,
         description,
@@ -140,7 +138,7 @@ export const createComplaint = async (values: CreateComplaimentFormValues) => {
 
   // 4. No hay categorías ni imágenes, pero la ubicación existe
   if (!categoryIds.length && !imageUrls.length && locationId) {
-    complaint = await db.complaint.create({
+    await db.complaint.create({
       data: {
         title,
         description,
@@ -175,7 +173,7 @@ export const createComplaint = async (values: CreateComplaimentFormValues) => {
       },
     });
 
-    complaint = await db.complaint.create({
+    await db.complaint.create({
       data: {
         title,
         description,
@@ -207,7 +205,7 @@ export const createComplaint = async (values: CreateComplaimentFormValues) => {
       },
     });
 
-    complaint = await db.complaint.create({
+    await db.complaint.create({
       data: {
         title,
         description,
@@ -239,7 +237,7 @@ export const createComplaint = async (values: CreateComplaimentFormValues) => {
       },
     });
 
-    complaint = await db.complaint.create({
+    await db.complaint.create({
       data: {
         title,
         description,

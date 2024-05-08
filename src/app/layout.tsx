@@ -8,7 +8,7 @@ import {ThemeProvider} from "@/providers/theme-provider";
 import {ButtonOpenModal} from "@/components/button-open-modal";
 import ModeToggle from "@/components/mode-toggle";
 import {ModalProvider} from "@/providers/modal-provider";
-import { Toaster } from "@/components/ui/sonner";
+import {Toaster} from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
   title: "lules-denuncias",

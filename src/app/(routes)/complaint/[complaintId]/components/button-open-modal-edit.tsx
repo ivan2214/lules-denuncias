@@ -4,7 +4,7 @@ import {PencilIcon} from "lucide-react";
 
 import {Button} from "@/components/ui/button";
 import {useCreateComplaimentModal} from "@/store/use-create-complaint-modal";
-import {type CreateComplaimentFormValues} from "@/components/modals/create-complaiment-modal";
+import {type CreateComplaimentFormValues} from "@/components/complaint/complaint-form";
 
 interface ButtonOpenModalEditProps {
   complaintId: number;

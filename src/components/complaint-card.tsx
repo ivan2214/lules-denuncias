@@ -1,6 +1,6 @@
 import Link from "next/link";
 import {FlagIcon, MapPinIcon} from "lucide-react";
-import {type User, type Complaint, StatusComplaint} from "@prisma/client";
+import {StatusComplaint} from "@prisma/client";
 import React from "react";
 
 import {

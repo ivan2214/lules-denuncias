@@ -12,14 +12,12 @@ import {
   UserIcon,
 } from "lucide-react";
 import Link from "next/link";
-import {type Image} from "@prisma/client";
 
 import {Button} from "@/components/ui/button";
-import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {db} from "@/lib/db";
 import {type ComplaintExtends} from "@/actions/complaints/get-filtered-complaints";
 import ImageSkeleton from "@/components/image-skeleton";
-import {type CreateComplaimentFormValues} from "@/components/modals/create-complaiment-modal";
+import {type CreateComplaimentFormValues} from "@/components/complaint/complaint-form";
 
 import {Comment} from "./components/comment";
 import {ButtonOpenModalEdit} from "./components/button-open-modal-edit";

@@ -14,7 +14,7 @@ export const Comment: React.FC<CommentProps> = ({comment}) => {
   return (
     <div className="flex gap-4">
       <Avatar className="h-10 w-10 border">
-        <AvatarImage alt="@shadcn" src={comment.author.image || "https://github.com/shadcn.png"} />
+        <AvatarImage alt="@shadcn" src={comment.author.image ?? "https://github.com/shadcn.png"} />
         <AvatarFallback>{comment.author.username.charAt(0)}</AvatarFallback>
       </Avatar>
       <div className="flex-1 space-y-2">
