@@ -8,7 +8,7 @@ import {Button} from "./ui/button";
 import {ButtonOpenModal} from "./button-open-modal";
 import {ComplaintsHome} from "./complaints-home";
 import {Badge} from "./ui/badge";
-import {ChartFilterHome} from "./chat-filter-home";
+import {ChartFilterHome} from "./chart-filter-home";
 
 export async function Home() {
   const {complaints} = await getFilteredComplaints();
