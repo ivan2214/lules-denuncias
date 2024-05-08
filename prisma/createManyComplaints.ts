@@ -144,7 +144,7 @@ export const createManyComplaints = async () => {
     // Creamos un array de objetos de conexión para las categorías seleccionadas
     const complaintCategories = randomCategories.map((category) => {
       return {
-        id: category.id,
+        name: category.name,
       };
     });
 

@@ -20,15 +20,18 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {CreateComplainSchema} from "@/schemas";
+import {CreateComplainSchema, type UpdateComplainSchema} from "@/schemas";
 import {Input} from "@/components/ui/input";
 import {cn} from "@/lib/utils";
-import {createComplaint} from "@/actions/server-actions/create-complaiment";
+import {createComplaint} from "@/actions/server-actions/complaintment/create-complaiment";
+import {updateComplaint} from "@/actions/server-actions/complaintment/update-complaiment";
 
 import {Textarea} from "../ui/textarea";
 import ImageUpload from "../image-upload";
 
 export type CreateComplaimentFormValues = z.infer<typeof CreateComplainSchema>;
+
+export type UpdateComplaimentFormValues = z.infer<typeof UpdateComplainSchema>;
 
 export const ComplaintForm = () => {
   const {close, data} = useCreateComplaimentModal();
@@ -78,35 +81,65 @@ export const ComplaintForm = () => {
 
   function onSubmit(values: CreateComplaimentFormValues) {
     startTransition(() => {
-      createComplaint(values).then((res) => {
-        if (res.error) {
-          toast("Error", {
-            description: "Error al crear la queja",
-            action: {
-              label: "Reintentar",
-              onClick: () => {
-                onSubmit(values);
+      if (!data?.complaintId) {
+        createComplaint(values).then((res) => {
+          if (res.error) {
+            toast("Error", {
+              description: "Error al crear la queja",
+              action: {
+                label: "Reintentar",
+                onClick: () => {
+                  onSubmit(values);
+                },
               },
-            },
-          });
-        }
+            });
+          }
 
-        if (res.success) {
-          toast("Success", {
-            description: "Queja creada correctamente",
+          if (res.success) {
+            toast("Success", {
+              description: "Queja creada correctamente",
+            });
+            close();
+            router.refresh();
+          }
+        });
+      }
+
+      if (data?.complaintId && data.values) {
+        console.log({values});
+
+        startTransition(() => {
+          updateComplaint(values, data.complaintId).then((res) => {
+            if (res.error) {
+              toast("Error", {
+                description: "Error al actualizar la queja",
+                action: {
+                  label: "Reintentar",
+                  onClick: () => {
+                    onSubmit(values);
+                  },
+                },
+              });
+            }
+            if (res.success) {
+              toast("Success", {
+                description: "Queja actualizada correctamente",
+                closeButton: true,
+                position: "top-center",
+              });
+              close();
+              router.refresh();
+            }
           });
-          close();
-          router.refresh();
-        }
-      });
+        });
+      }
     });
   }
 
   const categories = form.watch("categoriesNames") as {name: string}[];
 
-  console.log({
-    ...form.getValues(),
-  });
+  const buttonTitle = data?.complaintId ? "Update Complaint" : "Create Complaint";
+  const buttonLoadingTitle = data?.complaintId ? "Updating Complaint" : "Creating Complaint";
 
   return (
     <Form {...form}>
@@ -294,7 +327,7 @@ export const ComplaintForm = () => {
           </Button>
           <Button disabled={isPending} type="submit">
             {isPending ? <Loader className="mr-2 h-4 w-4 animate-spin" /> : null}
-            {isPending ? "Creando..." : "Crear"}
+            {isPending ? buttonLoadingTitle : buttonTitle}
           </Button>
         </DialogFooter>
       </form>

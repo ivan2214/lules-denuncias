@@ -17,3 +17,5 @@ export const CreateComplainSchema = z.object({
   city: z.string().optional(),
   country: z.string().optional(),
 });
+
+export const UpdateComplainSchema = CreateComplainSchema.partial();

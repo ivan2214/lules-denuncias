@@ -93,10 +93,7 @@ model Vote {
 }
 
 model Category {
-  id        Int      @id @default(autoincrement())
-  name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  name String @unique
 
   Complaint   Complaint? @relation(fields: [complaintId], references: [id])
   complaintId Int?

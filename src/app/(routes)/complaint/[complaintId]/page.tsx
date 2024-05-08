@@ -99,7 +99,7 @@ const ComplaintPage: React.FC<ComplaintPageProps> = async ({params}) => {
                 <TagIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />
                 <span className="text-sm font-medium">Category:</span>
                 {complaint.categories.map((category) => (
-                  <span key={category.id} className="text-sm text-gray-500 dark:text-gray-400">
+                  <span key={category.name} className="text-sm text-gray-500 dark:text-gray-400">
                     {category.name}
                   </span>
                 ))}
