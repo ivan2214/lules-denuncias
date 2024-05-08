@@ -52,7 +52,7 @@ const ComplaintPage: React.FC<ComplaintPageProps> = async ({params}) => {
     return <div>Complaint not found</div>;
   }
 
-  const isAuthor = userId === complaint.user.id;
+  const isAuthor = userId === complaint.user?.id;
 
   const values: CreateComplaimentFormValues = {
     description: complaint.description,
@@ -120,7 +120,7 @@ const ComplaintPage: React.FC<ComplaintPageProps> = async ({params}) => {
                 <UserIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />
                 <span className="text-sm font-medium">Reported by:</span>
                 <Link className="text-sm text-blue-600 hover:underline dark:text-blue-400" href="#">
-                  {complaint.user.username}
+                  {complaint.user?.username}
                 </Link>
               </div>
               <div className="flex items-center gap-2">
@@ -171,7 +171,7 @@ const ComplaintPage: React.FC<ComplaintPageProps> = async ({params}) => {
             {complaint.comments.length > 0 && (
               <div className="space-y-4">
                 {complaint.comments.map((comment) => (
-                  <Comment key={comment.id} comment={comment} />
+                  <Comment key={comment?.id} comment={comment} />
                 ))}
               </div>
             )}

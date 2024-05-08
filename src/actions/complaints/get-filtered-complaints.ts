@@ -62,11 +62,11 @@ interface WhereClause {
 }
 
 export interface CommentExtends extends Comment {
-  author: User;
+  author?: User | null;
 }
 
 export interface ComplaintExtends extends Complaint {
-  user: User;
+  user?: User | null;
   location?: Location | null;
   comments: CommentExtends[];
   votes: Vote[];

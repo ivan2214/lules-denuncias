@@ -40,7 +40,7 @@ export const ComplaintCard: React.FC<ComplaintCardProps> = ({complaint}) => {
         <CardHeader>
           <CardTitle className="capitalize">{complaint.title || "Pothole Complaint"}</CardTitle>
           <CardDescription>
-            Repordado por {complaint.user.username} el{" "}
+            Repordado por {complaint.anonymous ? "Anónimo" : complaint.user?.username} el{" "}
             {new Date(complaint.createdAt).toLocaleDateString()}
           </CardDescription>
         </CardHeader>

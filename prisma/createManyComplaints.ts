@@ -1,5 +1,5 @@
 import {faker} from "@faker-js/faker";
-import {StatusComplaint} from "@prisma/client";
+import {type Complaint, StatusComplaint} from "@prisma/client";
 
 import {db} from "../src/lib/db";
 
@@ -136,6 +136,7 @@ export const createManyComplaints = async () => {
 
   // Quejas y comentarios
   for (const complaintData of complaintsData) {
+    const anonymous = faker.datatype.boolean();
     // Seleccionamos un conjunto aleatorio de categorías
     const randomCategories = faker.helpers
       .shuffle(categories)
@@ -148,64 +149,153 @@ export const createManyComplaints = async () => {
       };
     });
 
+    const images = faker.helpers.uniqueArray(() => {
+      return {
+        url: faker.image.urlPicsumPhotos(),
+      };
+    }, 3);
+
     const status = faker.helpers.enumValue(StatusComplaint);
-    const complaint = await db.complaint.create({
-      data: {
-        title: complaintData.title,
-        description: complaintData.description,
-        isResolved: status === StatusComplaint.RESOLVED,
-        priority: Math.floor(Math.random() * 5),
-        status: status,
-        images: {
-          createMany: {
-            data: faker.helpers.uniqueArray(() => {
+
+    let complaint: Complaint | null = null;
+
+    if (!anonymous) {
+      complaint = await db.complaint.create({
+        data: {
+          title: complaintData.title,
+          description: complaintData.description,
+          isResolved: status === StatusComplaint.RESOLVED,
+          priority: Math.floor(Math.random() * 5),
+          status: status,
+          images: {
+            connectOrCreate: images.map((image) => {
               return {
-                url: faker.image.urlPicsumPhotos(),
+                where: {
+                  url: image.url,
+                },
+                create: {
+                  url: image.url,
+                },
               };
-            }, 3),
-            skipDuplicates: true,
+            }),
           },
-        },
-        user: {
-          connect: {
-            id: users[Math.floor(Math.random() * users.length)].id,
-          },
-        },
-        location: {
-          connectOrCreate: {
-            where: {
-              id: locations[Math.floor(Math.random() * locations.length)].id,
-            },
-            create: {
-              latitude: faker.location.latitude(),
-              longitude: faker.location.longitude(),
-              address: faker.location.streetAddress(),
-              city: faker.location.city(),
-              country: faker.location.country(),
+          location: {
+            connectOrCreate: {
+              where: {
+                id: locations[Math.floor(Math.random() * locations.length)].id,
+              },
+              create: {
+                latitude: faker.location.latitude(),
+                longitude: faker.location.longitude(),
+                address: faker.location.streetAddress(),
+                city: faker.location.city(),
+                country: faker.location.country(),
+              },
             },
           },
+          categories: {
+            connectOrCreate: complaintCategories.map((category) => {
+              return {
+                where: {
+                  name: category.name,
+                },
+                create: {
+                  name: category.name,
+                },
+              };
+            }),
+          },
+          user: {
+            connect: {
+              id: users[Math.floor(Math.random() * users.length)].id,
+            },
+          },
+          anonymous: false,
         },
-        categories: {
-          connect: complaintCategories,
+      });
+    }
+
+    if (anonymous) {
+      complaint = await db.complaint.create({
+        data: {
+          title: complaintData.title,
+          description: complaintData.description,
+          isResolved: status === StatusComplaint.RESOLVED,
+          priority: Math.floor(Math.random() * 5),
+          status: status,
+          images: {
+            connectOrCreate: images.map((image) => {
+              return {
+                where: {
+                  url: image.url,
+                },
+                create: {
+                  url: image.url,
+                },
+              };
+            }),
+          },
+          location: {
+            connectOrCreate: {
+              where: {
+                id: locations[Math.floor(Math.random() * locations.length)].id,
+              },
+              create: {
+                latitude: faker.location.latitude(),
+                longitude: faker.location.longitude(),
+                address: faker.location.streetAddress(),
+                city: faker.location.city(),
+                country: faker.location.country(),
+              },
+            },
+          },
+          categories: {
+            connectOrCreate: complaintCategories.map((category) => {
+              return {
+                where: {
+                  name: category.name,
+                },
+                create: {
+                  name: category.name,
+                },
+              };
+            }),
+          },
+          anonymous: true,
         },
-      },
-    });
+      });
+    }
 
     // Comentarios
     const randomComments = faker.number.int({min: 0, max: 20});
 
     for (let i = 0; i < randomComments; i++) {
-      await db.comment.create({
-        data: {
-          text: faker.lorem.paragraphs(3),
-          authorId: users[Math.floor(Math.random() * users.length)].id,
-          complaintId: complaint.id,
-        },
-      });
+      if (anonymous && complaint?.id) {
+        await db.comment.create({
+          data: {
+            text: faker.lorem.paragraphs(3),
+            anonymous,
+            complaintId: complaint?.id,
+          },
+        });
+      }
+
+      if (!anonymous && complaint?.id) {
+        await db.comment.create({
+          data: {
+            text: faker.lorem.paragraphs(3),
+            authorId: users[Math.floor(Math.random() * users.length)].id,
+            complaintId: complaint?.id,
+          },
+        });
+      }
+
+      console.log(`Comentario ${i.toString()}/${randomComments.toString()}`);
+      console.log("*-------------------------------------------*");
     }
 
     // Votos
-    const randomVotes = faker.number.int({min: 0, max: 10}); // Número aleatorio de votos
+    const randomVotes = faker.number.int({min: 0, max: 55}); // Número aleatorio de votos
     const userIds = users.map((user) => user.id); // Array de todos los IDs de usuarios
     const usersWithVotes = new Set(); // Conjunto para almacenar IDs de usuarios que ya han votado
 
@@ -214,7 +304,7 @@ export const createManyComplaints = async () => {
       const userId = userIds[Math.floor(Math.random() * userIds.length)];
 
       // Verificar si este usuario ya ha votado
-      if (!usersWithVotes.has(userId)) {
+      if (!usersWithVotes.has(userId) && complaint?.id) {
         // Agregar el usuario al conjunto de usuarios que han votado
         usersWithVotes.add(userId);
 
@@ -222,22 +312,25 @@ export const createManyComplaints = async () => {
         await db.vote.create({
           data: {
             userId: userId,
-            complaintId: complaint.id,
+            complaintId: complaint?.id,
           },
         });
       }
+
+      console.log(`Voto ${i.toString()}/${randomVotes.toString()}`);
+      console.log("*-------------------------------------------*");
     }
     // Contar los votos recibidos por la queja
     const votesCount = await db.vote.count({
       where: {
-        complaintId: complaint.id,
+        complaintId: complaint?.id,
       },
     });
 
     // Actualizar la prioridad de la queja en función de los votos recibidos
     await db.complaint.update({
       where: {
-        id: complaint.id,
+        id: complaint?.id,
       },
       data: {
         priority: votesCount,
