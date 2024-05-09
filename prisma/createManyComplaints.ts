@@ -276,6 +276,7 @@ export const createManyComplaints = async () => {
             text: faker.lorem.paragraphs(3),
             anonymous,
             complaintId: complaint?.id,
+            likes: faker.number.int({min: 0, max: 55}),
           },
         });
       }
@@ -286,6 +287,7 @@ export const createManyComplaints = async () => {
             text: faker.lorem.paragraphs(3),
             authorId: users[Math.floor(Math.random() * users.length)].id,
             complaintId: complaint?.id,
+            likes: faker.number.int({min: 0, max: 55}),
           },
         });
       }

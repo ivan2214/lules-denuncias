@@ -22,7 +22,7 @@ model User {
   updatedAt DateTime @updatedAt
 
   username   String
-  email      String @unique
+  email      String  @unique
   password   String
   image      String?
   reputation Int?    @default(0)
@@ -74,6 +74,7 @@ model Comment {
 
   text      String
   anonymous Boolean? @default(false)
+  likes     Int      @default(0)
 
   author      User?     @relation(fields: [authorId], references: [id])
   authorId    Int?

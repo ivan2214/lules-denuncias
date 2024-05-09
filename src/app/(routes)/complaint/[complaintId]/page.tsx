@@ -19,8 +19,8 @@ import {type ComplaintExtends} from "@/actions/complaints/get-filtered-complaint
 import ImageSkeleton from "@/components/image-skeleton";
 import {type CreateComplaimentFormValues} from "@/components/complaint/complaint-form";
 
-import {Comment} from "./components/comment";
 import {ButtonOpenModalEdit} from "./components/button-open-modal-edit";
+import {Comments} from "./components/comments";
 
 interface ComplaintPageProps {
   params: {complaintId: string};
@@ -40,6 +40,9 @@ const ComplaintPage: React.FC<ComplaintPageProps> = async ({params}) => {
       comments: {
         include: {
           author: true,
+        },
+        orderBy: {
+          createdAt: "desc",
         },
       },
       location: true,
@@ -77,7 +80,7 @@ const ComplaintPage: React.FC<ComplaintPageProps> = async ({params}) => {
           <div>
             <h1 className="text-3xl font-bold">{complaint.title}</h1>
             <p className="text-gray-500 dark:text-gray-400">
-              Reported on {new Date(complaint.createdAt).toLocaleDateString()}
+              Creado el {new Date(complaint.createdAt).toLocaleDateString()}
             </p>
           </div>
           <div className="prose prose-gray dark:prose-invert">
@@ -97,7 +100,7 @@ const ComplaintPage: React.FC<ComplaintPageProps> = async ({params}) => {
             <div className="space-y-2">
               <div className="flex items-center gap-2">
                 <TagIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />
-                <span className="text-sm font-medium">Category:</span>
+                <span className="text-sm font-medium">Categorías:</span>
                 {complaint.categories.map((category) => (
                   <span key={category.name} className="text-sm text-gray-500 dark:text-gray-400">
                     {category.name}
@@ -106,7 +109,7 @@ const ComplaintPage: React.FC<ComplaintPageProps> = async ({params}) => {
               </div>
               <div className="flex items-center gap-2">
                 <FlagIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />
-                <span className="text-sm font-medium">Priority:</span>
+                <span className="text-sm font-medium">Prioridad:</span>
                 <span className="text-sm text-gray-500 dark:text-gray-400">
                   {complaint.priority === 0
                     ? "Baja"
@@ -118,14 +121,14 @@ const ComplaintPage: React.FC<ComplaintPageProps> = async ({params}) => {
               </div>
               <div className="flex items-center gap-2">
                 <UserIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />
-                <span className="text-sm font-medium">Reported by:</span>
+                <span className="text-sm font-medium">Creado por:</span>
                 <Link className="text-sm text-blue-600 hover:underline dark:text-blue-400" href="#">
                   {complaint.user?.username}
                 </Link>
               </div>
               <div className="flex items-center gap-2">
                 <LocateIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />
-                <span className="text-sm font-medium">Location:</span>
+                <span className="text-sm font-medium">Ubicación:</span>
                 <span className="text-sm text-gray-500 dark:text-gray-400">
                   {complaint.location?.address} {complaint.location?.city}{" "}
                   {complaint.location?.country}
@@ -135,47 +138,35 @@ const ComplaintPage: React.FC<ComplaintPageProps> = async ({params}) => {
             <div className="space-y-2">
               <div className="flex items-center gap-2">
                 <ClockIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />
-                <span className="text-sm font-medium">Created:</span>
+                <span className="text-sm font-medium">Creado:</span>
                 <span className="text-sm text-gray-500 dark:text-gray-400">
-                  Reported on {new Date(complaint.createdAt).toLocaleDateString()}
+                  {new Date(complaint.createdAt).toLocaleDateString()}
                 </span>
               </div>
               <div className="flex items-center gap-2">
                 <ClockIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />
-                <span className="text-sm font-medium">Last Updated:</span>
+                <span className="text-sm font-medium">Ultima actualización:</span>
                 <span className="text-sm text-gray-500 dark:text-gray-400">
                   {new Date(complaint.updatedAt).toLocaleDateString()}
                 </span>
               </div>
               <div className="flex items-center gap-2">
                 <FlagIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />
-                <span className="text-sm font-medium">Status:</span>
+                <span className="text-sm font-medium">Estado:</span>
                 <span className="text-sm text-gray-500 dark:text-gray-400">Open</span>
               </div>
               <div className="flex items-center gap-2">
                 <ThumbsUpIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />
-                <span className="text-sm font-medium">Votes:</span>
+                <span className="text-sm font-medium">Votos:</span>
                 <span className="text-sm text-gray-500 dark:text-gray-400">
-                  {complaint.votes.length} {complaint.votes.length === 1 ? "vote" : "votes"}
+                  {complaint.votes.length} {complaint.votes.length === 1 ? "voto" : "votos"}
                 </span>
               </div>
             </div>
           </div>
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-bold">Comments</h2>
-              <Button size="sm" variant="outline">
-                Add Comment
-              </Button>
-            </div>
-            {complaint.comments.length > 0 && (
-              <div className="space-y-4">
-                {complaint.comments.map((comment) => (
-                  <Comment key={comment?.id} comment={comment} />
-                ))}
-              </div>
-            )}
-          </div>
+          {/* Comments */}
+          <Comments complaint={complaint} />
+          {/* Actions */}
           <div className="flex justify-between gap-2">
             {isAuthor ? (
               <div className="flex gap-2">

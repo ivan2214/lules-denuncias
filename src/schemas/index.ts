@@ -20,3 +20,18 @@ export const CreateComplainSchema = z.object({
 });
 
 export const UpdateComplainSchema = CreateComplainSchema.partial();
+
+export const CreateCommentSchema = z.object({
+  text: z.string().min(1).max(500, {
+    message: "El texto del comentario no puede superar los 500 caracteres",
+  }),
+  authorId: z.coerce.number().optional(),
+  complaintId: z.coerce.number().min(1),
+});
+
+export const CommentActionSchema = z.object({
+  commentId: z.coerce.number().min(1),
+  action: z.enum(["like", "unlike"]),
+  authorId: z.coerce.number().optional(),
+  complaintId: z.coerce.number().min(1),
+});
