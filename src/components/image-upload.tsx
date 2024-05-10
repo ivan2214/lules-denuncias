@@ -79,7 +79,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({onChange, onRemove, value}) =>
       </div>
       <div className="w-full" {...getRootProps()}>
         <label className="block text-sm font-medium text-gray-700" htmlFor="file-upload">
-          Product Image
+          Cargar imagen
         </label>
         <div className="mt-1 flex justify-center rounded-md border-2 border-dashed border-gray-300 px-6 pb-6 pt-5">
           <div className="flex flex-col items-center gap-y-1 space-y-1 text-center">
@@ -89,7 +89,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({onChange, onRemove, value}) =>
                 className="rounded- relative cursor-pointer font-medium text-primary focus-within:outline-none focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2 hover:text-primary"
                 htmlFor="file-upload"
               >
-                <span>Upload a file</span>
+                <span>Suba una imagen</span>
                 <input
                   {...getInputProps()}
                   className="sr-only"
@@ -98,7 +98,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({onChange, onRemove, value}) =>
                   type="file"
                 />
               </label>
-              <p className="pl-1">or drag and drop</p>
+              <p className="pl-1">o arrastra y suelta</p>
             </div>
             <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
           </div>

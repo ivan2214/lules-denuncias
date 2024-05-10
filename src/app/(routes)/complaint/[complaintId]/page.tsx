@@ -20,14 +20,14 @@ import ImageSkeleton from "@/components/image-skeleton";
 import {type CreateComplaimentFormValues} from "@/components/complaint/complaint-form";
 
 import {ButtonOpenModalEdit} from "./components/button-open-modal-edit";
-import {Comments} from "./components/comments";
+import {Comments} from "./components/comment/comments";
 
 interface ComplaintPageProps {
   params: {complaintId: string};
 }
 
 const ComplaintPage: React.FC<ComplaintPageProps> = async ({params}) => {
-  const userId = 1;
+  const userId = 2;
   const {complaintId} = params;
 
   const complaint: ComplaintExtends | null = await db.complaint.findUnique({
@@ -55,7 +55,7 @@ const ComplaintPage: React.FC<ComplaintPageProps> = async ({params}) => {
     return <div>Complaint not found</div>;
   }
 
-  const isAuthor = userId === complaint.user?.id;
+  const isAuthorComplaint = userId === complaint.user?.id;
 
   const values: CreateComplaimentFormValues = {
     description: complaint.description,
@@ -74,7 +74,7 @@ const ComplaintPage: React.FC<ComplaintPageProps> = async ({params}) => {
   };
 
   return (
-    <div className="relative px-4 py-6 md:px-6 lg:py-12">
+    <div className="px-4 py-6 md:px-6 lg:py-12">
       <div className="mx-auto max-w-4xl">
         <div className="space-y-6">
           <div>
@@ -165,31 +165,30 @@ const ComplaintPage: React.FC<ComplaintPageProps> = async ({params}) => {
             </div>
           </div>
           {/* Comments */}
-          <Comments complaint={complaint} />
+          <Comments complaint={complaint} isAuthorComplaint={isAuthorComplaint} />
           {/* Actions */}
           <div className="flex justify-between gap-2">
-            {isAuthor ? (
+            {isAuthorComplaint ? (
               <div className="flex gap-2">
-                <Button size="sm" variant="outline">
-                  <PencilIcon className="h-4 w-4" />
-                  Edit
-                </Button>
-                <Button size="sm" variant="outline">
+                {isAuthorComplaint ? (
+                  <ButtonOpenModalEdit complaintId={complaint.id} values={values} />
+                ) : null}
+                <Button className="flex items-center gap-x-2" size="sm" variant="outline">
                   <CheckIcon className="h-4 w-4" />
                   Mark as Resolved
                 </Button>
-                <Button size="sm" variant="outline">
+                <Button className="flex items-center gap-x-2" size="sm" variant="outline">
                   <TrashIcon className="h-4 w-4" />
-                  Delete
+                  Delete Complaint
                 </Button>
               </div>
             ) : null}
             <div className="flex gap-2">
-              <Button size="sm" variant="outline">
+              <Button className="flex items-center gap-x-2" size="sm" variant="outline">
                 <ShareIcon className="h-4 w-4" />
                 Share
               </Button>
-              <Button size="sm" variant="outline">
+              <Button className="flex items-center gap-x-2" size="sm" variant="outline">
                 <MailIcon className="h-4 w-4" />
                 Email
               </Button>
@@ -197,7 +196,6 @@ const ComplaintPage: React.FC<ComplaintPageProps> = async ({params}) => {
           </div>
         </div>
       </div>
-      {isAuthor ? <ButtonOpenModalEdit complaintId={complaint.id} values={values} /> : null}
     </div>
   );
 };

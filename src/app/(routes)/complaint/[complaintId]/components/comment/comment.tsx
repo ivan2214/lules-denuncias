@@ -2,12 +2,15 @@ import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {type CommentExtends} from "@/actions/complaints/get-filtered-complaints";
 
 import {ButtonActionsComments} from "./button-actions-comments";
+import {ButtonCommentDelete} from "./button-comment-delete";
 
 interface CommentProps {
   comment: CommentExtends;
+  isAuthorComment?: boolean;
+  isAuthorComplaint?: boolean;
 }
 
-export const Comment: React.FC<CommentProps> = ({comment}) => {
+export const Comment: React.FC<CommentProps> = ({comment, isAuthorComment, isAuthorComplaint}) => {
   const isAnonymous = comment?.anonymous === true;
 
   const avatarImage = isAnonymous
@@ -20,6 +23,8 @@ export const Comment: React.FC<CommentProps> = ({comment}) => {
 
   const textReputation =
     userReputation < 50 ? "Inaceptable" : userReputation < 100 ? "Aceptable" : "Muy aceptable";
+
+  const permitedDelete = Boolean(isAuthorComment) || Boolean(isAuthorComplaint);
 
   return (
     <div className="flex gap-4">
@@ -40,6 +45,7 @@ export const Comment: React.FC<CommentProps> = ({comment}) => {
         </div>
         <p className="text-sm text-gray-500 dark:text-gray-400">{comment.text}</p>
       </div>
+      {permitedDelete ? <ButtonCommentDelete commentId={comment.id} /> : null}
       <ButtonActionsComments comment={comment} />
     </div>
   );

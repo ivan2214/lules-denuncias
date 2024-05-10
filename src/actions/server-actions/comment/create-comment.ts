@@ -1,9 +1,9 @@
 "use server";
 import {revalidatePath} from "next/cache";
 
-import {type CreateCommentFormValues} from "@/app/(routes)/complaint/[complaintId]/components/comment-form";
 import {db} from "@/lib/db";
 import {CreateCommentSchema} from "@/schemas";
+import {type CreateCommentFormValues} from "@/app/(routes)/complaint/[complaintId]/components/comment/comment-form";
 
 export const createComment = async (values: CreateCommentFormValues) => {
   const validatedFields = CreateCommentSchema.safeParse(values);
@@ -27,14 +27,16 @@ export const createComment = async (values: CreateCommentFormValues) => {
       });
     }
 
-    await db.comment.create({
-      data: {
-        text,
-        complaintId,
-        authorId,
-        anonymous: false,
-      },
-    });
+    if (authorId && authorId !== undefined && authorId !== null && authorId !== 0) {
+      await db.comment.create({
+        data: {
+          text,
+          complaintId,
+          authorId,
+          anonymous: false,
+        },
+      });
+    }
 
     return {succes: "Comentario creado correctamente"};
   } catch (error) {

@@ -128,8 +128,8 @@ export const ComplaintForm = () => {
 
   const categories = form.watch("categoriesNames") as {name: string}[];
 
-  const buttonTitle = data?.complaintId ? "Update Complaint" : "Create Complaint";
-  const buttonLoadingTitle = data?.complaintId ? "Updating Complaint" : "Creating Complaint";
+  const buttonTitle = data?.complaintId ? "Actualizar Queja" : "Crear Queja";
+  const buttonLoadingTitle = data?.complaintId ? "Actualizando Queja" : "Creando Queja";
 
   return (
     <Form {...form}>
@@ -140,9 +140,9 @@ export const ComplaintForm = () => {
             name="title"
             render={({field}) => (
               <FormItem>
-                <FormLabel>Title</FormLabel>
+                <FormLabel>Titulo</FormLabel>
                 <FormControl>
-                  <Input placeholder="Title" {...field} />
+                  <Input placeholder="Titulo" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -154,9 +154,9 @@ export const ComplaintForm = () => {
             name="description"
             render={({field}) => (
               <FormItem>
-                <FormLabel>Description</FormLabel>
+                <FormLabel>Descripción</FormLabel>
                 <FormControl>
-                  <Textarea placeholder="Description" rows={5} {...field} />
+                  <Textarea placeholder="Descripción" rows={5} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -169,9 +169,9 @@ export const ComplaintForm = () => {
               name="address"
               render={({field}) => (
                 <FormItem>
-                  <FormLabel>Address</FormLabel>
+                  <FormLabel>Dirección</FormLabel>
                   <FormControl>
-                    <Input placeholder="Address" {...field} />
+                    <Input placeholder="Dirección" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -183,9 +183,9 @@ export const ComplaintForm = () => {
               name="city"
               render={({field}) => (
                 <FormItem>
-                  <FormLabel>City</FormLabel>
+                  <FormLabel>Ciudad</FormLabel>
                   <FormControl>
-                    <Input placeholder="City" {...field} />
+                    <Input placeholder="Ciudad" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -197,9 +197,9 @@ export const ComplaintForm = () => {
               name="country"
               render={({field}) => (
                 <FormItem>
-                  <FormLabel>Country</FormLabel>
+                  <FormLabel>País</FormLabel>
                   <FormControl>
-                    <Input placeholder="Country" {...field} />
+                    <Input placeholder="País" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -212,9 +212,9 @@ export const ComplaintForm = () => {
               name="latitude"
               render={({field}) => (
                 <FormItem>
-                  <FormLabel>Latitude</FormLabel>
+                  <FormLabel>Latitud</FormLabel>
                   <FormControl>
-                    <Input placeholder="Latitude" {...field} />
+                    <Input placeholder="Latitud" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -226,9 +226,9 @@ export const ComplaintForm = () => {
               name="longitude"
               render={({field}) => (
                 <FormItem>
-                  <FormLabel>Longitude</FormLabel>
+                  <FormLabel>Longitud</FormLabel>
                   <FormControl>
-                    <Input placeholder="Longitude" {...field} />
+                    <Input placeholder="Longitud" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -245,9 +245,9 @@ export const ComplaintForm = () => {
               name={`categoriesNames.${index}.name`}
               render={({field}) => (
                 <FormItem>
-                  <FormLabel className={cn(index !== 0 && "sr-only")}>Categories</FormLabel>
+                  <FormLabel className={cn(index !== 0 && "sr-only")}>Categorias</FormLabel>
                   <FormDescription className={cn(index !== 0 && "sr-only")}>
-                    Add links to your website, blog, or social media profiles.
+                    Añada una o mas categorias
                   </FormDescription>
                   <FormControl>
                     <Input {...field} />
@@ -263,9 +263,10 @@ export const ComplaintForm = () => {
               className="mt-2"
               size="sm"
               type="button"
+              variant="outline"
               onClick={() => appendCategory({name: ""})}
             >
-              Add category
+              Añadir categoria
             </Button>
 
             {categories.length > 0 && (
@@ -273,10 +274,10 @@ export const ComplaintForm = () => {
                 className="mt-2"
                 size="sm"
                 type="button"
-                variant="destructive"
+                variant="outline"
                 onClick={() => removeCategory(categories.length - 1)}
               >
-                Remove category
+                Eliminar categoria
               </Button>
             )}
           </section>
@@ -312,10 +313,10 @@ export const ComplaintForm = () => {
         </section>
 
         <DialogFooter>
-          <Button disabled={isPending} type="button" variant="destructive" onClick={() => close()}>
+          <Button disabled={isPending} type="button" variant="outline" onClick={() => close()}>
             Cancelar
           </Button>
-          <Button disabled={isPending} type="submit">
+          <Button disabled={isPending} type="submit" variant="outline">
             {isPending ? <Loader className="mr-2 h-4 w-4 animate-spin" /> : null}
             {isPending ? buttonLoadingTitle : buttonTitle}
           </Button>

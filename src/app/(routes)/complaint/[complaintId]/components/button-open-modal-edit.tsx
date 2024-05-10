@@ -15,8 +15,14 @@ export const ButtonOpenModalEdit: React.FC<ButtonOpenModalEditProps> = ({complai
   const {openEditModal} = useCreateComplaimentModal();
 
   return (
-    <Button className="absolute right-96 top-10" onClick={() => openEditModal(complaintId, values)}>
-      <PencilIcon />
+    <Button
+      className="flex items-center gap-x-2"
+      size="sm"
+      variant="outline"
+      onClick={() => openEditModal(complaintId, values)}
+    >
+      <PencilIcon className="h-4 w-4" />
+      Edit Complaint
     </Button>
   );
 };
