@@ -47,10 +47,7 @@ export const ComplaintCard: React.FC<ComplaintCardProps> = ({complaint}) => {
         <CardContent>
           <div className="flex items-center gap-2">
             <MapPinIcon className="h-5 w-5 text-gray-500" />
-            <span className="text-sm text-gray-500">
-              {complaint.location?.country} {complaint.location?.city} -{" "}
-              {complaint.location?.address}
-            </span>
+            <span className="text-sm text-gray-500">{complaint.address}</span>
           </div>
           <p className="mt-2 text-gray-500">
             {complaint.description ||

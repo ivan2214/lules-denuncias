@@ -1,9 +1,10 @@
 "use server";
 import {revalidatePath} from "next/cache";
 
-import {type CommentActionFormValues} from "@/app/(routes)/complaint/[complaintId]/components/button-actions-comments";
 import {db} from "@/lib/db";
 import {CommentActionSchema} from "@/schemas";
+
+import {type CommentActionFormValues} from "@/app/(routes)/complaint/[complaintId]/components/button-actions-comments";
 
 export const actionsComment = async (values: CommentActionFormValues) => {
   const validatedFields = CommentActionSchema.safeParse(values);

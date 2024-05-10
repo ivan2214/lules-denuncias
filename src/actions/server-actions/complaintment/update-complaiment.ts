@@ -18,39 +18,12 @@ export const updateComplaint = async (values: UpdateComplaimentFormValues, compl
   if (!complaintId) return {error: "Algo salio mal!"};
 
   // Extraer los campos validados
-  const {description, latitude, longitude, title, address, categoriesNames, city, country, images} =
-    validatedFields.data;
+  const {description, title, address, categoriesNames, images} = validatedFields.data;
 
   if (!title || !description) return {error: "Los campos title y description son requeridos!"};
 
   try {
     //verificar la localizacion ya existe sino crearla
-
-    const locationId = await db.location.findFirst({
-      where: {
-        AND: {
-          city,
-          country,
-          address,
-          latitude,
-          longitude,
-        },
-      },
-    });
-
-    let locationCreate;
-
-    if (!locationId && latitude && longitude) {
-      locationCreate = await db.location.create({
-        data: {
-          city,
-          country,
-          address,
-          latitude,
-          longitude,
-        },
-      });
-    }
 
     // Actualizar la queja en la base de datos
     await db.complaint.update({
@@ -86,7 +59,7 @@ export const updateComplaint = async (values: UpdateComplaimentFormValues, compl
             },
           })),
         },
-        locationId: locationId ? locationId.id : locationCreate?.id,
+        address,
       },
     });
 

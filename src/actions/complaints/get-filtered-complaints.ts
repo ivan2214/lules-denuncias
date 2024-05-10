@@ -4,7 +4,6 @@ import {
   type Complaint,
   type User,
   type Vote,
-  type Location,
   type Image,
   type StatusComplaint,
 } from "@prisma/client";
@@ -23,7 +22,7 @@ interface QueryProps {
   status?: StatusComplaint;
 }
 
-interface LocationFilter {
+/* interface LocationFilter {
   latitude: {
     lte: number;
     gte: number;
@@ -33,7 +32,7 @@ interface LocationFilter {
     gte: number;
   };
 }
-
+ */
 interface WhereClause {
   categories?: {
     some: {
@@ -44,7 +43,7 @@ interface WhereClause {
     gte?: number;
     lte?: number;
   };
-  location?: LocationFilter;
+  /* location?: LocationFilter; */
   status?: {
     equals?: StatusComplaint;
   };
@@ -67,7 +66,6 @@ export interface CommentExtends extends Comment {
 
 export interface ComplaintExtends extends Complaint {
   user?: User | null;
-  location?: Location | null;
   comments: CommentExtends[];
   votes: Vote[];
   categories: Category[];
@@ -107,7 +105,8 @@ export const getFilteredComplaints = async (
       where.priority = {lte: parseInt(maxPriority)};
     }
 
-    if (latitude && longitude) {
+    // Impllementar con mapas mas adelante
+    /* if (latitude && longitude) {
       where.location = {
         latitude: {
           lte: parseFloat(latitude) + 0.1,
@@ -118,7 +117,7 @@ export const getFilteredComplaints = async (
           gte: parseFloat(longitude) - 0.1,
         },
       };
-    }
+    } */
 
     if (status) {
       where.status = {
@@ -146,7 +145,6 @@ export const getFilteredComplaints = async (
           },
         },
         images: true,
-        location: true,
         votes: true,
       },
       orderBy,

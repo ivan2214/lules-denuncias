@@ -109,31 +109,6 @@ export const createManyComplaints = async () => {
     },
   ];
 
-  // Ubicaciones
-  const randomLocations = faker.number.int({min: 2, max: 20});
-
-  for (let i = 0; i < randomLocations; i++) {
-    const latitude = faker.location.latitude();
-    const longitude = faker.location.longitude();
-    const address = faker.location.streetAddress();
-    const city = faker.location.city();
-    const country = faker.location.country();
-
-    await db.location.create({
-      data: {
-        latitude,
-        longitude,
-        address,
-        city,
-        country,
-      },
-    });
-    console.log(`📍 Generando ubicaciones ${i.toString()}/${randomLocations.toString()}`);
-    console.log("*-------------------------------------------*");
-  }
-
-  const locations = await db.location.findMany();
-
   // Quejas y comentarios
   for (const complaintData of complaintsData) {
     const anonymous = faker.datatype.boolean();
@@ -179,20 +154,6 @@ export const createManyComplaints = async () => {
               };
             }),
           },
-          location: {
-            connectOrCreate: {
-              where: {
-                id: locations[Math.floor(Math.random() * locations.length)].id,
-              },
-              create: {
-                latitude: faker.location.latitude(),
-                longitude: faker.location.longitude(),
-                address: faker.location.streetAddress(),
-                city: faker.location.city(),
-                country: faker.location.country(),
-              },
-            },
-          },
           categories: {
             connectOrCreate: complaintCategories.map((category) => {
               return {
@@ -211,6 +172,7 @@ export const createManyComplaints = async () => {
             },
           },
           anonymous: false,
+          address: faker.location.streetAddress(),
         },
       });
     }
@@ -235,20 +197,6 @@ export const createManyComplaints = async () => {
               };
             }),
           },
-          location: {
-            connectOrCreate: {
-              where: {
-                id: locations[Math.floor(Math.random() * locations.length)].id,
-              },
-              create: {
-                latitude: faker.location.latitude(),
-                longitude: faker.location.longitude(),
-                address: faker.location.streetAddress(),
-                city: faker.location.city(),
-                country: faker.location.country(),
-              },
-            },
-          },
           categories: {
             connectOrCreate: complaintCategories.map((category) => {
               return {
@@ -262,6 +210,7 @@ export const createManyComplaints = async () => {
             }),
           },
           anonymous: true,
+          address: faker.location.streetAddress(),
         },
       });
     }

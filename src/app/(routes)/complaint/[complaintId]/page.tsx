@@ -45,7 +45,6 @@ const ComplaintPage: React.FC<ComplaintPageProps> = async ({params}) => {
           createdAt: "desc",
         },
       },
-      location: true,
       user: true,
       votes: true,
     },
@@ -59,11 +58,7 @@ const ComplaintPage: React.FC<ComplaintPageProps> = async ({params}) => {
 
   const values: CreateComplaimentFormValues = {
     description: complaint.description,
-    latitude: complaint.location?.latitude ?? 0,
-    longitude: complaint.location?.longitude ?? 0,
-    address: complaint.location?.address ?? "",
-    city: complaint.location?.city ?? "",
-    country: complaint.location?.country ?? "",
+    address: complaint.address ?? "",
     title: complaint.title,
     categoriesNames: complaint.categories.map((category) => ({
       name: category.name,
@@ -130,8 +125,7 @@ const ComplaintPage: React.FC<ComplaintPageProps> = async ({params}) => {
                 <LocateIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />
                 <span className="text-sm font-medium">Ubicación:</span>
                 <span className="text-sm text-gray-500 dark:text-gray-400">
-                  {complaint.location?.address} {complaint.location?.city}{" "}
-                  {complaint.location?.country}
+                  {complaint.address}
                 </span>
               </div>
             </div>

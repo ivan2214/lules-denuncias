@@ -13,57 +13,10 @@ export const createComplaint = async (values: CreateComplaimentFormValues) => {
     return {error: "Invalid fields!"};
   }
 
-  const {
-    description,
-    latitude,
-    longitude,
-    title,
-    address,
-    categoriesNames,
-    city,
-    country,
-    images,
-    userId,
-  } = validatedFields.data;
+  const {description, title, address, categoriesNames, images, userId} = validatedFields.data;
 
-  if (
-    !description ||
-    !latitude ||
-    !longitude ||
-    !title ||
-    !address ||
-    !categoriesNames ||
-    !city ||
-    !country ||
-    !images
-  ) {
+  if (!description || !title || !address || !categoriesNames || !images) {
     return {error: "Invalid fields!"};
-  }
-
-  let locationCreate;
-
-  const locationId = await db.location
-    .findFirst({
-      where: {
-        latitude,
-        longitude,
-        address,
-        city,
-        country,
-      },
-    })
-    .then((location) => location?.id);
-
-  if (!locationId) {
-    locationCreate = await db.location.create({
-      data: {
-        latitude,
-        longitude,
-        address,
-        city,
-        country,
-      },
-    });
   }
 
   if (userId && userId > 0 && userId !== undefined && userId !== null) {
@@ -86,7 +39,7 @@ export const createComplaint = async (values: CreateComplaimentFormValues) => {
         userId,
         anonymous: false,
         status: StatusComplaint.PENDING,
-        locationId: locationId ?? locationCreate?.id,
+        address,
       },
     });
   }
@@ -110,7 +63,7 @@ export const createComplaint = async (values: CreateComplaimentFormValues) => {
         },
         anonymous: true,
         status: StatusComplaint.PENDING,
-        locationId: locationId ?? locationCreate?.id,
+        address,
       },
     });
   }
