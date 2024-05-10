@@ -23,8 +23,8 @@ import {
 import {CreateComplainSchema, type UpdateComplainSchema} from "@/schemas";
 import {Input} from "@/components/ui/input";
 import {cn} from "@/lib/utils";
-import {createComplaint} from "@/actions/server-actions/complaintment/create-complaiment";
-import {updateComplaint} from "@/actions/server-actions/complaintment/update-complaiment";
+import {createComplaint} from "@/actions/server-actions/complaint/create-complaint";
+import {updateComplaint} from "@/actions/server-actions/complaint/update-complaint";
 
 import {Textarea} from "../ui/textarea";
 import ImageUpload from "../image-upload";
@@ -41,11 +41,7 @@ export const ComplaintForm = () => {
     description: data?.values?.description ?? "",
     categoriesNames: data?.values?.categoriesNames ?? [],
     images: data?.values?.images ?? [],
-    latitude: data?.values?.latitude ?? 0,
-    longitude: data?.values?.longitude ?? 0,
     address: data?.values?.address ?? "",
-    city: data?.values?.city ?? "",
-    country: data?.values?.country ?? "",
   };
 
   const form = useForm<CreateComplaimentFormValues>({
@@ -172,63 +168,6 @@ export const ComplaintForm = () => {
                   <FormLabel>Dirección</FormLabel>
                   <FormControl>
                     <Input placeholder="Dirección" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="city"
-              render={({field}) => (
-                <FormItem>
-                  <FormLabel>Ciudad</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Ciudad" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="country"
-              render={({field}) => (
-                <FormItem>
-                  <FormLabel>País</FormLabel>
-                  <FormControl>
-                    <Input placeholder="País" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-          <div className="grid grid-cols-2 gap-6">
-            <FormField
-              control={form.control}
-              name="latitude"
-              render={({field}) => (
-                <FormItem>
-                  <FormLabel>Latitud</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Latitud" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="longitude"
-              render={({field}) => (
-                <FormItem>
-                  <FormLabel>Longitud</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Longitud" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

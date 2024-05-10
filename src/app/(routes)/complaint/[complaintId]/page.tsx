@@ -4,7 +4,6 @@ import {
   FlagIcon,
   LocateIcon,
   MailIcon,
-  PencilIcon,
   ShareIcon,
   TagIcon,
   ThumbsUpIcon,
@@ -21,6 +20,7 @@ import {type CreateComplaimentFormValues} from "@/components/complaint/complaint
 
 import {ButtonOpenModalEdit} from "./components/button-open-modal-edit";
 import {Comments} from "./components/comment/comments";
+import {ButtonVotes} from "./components/vote/button-votes";
 
 interface ComplaintPageProps {
   params: {complaintId: string};
@@ -69,7 +69,7 @@ const ComplaintPage: React.FC<ComplaintPageProps> = async ({params}) => {
   };
 
   return (
-    <div className="px-4 py-6 md:px-6 lg:py-12">
+    <main className="p-12">
       <div className="mx-auto max-w-4xl">
         <div className="space-y-6">
           <div>
@@ -158,6 +158,9 @@ const ComplaintPage: React.FC<ComplaintPageProps> = async ({params}) => {
               </div>
             </div>
           </div>
+          {/* Votar prioridad */}
+
+          <ButtonVotes complaint={complaint} />
           {/* Comments */}
           <Comments complaint={complaint} isAuthorComplaint={isAuthorComplaint} />
           {/* Actions */}
@@ -190,7 +193,7 @@ const ComplaintPage: React.FC<ComplaintPageProps> = async ({params}) => {
           </div>
         </div>
       </div>
-    </div>
+    </main>
   );
 };
 
