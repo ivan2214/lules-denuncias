@@ -4,7 +4,7 @@ import {StatusComplaint} from "@prisma/client";
 
 import {db} from "@/lib/db";
 
-export const voteAction = async (complaintId: number, userId: number) => {
+export const voteAction = async (complaintId: number, userId: string) => {
   if (!complaintId || !userId) return {error: "Parametros invalidos"};
 
   const user = await db.user.findUnique({

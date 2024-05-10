@@ -1,6 +1,6 @@
 import {create} from "zustand";
 
-import {type CreateComplaimentFormValues} from "@/components/modals/create-complaiment-modal";
+import {type CreateComplaimentFormValues} from "@/components/complaint/complaint-form";
 
 interface CreateComplaimentModalStore {
   isOpen: boolean;
@@ -28,11 +28,7 @@ export const useCreateComplaimentModal = create<CreateComplaimentModalStore>((se
           description: "",
           categoriesNames: [],
           images: [],
-          latitude: 0,
-          longitude: 0,
           address: "",
-          city: "",
-          country: "",
         },
       },
     }),

@@ -18,7 +18,7 @@ export const ButtonVotes: React.FC<ButtonVotesProps> = ({complaint}) => {
 
   const onClick = () => {
     startTransition(() => {
-      voteAction(complaint.id, 6).then((res) => {
+      voteAction(complaint.id, "d").then((res) => {
         if (res?.error) {
           toast("Error", {
             description: res?.error,

@@ -9,6 +9,7 @@ import {ButtonOpenModal} from "@/components/button-open-modal";
 import ModeToggle from "@/components/mode-toggle";
 import {ModalProvider} from "@/providers/modal-provider";
 import {Toaster} from "@/components/ui/sonner";
+import {MenuAuth} from "@/components/menu-auth";
 
 export const metadata: Metadata = {
   title: "lules-denuncias",
@@ -36,6 +37,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                 Contact
               </Link>
               <ModeToggle />
+              <MenuAuth />
             </nav>
           </header>
           <main>{children}</main>

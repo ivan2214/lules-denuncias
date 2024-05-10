@@ -98,5 +98,7 @@ module.exports = {
     "@typescript-eslint/restrict-template-expressions": "off",
     "@typescript-eslint/no-unnecessary-condition": "off",
     "jsx-a11y/heading-has-content": "off",
+    "@typescript-eslint/prefer-nullish-coalescing": "off",
+    "no-var": "off",
   },
 };

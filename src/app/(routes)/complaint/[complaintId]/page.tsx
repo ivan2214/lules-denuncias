@@ -27,7 +27,7 @@ interface ComplaintPageProps {
 }
 
 const ComplaintPage: React.FC<ComplaintPageProps> = async ({params}) => {
-  const userId = 2;
+  const userId = "as";
   const {complaintId} = params;
 
   const complaint: ComplaintExtends | null = await db.complaint.findUnique({

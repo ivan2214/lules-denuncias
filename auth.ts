@@ -1,53 +1,74 @@
-import type {NextAuthConfig, Session} from "next-auth";
-
-import "next-auth/jwt";
-import {PrismaAdapter} from "@auth/prisma-adapter";
 import NextAuth from "next-auth";
-import Auth0 from "next-auth/providers/auth0";
-import Facebook from "next-auth/providers/facebook";
-import GitHub from "next-auth/providers/github";
-import Google from "next-auth/providers/google";
-import Twitter from "next-auth/providers/twitter";
-import {type JWT} from "next-auth/jwt";
+import {PrismaAdapter} from "@auth/prisma-adapter";
 
 import {db} from "@/lib/db";
+import {getUserById} from "@/data/user";
 
-export const config = {
-  adapter: PrismaAdapter(db),
-  theme: {logo: "https://authjs.dev/img/logo-sm.png"},
-  providers: [Auth0, Facebook, GitHub, Google, Twitter],
-  basePath: "/auth",
+import authConfig from "./auth.config";
+
+export const {handlers, auth, signIn, signOut} = NextAuth({
+  pages: {
+    signIn: "/auth/login",
+    error: "/auth/error",
+  },
+  events: {
+    async linkAccount({user}) {
+      await db.user.update({
+        where: {
+          id: user.id,
+        },
+        data: {
+          emailVerified: new Date(),
+        },
+      });
+    },
+  },
   callbacks: {
-    authorized({request, auth}) {
-      const {pathname} = request.nextUrl;
+    async signIn({user, account}) {
+      //allow Oauth without  email verification
+      console.log({
+        user,
+        account,
+      });
 
-      if (pathname === "/middleware-example") return !!auth;
+      if (account?.provider !== "credentials") {
+        return true;
+      }
+
+      if (!user.id) return false;
+
+      const existingUser = await getUserById(user.id);
+
+      // Prevent sign in without email verification
+      if (!existingUser?.emailVerified) return false;
+
+      // TODO: Add 2FA Check
 
       return true;
     },
-    jwt({token, trigger, session}): JWT {
-      if (trigger === "update") token.name = session.user.name;
+    async session({session, token}) {
+      if (session.user && token.sub) {
+        session.user.id = token.sub;
+      }
+
+      if (token.role && session.user) {
+        session.user.role = token.role;
+      }
+
+      return session;
+    },
+    async jwt({token}) {
+      if (!token.sub) return token;
+      const existingUser = await getUserById(token.sub);
+
+      if (!existingUser) return token;
+
+      token.role = existingUser.role;
 
       return token;
     },
-    async session({session, token}): Promise<Session> {
-      session.accessToken = token.accessToken;
-
-      return Promise.resolve(session);
-    },
   },
-} satisfies NextAuthConfig;
-
-export const {handlers, auth, signIn, signOut} = NextAuth(config);
-
-declare module "next-auth" {
-  interface Session {
-    accessToken?: string;
-  }
-}
-
-declare module "next-auth/jwt" {
-  interface JWT {
-    accessToken?: string;
-  }
-}
+  adapter: PrismaAdapter(db),
+  session: {strategy: "jwt"},
+  ...authConfig,
+});
