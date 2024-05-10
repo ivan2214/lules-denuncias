@@ -1,7 +1,7 @@
 import type {NextAuthConfig, Session} from "next-auth";
 
 import "next-auth/jwt";
-
+import {PrismaAdapter} from "@auth/prisma-adapter";
 import NextAuth from "next-auth";
 import Auth0 from "next-auth/providers/auth0";
 import Facebook from "next-auth/providers/facebook";
@@ -10,7 +10,10 @@ import Google from "next-auth/providers/google";
 import Twitter from "next-auth/providers/twitter";
 import {type JWT} from "next-auth/jwt";
 
+import {db} from "@/lib/db";
+
 export const config = {
+  adapter: PrismaAdapter(db),
   theme: {logo: "https://authjs.dev/img/logo-sm.png"},
   providers: [Auth0, Facebook, GitHub, Google, Twitter],
   basePath: "/auth",
