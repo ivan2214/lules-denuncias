@@ -67,7 +67,7 @@ export const ComplaintForm = () => {
 
   useEffect(() => {
     if (data?.values) {
-      form.reset(data?.values as CreateComplaimentFormValues);
+      form.reset(data?.values);
     }
   }, [data?.values, form]);
 

@@ -45,10 +45,10 @@ model User {
   updatedAt DateTime @updatedAt
 
   name          String?
-  username      String
+  username      String?
   email         String    @unique
   emailVerified DateTime?
-  password      String
+  hashPassword  String?
   image         String?
   reputation    Int?      @default(0)
 

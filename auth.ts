@@ -51,9 +51,9 @@ export const {handlers, auth, signIn, signOut} = NextAuth({
         session.user.id = token.sub;
       }
 
-      if (token.role && session.user) {
+      /* if (token.role && session.user) {
         session.user.role = token.role;
-      }
+      } */
 
       return session;
     },
@@ -63,7 +63,7 @@ export const {handlers, auth, signIn, signOut} = NextAuth({
 
       if (!existingUser) return token;
 
-      token.role = existingUser.role;
+      /* token.role = existingUser.role; */
 
       return token;
     },

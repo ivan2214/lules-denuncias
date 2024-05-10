@@ -4,6 +4,7 @@ import GitHub from "next-auth/providers/github";
 import google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
+import {type User} from "@prisma/client";
 
 import {LoginSchema} from "@/schemas";
 import {getUserByEmail} from "@/data/user";
@@ -27,11 +28,12 @@ export default {
 
           const user = await getUserByEmail(email);
 
-          if (!user?.password) {
+          if (!user?.hashPassword) {
             return null;
           }
 
-          const isValid = await bcrypt.compare(password, user.password);
+          const {hashPassword}: User = user;
+          const isValid = await bcrypt.compare(password, hashPassword);
 
           if (isValid) {
             return user;

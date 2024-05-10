@@ -1,5 +1,6 @@
 import {faker} from "@faker-js/faker";
 import {type Complaint, StatusComplaint} from "@prisma/client";
+import bcrypt from "bcryptjs";
 
 import {db} from "../src/lib/db";
 
@@ -9,11 +10,14 @@ export const createManyComplaints = async () => {
   const randomUsers = faker.number.int({min: 5, max: 10});
 
   for (let i = 0; i < randomUsers; i++) {
+    const password = "123";
+    const hashPassword = await bcrypt.hash(password, 10);
+
     await db.user.create({
       data: {
         username: faker.internet.userName(),
         email: faker.internet.email(),
-        password: "123",
+        hashPassword,
         image: faker.image.avatar(),
         reputation: faker.number.int({min: 0, max: 100}),
       },

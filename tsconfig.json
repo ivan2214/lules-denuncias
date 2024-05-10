@@ -20,13 +20,13 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
-      "@/ui/*": ["./src/components/ui/*"],
-      "@/lib/*": ["./src/lib/*"],
-      "@/components/*": ["./src/components/*"],
-      "@/schemas/*": ["./src/schemas/*"],
-      "@/actions/*": ["./src/actions/*"],
-      "@/store/*": ["./src/store/*"],
-      "@/types/*": ["./src/types/*"],
+      "@ui/*": ["./src/components/ui/*"],
+      "@lib/*": ["./src/lib/*"],
+      "@components/*": ["./src/components/*"],
+      "@schemas/*": ["./src/schemas/*"],
+      "@actions/*": ["./src/actions/*"],
+      "@store/*": ["./src/store/*"],
+      "@types/*": ["./src/types/*"],
       "auth": ["./auth"]
     }
   },
