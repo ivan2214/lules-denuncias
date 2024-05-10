@@ -14,7 +14,11 @@ export const register = async (values: RegisterFormValues) => {
     return {error: "Invalid fields!"};
   }
 
-  const {email, password, name} = validatedFields.data;
+  const {email, password, name, confirmPassword, username} = validatedFields.data;
+
+  if (password !== confirmPassword) {
+    return {error: "Passwords do not match!"};
+  }
 
   const existingUser = await getUserByEmail(email);
 
@@ -26,6 +30,7 @@ export const register = async (values: RegisterFormValues) => {
 
   await db.user.create({
     data: {
+      username,
       name,
       email,
       hashPassword: hashedPassword,
@@ -33,6 +38,6 @@ export const register = async (values: RegisterFormValues) => {
   });
 
   return {
-    success: "Check your email and verify your account!",
+    success: "User created successfully!",
   };
 };

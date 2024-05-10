@@ -30,6 +30,8 @@ export const login = async (values: LoginFormValues) => {
     });
   } catch (error) {
     if (error instanceof AuthError) {
+      console.log(error);
+
       switch (error.type) {
         case "CredentialsSignin":
           return {error: "Invalid credentials!"};
