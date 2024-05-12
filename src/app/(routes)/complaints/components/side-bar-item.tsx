@@ -21,7 +21,7 @@ export const SideBarItem: React.FC<SideBarItemProps> = ({category}) => {
       ? false
       : true;
   const selectedCategories = searchParams.get("categories")?.split(",") ?? [];
-  const searchParmsActive = searchParams.get("categories");
+
   const newParams = new URLSearchParams(searchParams.toString());
 
   if (!activeParams) {
