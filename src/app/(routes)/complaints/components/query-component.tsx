@@ -1,6 +1,7 @@
 "use client";
-import {TrashIcon} from "lucide-react";
+import {Loader2Icon, TrashIcon} from "lucide-react";
 import {usePathname, useRouter} from "next/navigation";
+import {useState} from "react";
 
 import {Badge} from "@/components/ui/badge";
 import {Button} from "@/components/ui/button";
@@ -11,6 +12,7 @@ interface QueryComponentProps {
 }
 
 export const QueryComponent: React.FC<QueryComponentProps> = ({searchParams}) => {
+  const [isLoading, setIsLoading] = useState(false);
   const {
     sortBy,
     categories,
@@ -42,6 +44,7 @@ export const QueryComponent: React.FC<QueryComponentProps> = ({searchParams}) =>
       | "status";
     value?: string;
   }) => {
+    setIsLoading(true);
     const params = {...searchParams};
 
     if (param === "keyword") {
@@ -90,12 +93,16 @@ export const QueryComponent: React.FC<QueryComponentProps> = ({searchParams}) =>
 
     router.push(url);
     router.refresh();
+
+    setIsLoading(false);
   };
 
   const clearAll = () => {
+    setIsLoading(true);
     categoriesArray = [];
     router.push(pathname);
     router.refresh();
+    setIsLoading(false);
   };
 
   return (
@@ -110,6 +117,7 @@ export const QueryComponent: React.FC<QueryComponentProps> = ({searchParams}) =>
               >
                 {category}
                 <Button
+                  disabled={isLoading}
                   size="icon"
                   variant="ghost"
                   onClick={() => {
@@ -128,6 +136,7 @@ export const QueryComponent: React.FC<QueryComponentProps> = ({searchParams}) =>
           <Badge className="flex items-center justify-between capitalize" variant="outline">
             {status}
             <Button
+              disabled={isLoading}
               size="icon"
               variant="ghost"
               onClick={() => {
@@ -162,6 +171,7 @@ export const QueryComponent: React.FC<QueryComponentProps> = ({searchParams}) =>
           <Badge className="flex items-center justify-between capitalize" variant="outline">
             {keyword}
             <Button
+              disabled={isLoading}
               size="icon"
               variant="ghost"
               onClick={() => {
@@ -176,8 +186,14 @@ export const QueryComponent: React.FC<QueryComponentProps> = ({searchParams}) =>
           </Badge>
         ) : null}
       </div>
-      <Button className="flex w-fit items-center gap-2 " variant="destructive" onClick={clearAll}>
-        Borrar todos
+      <Button
+        className="flex w-fit items-center gap-2 "
+        disabled={isLoading}
+        variant="destructive"
+        onClick={clearAll}
+      >
+        {isLoading ? <Loader2Icon className="h-4 w-4 animate-spin" /> : null}
+        {!isLoading ? "Borrar todos" : "Borrando..."}
         <TrashIcon className="h-4 w-4" />
       </Button>
     </div>

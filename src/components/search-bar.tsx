@@ -19,12 +19,12 @@ export const SearchBar = () => {
     const newParams = new URLSearchParams(searchParams.toString());
 
     if (search.value) {
-      newParams.set("search", search.value);
+      newParams.set("keyword", search.value);
     } else {
-      newParams.delete("search");
+      newParams.delete("keyword");
     }
-    const includesOfferPage = pathname?.includes("offers");
-    const pathNameDefined = !includesOfferPage ? `/offers${pathname}` : pathname;
+    const includesOfferPage = pathname?.includes("complaints");
+    const pathNameDefined = !includesOfferPage ? `/complaints${pathname}` : pathname;
 
     router.push(createUrl(pathNameDefined, newParams));
     router.refresh();
@@ -39,7 +39,7 @@ export const SearchBar = () => {
             key={searchParams?.get("search")}
             autoComplete="off"
             className="pl-8"
-            defaultValue={searchParams?.get("search") ?? ""}
+            defaultValue={searchParams?.get("keyword") ?? ""}
             name="search"
             placeholder="Buscar productos..."
             type="search"
