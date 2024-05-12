@@ -38,7 +38,11 @@ const ComplaintPage: React.FC<ComplaintPageProps> = async ({params}) => {
     },
     include: {
       images: true,
-      categories: true,
+      categories: {
+        include: {
+          Category: true,
+        },
+      },
       comments: {
         include: {
           author: true,
@@ -63,7 +67,7 @@ const ComplaintPage: React.FC<ComplaintPageProps> = async ({params}) => {
     address: complaint.address ?? "",
     title: complaint.title,
     categoriesNames: complaint.categories.map((category) => ({
-      name: category.name,
+      name: category.Category.name,
     })),
     images: complaint.images.map((image) => ({
       url: image.url || "https://via.placeholder.com/600x400",
@@ -108,8 +112,11 @@ const ComplaintPage: React.FC<ComplaintPageProps> = async ({params}) => {
                 <TagIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />
                 <span className="text-sm font-medium">Categorías:</span>
                 {complaint.categories.map((category) => (
-                  <span key={category.name} className="text-sm text-gray-500 dark:text-gray-400">
-                    {category.name}
+                  <span
+                    key={category.Category.id}
+                    className="text-sm text-gray-500 dark:text-gray-400"
+                  >
+                    {category.Category.name}
                   </span>
                 ))}
               </div>

@@ -25,6 +25,14 @@ export const updateComplaint = async (values: UpdateComplaimentFormValues, compl
   try {
     //verificar la localizacion ya existe sino crearla
 
+    const categories = await db.category.findMany({
+      where: {
+        name: {
+          in: categoriesNames?.map((category) => category.name),
+        },
+      },
+    });
+
     // Actualizar la queja en la base de datos
     await db.complaint.update({
       where: {
@@ -34,15 +42,24 @@ export const updateComplaint = async (values: UpdateComplaimentFormValues, compl
         description,
         title,
         categories: {
-          upsert: categoriesNames?.map((category) => ({
+          upsert: categories?.map((category) => ({
             where: {
-              name: category.name,
+              complaintId_categoryId: {
+                categoryId: category.id,
+                complaintId,
+              },
+              Category: {name: category.name},
             },
             create: {
-              name: category.name,
+              Category: {
+                connectOrCreate: {
+                  where: {id: category.id},
+                  create: {name: category.name},
+                },
+              },
             },
             update: {
-              name: category.name,
+              categoryId: category.id,
             },
           })),
         },
