@@ -6,6 +6,7 @@ import {useTransition} from "react";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {StatusComplaint} from "@prisma/client";
+import {toast} from "sonner";
 
 import {ChangeStatusSchema} from "@/schemas";
 import {Form, FormControl, FormField, FormItem, FormMessage} from "@/components/ui/form";
@@ -16,6 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {changeStatus} from "@/actions/server-actions/complaint/change-status";
 
 export type ChangeStatusFormValues = z.infer<typeof ChangeStatusSchema>;
 
@@ -48,7 +50,19 @@ export const ButtonChangeStatus: React.FC<ButtonChangeStatusProps> = ({complaint
 
   function onSubmit(data: ChangeStatusFormValues) {
     startTransition(() => {
-      console.log(data);
+      changeStatus(data).then((res) => {
+        if (res?.error) {
+          toast("Error", {
+            description: res?.error,
+          });
+        }
+
+        if (res?.success) {
+          toast("Status cambiado", {
+            description: res?.success,
+          });
+        }
+      });
     });
   }
 
@@ -69,7 +83,7 @@ export const ButtonChangeStatus: React.FC<ButtonChangeStatusProps> = ({complaint
                 }}
               >
                 <FormControl>
-                  <SelectTrigger>
+                  <SelectTrigger className="h-9 rounded-md px-3">
                     <SelectValue placeholder="Status" />
                   </SelectTrigger>
                 </FormControl>
