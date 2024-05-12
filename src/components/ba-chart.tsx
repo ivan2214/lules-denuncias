@@ -13,7 +13,7 @@ interface BaChartProp {
 export function BarChart({data, className}: BaChartProp) {
   const dataParsed = data.map((complaint) => {
     return {
-      name: complaint.categories.map((category) => category.name).join(", "),
+      name: complaint.categories.map((category) => category.Category.name).join(", "),
       count: complaint.categories.length,
     };
   });

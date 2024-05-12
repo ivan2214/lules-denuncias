@@ -72,25 +72,16 @@ export const createManyComplaints = async (users: User[], categories: Category[]
   for (let i = 0; i < complaintsData.length; i++) {
     const complaintData = complaintsData[i];
     const anonymousPost = faker.datatype.boolean();
-    // Seleccionamos un conjunto aleatorio de categorías
+    const status = faker.helpers.enumValue(StatusComplaint);
     const randomCategories = faker.helpers
       .shuffle(categories)
-      .slice(0, faker.number.int({min: 0, max: 3}));
-
-    // Creamos un array de objetos de conexión para las categorías seleccionadas
-    const complaintCategories = randomCategories.map((category) => {
-      return {
-        name: category.name,
-      };
-    });
+      .slice(0, faker.datatype.number({min: 1, max: 3}));
 
     const images = faker.helpers.uniqueArray(() => {
       return {
         url: faker.image.urlPicsumPhotos(),
       };
     }, 3);
-
-    const status = faker.helpers.enumValue(StatusComplaint);
 
     let complaint: Complaint | null = null;
 
@@ -114,18 +105,6 @@ export const createManyComplaints = async (users: User[], categories: Category[]
               };
             }),
           },
-          categories: {
-            connectOrCreate: complaintCategories.map((category) => {
-              return {
-                where: {
-                  name: category.name,
-                },
-                create: {
-                  name: category.name,
-                },
-              };
-            }),
-          },
           user: {
             connect: {
               id: users[Math.floor(Math.random() * users.length)].id,
@@ -133,6 +112,15 @@ export const createManyComplaints = async (users: User[], categories: Category[]
           },
           anonymous: false,
           address: faker.location.streetAddress(),
+          categories: {
+            createMany: {
+              data: randomCategories.map((category) => {
+                return {
+                  categoryId: category.id,
+                };
+              }),
+            },
+          },
         },
       });
     }
@@ -157,20 +145,17 @@ export const createManyComplaints = async (users: User[], categories: Category[]
               };
             }),
           },
-          categories: {
-            connectOrCreate: complaintCategories.map((category) => {
-              return {
-                where: {
-                  name: category.name,
-                },
-                create: {
-                  name: category.name,
-                },
-              };
-            }),
-          },
           anonymous: true,
           address: faker.location.streetAddress(),
+          categories: {
+            createMany: {
+              data: randomCategories.map((category) => {
+                return {
+                  categoryId: category.id,
+                };
+              }),
+            },
+          },
         },
       });
     }

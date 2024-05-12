@@ -6,12 +6,14 @@ import {
   type Vote,
   type Image,
   type StatusComplaint,
+  type CategoriesOnComplaint,
+  type Prisma,
 } from "@prisma/client";
 
 import {db} from "@/lib/db";
 
 export interface QueryProps {
-  category?: string;
+  categories?: string;
   minPriority?: string;
   maxPriority?: string;
   latitude?: string;
@@ -36,7 +38,11 @@ export interface QueryProps {
 interface WhereClause {
   categories?: {
     some: {
-      name: string;
+      Category: {
+        name: {
+          in: string[];
+        };
+      };
     };
   };
   priority?: {
@@ -64,11 +70,16 @@ export interface CommentExtends extends Comment {
   author?: User | null;
 }
 
+export interface CategoriesOnComplaintExtends extends CategoriesOnComplaint {
+  Category: Category;
+  complaint?: Complaint | null;
+}
+
 export interface ComplaintExtends extends Complaint {
   user?: User | null;
   comments: CommentExtends[];
   votes: Vote[];
-  categories: Category[];
+  categories: CategoriesOnComplaintExtends[];
   images: Image[];
 }
 
@@ -77,7 +88,7 @@ export const getFilteredComplaints = async (
 ): Promise<{complaints: ComplaintExtends[] | []}> => {
   try {
     const {
-      category,
+      categories,
       minPriority,
       maxPriority,
       latitude,
@@ -88,10 +99,43 @@ export const getFilteredComplaints = async (
       status,
     } = query ?? {};
 
-    const where: WhereClause = {};
+    const where: Prisma.ComplaintFindManyArgs["where"] = {};
 
-    if (category) {
-      where.categories = {some: {name: category}};
+    console.log(categories);
+
+    // Función para normalizar una cadena de texto (convertir a minúsculas y eliminar acentos)
+    const normalizeString = (str: string): string => {
+      return str
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase();
+    };
+
+    // Parsea las categorías normalizando cada una
+    const parseCategories = (categories?: string): string[] => {
+      if (!categories) {
+        return [];
+      }
+
+      return categories
+        .split(",")
+        .map((category) => normalizeString(category.trim()))
+        .filter((category) => !!category);
+    };
+
+    if (categories) {
+      const normalizedCategories = parseCategories(categories);
+
+      where.categories = {
+        some: {
+          Category: {
+            name: {
+              mode: "insensitive",
+              in: normalizedCategories,
+            },
+          },
+        },
+      };
     }
 
     if (minPriority && maxPriority) {
@@ -138,7 +182,11 @@ export const getFilteredComplaints = async (
       },
       include: {
         user: true,
-        categories: true,
+        categories: {
+          include: {
+            Category: true,
+          },
+        },
         comments: {
           include: {
             author: true,

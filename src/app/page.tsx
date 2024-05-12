@@ -10,6 +10,8 @@ import {ComplaintsHome} from "@components/complaints-home";
 import {ChartFilterHome} from "@components/chart-filter-home";
 
 export default async function HomePage({searchParams}: {searchParams: QueryProps}) {
+  console.log(searchParams);
+
   const {complaints} = await getFilteredComplaints(searchParams);
 
   return (

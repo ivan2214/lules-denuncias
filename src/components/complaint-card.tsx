@@ -23,6 +23,8 @@ interface ComplaintCardProps {
 }
 
 export const ComplaintCard: React.FC<ComplaintCardProps> = ({complaint}) => {
+  console.log(complaint.categories);
+
   const creatorName = (user: ComplaintExtends["user"]) => {
     if (user) {
       return user.name || user.username || "Anónimo";
@@ -60,8 +62,8 @@ export const ComplaintCard: React.FC<ComplaintCardProps> = ({complaint}) => {
           </div>
           <section className="flex flex-wrap gap-2">
             {complaint.categories.map((category) => (
-              <Badge key={category.name} className="text-xs" variant="secondary">
-                {category.name}
+              <Badge key={category.Category.id} className="text-xs" variant="secondary">
+                {category.Category.name}
               </Badge>
             ))}
           </section>
@@ -142,8 +144,8 @@ export const ComplaintCard: React.FC<ComplaintCardProps> = ({complaint}) => {
           </div>
           <section className="flex flex-wrap gap-2">
             {complaint.categories.map((category) => (
-              <Badge key={category.name} className="text-xs" variant="secondary">
-                {category.name}
+              <Badge key={category.Category.name} className="text-xs" variant="secondary">
+                {category.Category.name}
               </Badge>
             ))}
           </section>

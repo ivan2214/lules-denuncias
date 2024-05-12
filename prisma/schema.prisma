@@ -74,10 +74,11 @@ model Complaint {
   user   User?   @relation(fields: [userId], references: [id])
   userId String?
 
-  comments   Comment[]
-  votes      Vote[]
-  categories Category[]
+  comments Comment[]
+  votes    Vote[]
+
   images     Image[]
+  categories CategoriesOnComplaint[] 
 
   @@index([userId])
 }
@@ -111,9 +112,9 @@ model Comment {
 
 model Vote {
   id          Int       @id @default(autoincrement())
-  complaint   Complaint @relation(fields: [complaintId], references: [id])
+  complaint   Complaint @relation(fields: [complaintId], references: [id], onDelete: Cascade)
   complaintId Int
-  user        User      @relation(fields: [userId], references: [id])
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      String
   createdAt   DateTime  @default(now())
 
@@ -122,12 +123,22 @@ model Vote {
 }
 
 model Category {
-  name String @unique
+  id         Int                     @id @default(autoincrement())
+  name       String
+  complaints CategoriesOnComplaint[]
+}
 
-  Complaint   Complaint? @relation(fields: [complaintId], references: [id])
-  complaintId Int?
+model CategoriesOnComplaint {
+  complaint   Complaint @relation(fields: [complaintId], references: [id], onDelete: Cascade)
+  complaintId Int
 
-  @@index([complaintId])
+  asignedAt DateTime @default(now())
+
+  Category   Category @relation(fields: [categoryId], references: [id] ,onDelete: Cascade)
+  categoryId Int
+
+  @@id([complaintId, categoryId])
+  @@index([categoryId])
 }
 
 enum StatusComplaint {
