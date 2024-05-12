@@ -60,7 +60,11 @@ export const ComplaintCard: React.FC<ComplaintCardProps> = ({complaint}) => {
           </div>
           <section className="flex flex-wrap gap-2">
             {complaint.categories.map((category) => (
-              <Badge key={category.Category.id} className="text-xs" variant="secondary">
+              <Badge
+                key={category.Category.id}
+                className="bg-primary text-xs capitalize hover:bg-primary/60 dark:bg-secondary hover:dark:bg-secondary/60"
+                variant="secondary"
+              >
                 {category.Category.name}
               </Badge>
             ))}
@@ -142,7 +146,11 @@ export const ComplaintCard: React.FC<ComplaintCardProps> = ({complaint}) => {
           </div>
           <section className="flex flex-wrap gap-2">
             {complaint.categories.map((category) => (
-              <Badge key={category.Category.name} className="text-xs" variant="secondary">
+              <Badge
+                key={category.Category.name}
+                className="bg-primary text-xs capitalize hover:bg-primary/60 dark:bg-secondary hover:dark:bg-secondary/60"
+                variant="secondary"
+              >
                 {category.Category.name}
               </Badge>
             ))}

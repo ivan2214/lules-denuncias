@@ -14,7 +14,7 @@ import {db} from "@/lib/db";
 export default async function HomePage({searchParams}: {searchParams: QueryProps}) {
   const {complaints} = await getFilteredComplaints(searchParams);
 
-  const categoriesMostResolved = await db.category.findMany({
+  const categoriesMostResolved = await db.category?.findMany({
     where: {
       complaints: {
         some: {
@@ -24,7 +24,7 @@ export default async function HomePage({searchParams}: {searchParams: QueryProps
         },
       },
     },
-    include: {
+    select: {
       _count: {
         select: {
           complaints: {
@@ -45,6 +45,7 @@ export default async function HomePage({searchParams}: {searchParams: QueryProps
           },
         },
       },
+      name: true,
     },
     orderBy: {
       complaints: {
@@ -92,19 +93,21 @@ export default async function HomePage({searchParams}: {searchParams: QueryProps
           {categoriesMostResolved
             ? categoriesMostResolved?.map((category) => (
                 <div
-                  key={category.name}
-                  className="flex flex-col gap-y-4 overflow-hidden rounded-md border shadow-md transition-shadow duration-300 hover:shadow-2xl"
+                  key={category?.name}
+                  className="flex flex-col gap-y-4 overflow-hidden rounded-md shadow-md transition-shadow duration-300 hover:shadow-2xl"
                 >
-                  <div className="h-32 w-full">
-                    <img
-                      alt=""
-                      className="aspect-square h-full w-full  object-cover"
-                      src={category.complaints[0]?.complaint.images[0].url}
-                    />
-                  </div>
+                  {category?.complaints?.[0]?.complaint?.images ? (
+                    <div className="h-32 w-full">
+                      <img
+                        alt=""
+                        className="aspect-square h-full w-full  object-cover"
+                        src={category?.complaints[0]?.complaint.images[0]?.url}
+                      />
+                    </div>
+                  ) : null}
                   <div className="flex items-center justify-between p-4">
-                    <h3 className="text-lg font-semibold">{category.name}</h3>
-                    <Badge>{category._count.complaints} complaints</Badge>
+                    <h3 className="text-lg font-semibold">{category?.name}</h3>
+                    <Badge>{category?._count.complaints} complaints</Badge>
                   </div>
                 </div>
               ))
