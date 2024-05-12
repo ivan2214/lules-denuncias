@@ -52,11 +52,10 @@ model User {
   image         String?
   reputation    Int?      @default(0)
 
-  complaints   Complaint[]
-  comments     Comment[]
-  votes        Vote[]
-  accounts     Account[]
-  likeComments LikeComment[]
+  complaints Complaint[]
+  comments   Comment[]
+  votes      Vote[]
+  accounts   Account[]
 }
 
 model Complaint {
@@ -99,30 +98,15 @@ model Comment {
 
   text      String
   anonymous Boolean? @default(false)
+  likes     Int      @default(0)
 
-  author       User?         @relation(fields: [authorId], references: [id])
-  authorId     String?
-  complaint    Complaint     @relation(fields: [complaintId], references: [id])
-  complaintId  Int
-  likeComments LikeComment[]
+  author      User?      @relation(fields: [authorId], references: [id])
+  authorId    String?
+  Complaint   Complaint? @relation(fields: [complaintId], references: [id])
+  complaintId Int?
 
-  @@index([complaintId])
   @@index([authorId])
-}
-
-model LikeComment {
-  id Int @id @default(autoincrement())
-
-  type LikeCommentType
-
-  userLike   User   @relation(fields: [userLikeId], references: [id])
-  userLikeId String
-
-  comment   Comment @relation(fields: [commentId], references: [id])
-  commentId Int
-
-  @@index([commentId])
-  @@index([userLikeId])
+  @@index([complaintId])
 }
 
 model Vote {
@@ -153,9 +137,4 @@ enum StatusComplaint {
   RESOLVED
   UNRESOLVED
   PENDING
-}
-
-enum LikeCommentType {
-  LIKE
-  UNLIKE
 }

@@ -42,11 +42,6 @@ const ComplaintPage: React.FC<ComplaintPageProps> = async ({params}) => {
       comments: {
         include: {
           author: true,
-          likeComments: {
-            include: {
-              userLike: true,
-            },
-          },
         },
         orderBy: {
           createdAt: "desc",
@@ -56,8 +51,6 @@ const ComplaintPage: React.FC<ComplaintPageProps> = async ({params}) => {
       votes: true,
     },
   });
-
-  console.log({complaint});
 
   if (!complaint) {
     return <div>Complaint not found</div>;

@@ -44,4 +44,5 @@ export const CreateCommentSchema = z.object({
 export const CommentActionSchema = z.object({
   commentId: z.coerce.number().min(1),
   action: z.enum(["like", "unlike"]),
+  complaintId: z.coerce.number(),
 });

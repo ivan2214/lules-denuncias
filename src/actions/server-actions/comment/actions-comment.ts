@@ -15,7 +15,7 @@ export const actionsComment = async (values: CommentActionFormValues) => {
     return {error: "Algo salio mal!"};
   }
 
-  const {commentId, action} = validatedFields.data;
+  const {commentId, action, complaintId} = validatedFields.data;
 
   try {
     const comment = await db.comment.findUnique({
@@ -28,24 +28,30 @@ export const actionsComment = async (values: CommentActionFormValues) => {
       return {error: "Comentario no encontrado"};
     }
 
-    if (!userLikeId || userLikeId === undefined || userLikeId === null) {
-      return {error: "Debe iniciar sesion para realizar esta accion!"};
-    }
+    if (!complaintId) return {error: "Algo sasdasalio mal!!!"};
+
+    //verificar que no puedo darme me gusta a mi mismo
+
     if (comment.authorId === userLikeId)
       return {error: "No puedes dar like a tu propio comentario"};
 
-    const createLikeComment = await db.likeComment.create({
+    if (!userLikeId || userLikeId === undefined || userLikeId === null) {
+      return {error: "Debe iniciar sesion para realizar esta accion!"};
+    }
+
+    await db.comment.update({
+      where: {
+        id: commentId,
+      },
       data: {
-        type: action === "like" ? "LIKE" : "UNLIKE",
-        userLikeId,
-        commentId,
+        likes: action === "like" ? {increment: 1} : {decrement: 1},
       },
     });
 
-    if (createLikeComment) {
-      return {success: "Comentario dado like!"};
-    }
+    return {success: "Comentario actualizado"};
   } catch (error) {
+    console.log(error);
+
     return {error: "Algo salio mal!"};
   } finally {
     revalidatePath("/complaint/[complaintId]");
