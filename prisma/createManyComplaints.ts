@@ -4,6 +4,7 @@ import {type Complaint, StatusComplaint, type User, type Category} from "@prisma
 import {db} from "../src/lib/db";
 
 export const createManyComplaints = async (users: User[], categories: Category[]) => {
+  const complaintIds: number[] = [];
   // Títulos y descripciones realistas de quejas
   const complaintsData = [
     {
@@ -68,7 +69,8 @@ export const createManyComplaints = async (users: User[], categories: Category[]
   ];
 
   // Quejas y comentarios
-  for (const complaintData of complaintsData) {
+  for (let i = 0; i < complaintsData.length; i++) {
+    const complaintData = complaintsData[i];
     const anonymousPost = faker.datatype.boolean();
     // Seleccionamos un conjunto aleatorio de categorías
     const randomCategories = faker.helpers
@@ -173,80 +175,13 @@ export const createManyComplaints = async (users: User[], categories: Category[]
       });
     }
 
-    // Comentarios
-    const randomComments = faker.number.int({min: 0, max: 20});
-
-    for (let i = 0; i < randomComments; i++) {
-      const anonymousComment = faker.datatype.boolean();
-      const userCommentId = users[Math.floor(Math.random() * users.length)].id;
-
-      if (anonymousComment && complaint?.id) {
-        await db.comment.create({
-          data: {
-            text: faker.lorem.paragraphs(3),
-            anonymous: anonymousComment,
-            complaintId: complaint?.id,
-            likes: faker.number.int({min: 0, max: 55}),
-          },
-        });
-      }
-
-      if (!anonymousComment && complaint?.id) {
-        await db.comment.create({
-          data: {
-            text: faker.lorem.paragraphs(3),
-            authorId: userCommentId,
-            complaintId: complaint?.id,
-            likes: faker.number.int({min: 0, max: 55}),
-          },
-        });
-      }
-
-      console.log(`Comentario ${i.toString()}/${randomComments.toString()}`);
-      console.log("*-------------------------------------------*");
+    if (complaint) {
+      complaintIds.push(complaint.id);
     }
 
-    // Votos
-    const randomVotes = faker.number.int({min: 0, max: 55}); // Número aleatorio de votos
-    const userIds = users.map((user) => user.id); // Array de todos los IDs de usuarios
-    const usersWithVotes = new Set(); // Conjunto para almacenar IDs de usuarios que ya han votado
-
-    for (let i = 0; i < randomVotes; i++) {
-      // Escoger un ID de usuario aleatorio
-      const userId = userIds[Math.floor(Math.random() * userIds.length)];
-
-      // Verificar si este usuario ya ha votado
-      if (!usersWithVotes.has(userId) && complaint?.id) {
-        // Agregar el usuario al conjunto de usuarios que han votado
-        usersWithVotes.add(userId);
-
-        // Crear el voto
-        await db.vote.create({
-          data: {
-            userId: userId,
-            complaintId: complaint?.id,
-          },
-        });
-      }
-
-      console.log(`Voto ${i.toString()}/${randomVotes.toString()}`);
-      console.log("*-------------------------------------------*");
-    }
-    // Contar los votos recibidos por la queja
-    const votesCount = await db.vote.count({
-      where: {
-        complaintId: complaint?.id,
-      },
-    });
-
-    // Actualizar la prioridad de la queja en función de los votos recibidos
-    await db.complaint.update({
-      where: {
-        id: complaint?.id,
-      },
-      data: {
-        priority: votesCount,
-      },
-    });
+    console.log(`Queja ${i.toString()}/${complaintsData.length.toString()}`);
+    console.log("*-------------------------------------------*");
   }
+
+  return complaintIds; // Devolvemos todos los IDs de las quejas creadas
 };
