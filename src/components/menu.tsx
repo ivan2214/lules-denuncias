@@ -6,7 +6,6 @@ import {type Category} from "@prisma/client";
 import {type User} from "next-auth";
 
 import {cn, createUrl} from "@/lib/utils";
-import {Button} from "@/components/ui/button";
 import {SearchBar} from "@components/search-bar";
 import SearchBarFallback from "@components/fallbacks/search-bar-fallback";
 import AuthButtons from "@/components/auth-options";

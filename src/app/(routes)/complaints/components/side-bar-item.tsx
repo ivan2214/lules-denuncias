@@ -47,7 +47,7 @@ export const SideBarItem: React.FC<SideBarItemProps> = ({category}) => {
   return (
     <Link
       className={cn(
-        "block capitalize transition-colors duration-300 hover:underline",
+        "block px-4 font-extralight capitalize transition-colors duration-300 hover:underline",
         selectedCategories.includes(category.name) &&
           "underline decoration-primary underline-offset-4",
       )}
