@@ -10,7 +10,7 @@ import {
 
 import {db} from "@/lib/db";
 
-interface QueryProps {
+export interface QueryProps {
   category?: string;
   minPriority?: string;
   maxPriority?: string;
@@ -93,6 +93,7 @@ export const getFilteredComplaints = async (
     if (category) {
       where.categories = {some: {name: category}};
     }
+    console.log(category);
 
     if (minPriority && maxPriority) {
       where.priority = {

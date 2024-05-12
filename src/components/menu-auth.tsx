@@ -14,13 +14,13 @@ export const MenuAuth = async () => {
       {session ? (
         <MenuUser user={user} />
       ) : (
-        <Button className="text-foreground" variant="link">
-          <Link href="/auth/login">Login</Link>
+        <Button className="text-foreground" variant="outline">
+          <Link href="/auth/login">Iniciar sesión</Link>
         </Button>
       )}
       {!session && (
-        <Button className="text-foreground" variant="link">
-          <Link href="/auth/register">Register</Link>
+        <Button className="text-foreground" variant="outline">
+          <Link href="/auth/register">Registrarse</Link>
         </Button>
       )}
     </section>
