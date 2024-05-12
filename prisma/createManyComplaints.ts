@@ -1,55 +1,9 @@
 import {faker} from "@faker-js/faker";
-import {type Complaint, StatusComplaint} from "@prisma/client";
-import bcrypt from "bcryptjs";
+import {type Complaint, StatusComplaint, type User, type Category} from "@prisma/client";
 
 import {db} from "../src/lib/db";
 
-export const createManyComplaints = async () => {
-  // Usuarios
-
-  const randomUsers = faker.number.int({min: 5, max: 10});
-
-  for (let i = 0; i < randomUsers; i++) {
-    const password = "123";
-    const hashPassword = await bcrypt.hash(password, 10);
-
-    await db.user.create({
-      data: {
-        username: faker.internet.userName(),
-        email: faker.internet.email(),
-        hashPassword,
-        image: faker.image.avatar(),
-        reputation: faker.number.int({min: 0, max: 100}),
-      },
-    });
-    console.log(`👤 Generando usuarios ${i.toString()}/${randomUsers.toString()}`);
-    console.log("*-------------------------------------------*");
-  }
-
-  const users = await db.user.findMany();
-
-  // Categorías
-  const categoriesData = [
-    "Infraestructura",
-    "Servicios Públicos",
-    "Seguridad",
-    "Tráfico",
-    "Medio Ambiente",
-    "Transporte",
-    "Vivienda",
-    "Educación",
-    "Salud",
-    "Comercio",
-    "Otro",
-  ];
-
-  await db.category.createMany({
-    data: categoriesData.map((name) => ({name})),
-    skipDuplicates: true,
-  });
-
-  const categories = await db.category.findMany();
-
+export const createManyComplaints = async (users: User[], categories: Category[]) => {
   // Títulos y descripciones realistas de quejas
   const complaintsData = [
     {
