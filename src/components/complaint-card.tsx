@@ -31,6 +31,76 @@ export const ComplaintCard: React.FC<ComplaintCardProps> = ({complaint}) => {
     return "Anónimo";
   };
 
+  if (!complaint.images.length) {
+    return (
+      <Card key={complaint.id} className="relative h-fit">
+        <CardHeader>
+          <CardTitle className="capitalize">{complaint.title || "Pothole Complaint"}</CardTitle>
+          <CardDescription>
+            Repordado por {creatorName(complaint.user)} el{" "}
+            {new Date(complaint.createdAt).toLocaleDateString()}
+          </CardDescription>
+        </CardHeader>
+        <section className="flex">
+          <CardContent>
+            <div className="flex items-center gap-2">
+              <MapPinIcon className="h-5 w-5 text-gray-500" />
+              <span className="text-sm text-gray-500">{complaint.address}</span>
+            </div>
+            <p className="mt-2 max-w-prose text-sm text-gray-500">{complaint.description}</p>
+          </CardContent>
+        </section>
+        <CardFooter className="mt-auto flex flex-col items-start gap-y-5 ">
+          <div className="flex items-center gap-2">
+            <FlagIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />
+            <span className="text-sm font-medium">Prioridad:</span>
+            <span className="text-sm text-gray-500 dark:text-gray-400">
+              {complaint.priority === 0 ? "Baja" : complaint.priority === 1 ? "Media" : "Alta"}
+            </span>
+          </div>
+          <section className="flex flex-wrap gap-2">
+            {complaint.categories.map((category) => (
+              <Badge key={category.name} className="text-xs" variant="secondary">
+                {category.name}
+              </Badge>
+            ))}
+          </section>
+        </CardFooter>
+        <CardFooter>
+          <div className="flex items-center justify-between gap-x-2">
+            <Badge
+              className={cn(
+                "text-primary-foreground dark:text-secondary-foreground",
+                complaint.isResolved
+                  ? "bg-green-500"
+                  : complaint.status === StatusComplaint.IN_PROGRESS ||
+                      complaint.status === StatusComplaint.OPEN
+                    ? "bg-yellow-500"
+                    : "bg-red-500",
+              )}
+              variant="secondary"
+            >
+              {complaint.status}
+            </Badge>
+            <Link
+              className="text-sm text-gray-500 hover:underline"
+              href={`/complaint/${complaint.id.toString()}`}
+            >
+              Ver detalles
+            </Link>
+          </div>
+        </CardFooter>
+        <div className="absolute right-2 top-2 ">
+          <ArrowPrioriry
+            priority={
+              complaint.priority === 0 ? "Baja" : complaint.priority === 1 ? "Media" : "Alta"
+            }
+          />
+        </div>
+      </Card>
+    );
+  }
+
   return (
     <Card
       key={complaint.id}
@@ -103,7 +173,7 @@ export const ComplaintCard: React.FC<ComplaintCardProps> = ({complaint}) => {
           </div>
         </CardFooter>
       </section>
-      <div className="absolute right-2 top-2">
+      <div className="absolute right-2 top-2 ">
         <ArrowPrioriry
           priority={complaint.priority === 0 ? "Baja" : complaint.priority === 1 ? "Media" : "Alta"}
         />

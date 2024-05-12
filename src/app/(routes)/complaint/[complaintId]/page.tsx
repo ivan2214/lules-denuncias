@@ -22,6 +22,7 @@ import {auth} from "auth";
 import {ButtonOpenModalEdit} from "./components/button-open-modal-edit";
 import {Comments} from "./components/comment/comments";
 import {ButtonVotes} from "./components/vote/button-votes";
+import {ButtonChangeStatus} from "./components/button-change-status";
 
 interface ComplaintPageProps {
   params: {complaintId: string};
@@ -76,6 +77,10 @@ const ComplaintPage: React.FC<ComplaintPageProps> = async ({params}) => {
     }
 
     return "Anónimo";
+  };
+
+  const statusValues = {
+    status: complaint.status,
   };
 
   return (
@@ -172,19 +177,17 @@ const ComplaintPage: React.FC<ComplaintPageProps> = async ({params}) => {
           {/* Votar prioridad */}
 
           <ButtonVotes complaint={complaint} />
+
           {/* Comments */}
           <Comments complaint={complaint} isAuthorComplaint={isAuthorComplaint} />
+
           {/* Actions */}
           <div className="flex justify-between gap-2">
             {isAuthorComplaint ? (
               <div className="flex gap-2">
-                {isAuthorComplaint ? (
-                  <ButtonOpenModalEdit complaintId={complaint.id} values={values} />
-                ) : null}
-                <Button className="flex items-center gap-x-2" size="sm" variant="outline">
-                  <CheckIcon className="h-4 w-4" />
-                  Mark as Resolved
-                </Button>
+                <ButtonOpenModalEdit complaintId={complaint.id} values={values} />
+                <ButtonChangeStatus complaintId={complaint.id} values={statusValues.status} />
+
                 <Button className="flex items-center gap-x-2" size="sm" variant="outline">
                   <TrashIcon className="h-4 w-4" />
                   Delete Complaint

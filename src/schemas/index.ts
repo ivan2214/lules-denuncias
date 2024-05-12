@@ -1,3 +1,4 @@
+import {StatusComplaint} from "@prisma/client";
 import * as z from "zod";
 
 export const LoginSchema = z.object({
@@ -45,4 +46,15 @@ export const CommentActionSchema = z.object({
   commentId: z.coerce.number().min(1),
   action: z.enum(["like", "unlike"]),
   complaintId: z.coerce.number(),
+});
+
+export const ChangeStatusSchema = z.object({
+  status: z.enum([
+    StatusComplaint.CLOSED,
+    StatusComplaint.IN_PROGRESS,
+    StatusComplaint.OPEN,
+    StatusComplaint.PENDING,
+    StatusComplaint.RESOLVED,
+    StatusComplaint.UNRESOLVED,
+  ]),
 });

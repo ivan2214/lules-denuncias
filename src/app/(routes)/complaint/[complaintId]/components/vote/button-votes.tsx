@@ -3,6 +3,7 @@
 import {useTransition} from "react";
 import {toast} from "sonner";
 import {ChevronUpIcon} from "lucide-react";
+import {useSession} from "next-auth/react";
 
 import {Button} from "@/components/ui/button";
 import {type ComplaintExtends} from "@/actions/complaints/get-filtered-complaints";
@@ -14,11 +15,13 @@ interface ButtonVotesProps {
 }
 
 export const ButtonVotes: React.FC<ButtonVotesProps> = ({complaint}) => {
+  const session = useSession();
+
   const [isPending, startTransition] = useTransition();
 
   const onClick = () => {
     startTransition(() => {
-      voteAction(complaint.id, "d").then((res) => {
+      voteAction(complaint.id, session?.data?.user?.id).then((res) => {
         if (res?.error) {
           toast("Error", {
             description: res?.error,
