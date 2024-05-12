@@ -36,19 +36,24 @@ export const CommentForm: React.FC<CommentFormProps> = ({complaintId}) => {
 
   const onSubmit = (values: CreateCommentFormValues) => {
     startTransition(() => {
-      createComment(values).then((res) => {
-        if (res.error) {
-          toast("Error", {
-            description: res.error,
-          });
-        }
+      createComment(values)
+        .then((res) => {
+          if (res.error) {
+            toast("Error", {
+              description: res.error,
+            });
+          }
 
-        if (res.succes) {
-          toast("Comentario creado", {
-            description: res.succes,
-          });
-        }
-      });
+          if (res.succes) {
+            toast("Comentario creado", {
+              description: res.succes,
+            });
+          }
+        })
+        .finally(() => {
+          setAddComment(false);
+          form.reset();
+        });
     });
   };
 

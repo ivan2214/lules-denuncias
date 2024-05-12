@@ -6,7 +6,6 @@ import {
   ShareIcon,
   TagIcon,
   ThumbsUpIcon,
-  TrashIcon,
   UserIcon,
 } from "lucide-react";
 import Link from "next/link";
@@ -22,6 +21,7 @@ import {ButtonOpenModalEdit} from "./components/button-open-modal-edit";
 import {Comments} from "./components/comment/comments";
 import {ButtonVotes} from "./components/vote/button-votes";
 import {ButtonChangeStatus} from "./components/button-change-status";
+import {ButtonDeleteComplaint} from "./components/button-delete-complaint";
 
 interface ComplaintPageProps {
   params: {complaintId: string};
@@ -189,10 +189,7 @@ const ComplaintPage: React.FC<ComplaintPageProps> = async ({params}) => {
                   }}
                 />
 
-                <Button className="flex items-center gap-x-2" size="sm" variant="outline">
-                  <TrashIcon className="h-4 w-4" />
-                  Delete Complaint
-                </Button>
+                <ButtonDeleteComplaint complaintId={complaint.id} />
               </div>
             ) : null}
             <div className="flex gap-2">
