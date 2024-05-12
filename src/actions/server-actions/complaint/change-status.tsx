@@ -1,6 +1,7 @@
 "use server";
 
 import {revalidatePath} from "next/cache";
+import {StatusComplaint} from "@prisma/client";
 
 import {db} from "@/lib/db";
 import {ChangeStatusSchema} from "@/schemas";
@@ -23,6 +24,7 @@ export const changeStatus = async (data: ChangeStatusFormValues) => {
         id: complaintId,
       },
       data: {
+        isResolved: status === StatusComplaint.RESOLVED,
         status,
       },
     });

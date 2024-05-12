@@ -46,9 +46,12 @@ export default async function HomePage({searchParams}: {searchParams: QueryProps
         },
       },
     },
+    orderBy: {
+      complaints: {
+        _count: "desc",
+      },
+    },
   });
-
-  console.log(categoriesMostResolved);
 
   return (
     <main className="container h-full w-full">
@@ -88,10 +91,9 @@ export default async function HomePage({searchParams}: {searchParams: QueryProps
         <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-4">
           {categoriesMostResolved
             ? categoriesMostResolved?.map((category) => (
-                <Link
+                <div
                   key={category.name}
                   className="flex flex-col gap-y-4 overflow-hidden rounded-md border shadow-md transition-shadow duration-300 hover:shadow-2xl"
-                  href={`/complaints?category=${category?.name}`}
                 >
                   <div className="h-32 w-full">
                     <img
@@ -104,7 +106,7 @@ export default async function HomePage({searchParams}: {searchParams: QueryProps
                     <h3 className="text-lg font-semibold">{category.name}</h3>
                     <Badge>{category._count.complaints} complaints</Badge>
                   </div>
-                </Link>
+                </div>
               ))
             : null}
         </div>
