@@ -93,7 +93,6 @@ export const getFilteredComplaints = async (
     if (category) {
       where.categories = {some: {name: category}};
     }
-    console.log(category);
 
     if (minPriority && maxPriority) {
       where.priority = {

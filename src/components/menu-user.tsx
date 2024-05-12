@@ -4,7 +4,7 @@ import {type User} from "next-auth";
 import {signOut} from "next-auth/react";
 
 import {Separator} from "@ui/separator";
-import {type IconProps} from "@components/icon";
+import Icon, {type IconProps} from "@components/icon";
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
 import {Button} from "@/components/ui/button";
 
@@ -23,7 +23,7 @@ const routesUser: Route[] = [
   {
     name: "Ayuda",
     icon: "badge-help",
-    href: "/help",
+    href: "/faqs",
   },
 ];
 
@@ -40,7 +40,7 @@ const MenuUser = ({user}: {user?: User}) => {
             alt="Avatar"
             className="rounded-full object-cover"
             height="35"
-            src={user?.image ?? "https://i.pravatar.cc/300"}
+            src={user?.image ?? ""}
             style={{
               aspectRatio: "35/35",
               objectFit: "cover",
@@ -62,6 +62,7 @@ const MenuUser = ({user}: {user?: User}) => {
               className="flex items-center gap-2 text-base font-light transition hover:text-primary"
               href={route.href}
             >
+              {route.icon ? <Icon name={route.icon} /> : null}
               <span>{route.name}</span>
             </Link>
           ))}

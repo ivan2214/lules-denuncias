@@ -35,10 +35,16 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                 <Link className="text-sm font-medium underline-offset-4 hover:underline" href="/">
                   Inicio
                 </Link>
-                <Link className="text-sm font-medium underline-offset-4 hover:underline" href="#">
-                  FAQs
+                <Link
+                  className="text-sm font-medium underline-offset-4 hover:underline"
+                  href="/faqs"
+                >
+                  Ayuda
                 </Link>
-                <Link className="text-sm font-medium underline-offset-4 hover:underline" href="#">
+                <Link
+                  className="text-sm font-medium underline-offset-4 hover:underline"
+                  href="/contact"
+                >
                   Contacto
                 </Link>
                 <MenuAuth />
