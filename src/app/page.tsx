@@ -1,5 +1,6 @@
 import Link from "next/link";
 import {LinkedinIcon, TwitterIcon, FacebookIcon, ShareIcon} from "lucide-react";
+import {StatusComplaint} from "@prisma/client";
 
 import {CardTitle, CardHeader, CardContent, Card, CardFooter} from "@/components/ui/card";
 import {type QueryProps, getFilteredComplaints} from "@/actions/complaints/get-filtered-complaints";
@@ -8,14 +9,49 @@ import {Badge} from "@ui/badge";
 import {ButtonOpenModal} from "@components/button-open-modal";
 import {ComplaintsHome} from "@components/complaints-home";
 import {ChartFilterHome} from "@components/chart-filter-home";
+import {db} from "@/lib/db";
 
 export default async function HomePage({searchParams}: {searchParams: QueryProps}) {
-  console.log(searchParams);
-
   const {complaints} = await getFilteredComplaints(searchParams);
 
+  const categoriesMostResolved = await db.category.findMany({
+    where: {
+      complaints: {
+        some: {
+          complaint: {
+            status: StatusComplaint.RESOLVED,
+          },
+        },
+      },
+    },
+    include: {
+      _count: {
+        select: {
+          complaints: {
+            where: {
+              complaint: {
+                status: StatusComplaint.RESOLVED,
+              },
+            },
+          },
+        },
+      },
+      complaints: {
+        select: {
+          complaint: {
+            select: {
+              images: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  console.log(categoriesMostResolved);
+
   return (
-    <main className="flex-1 ">
+    <main className="container h-full w-full">
       <section className="py-16">
         <div className="mx-auto grid max-w-[1300px] gap-4 md:grid-cols-2 md:gap-16">
           <div>
@@ -42,6 +78,36 @@ export default async function HomePage({searchParams}: {searchParams: QueryProps
       </section>
       <section className="container w-full space-y-10 border-b px-4 py-12 md:px-6 md:py-24 lg:py-32">
         <ComplaintsHome complaints={complaints} />
+      </section>
+      {/* categories most creates */}
+
+      <section className="container w-full space-y-10 border-b px-4 py-12 md:px-6 md:py-24 lg:py-32">
+        <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+          Categorías con más denuncias resueltas
+        </h2>
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-4">
+          {categoriesMostResolved
+            ? categoriesMostResolved?.map((category) => (
+                <Link
+                  key={category.name}
+                  className="flex flex-col gap-y-4 overflow-hidden rounded-md border shadow-md transition-shadow duration-300 hover:shadow-2xl"
+                  href={`/complaints?category=${category?.name}`}
+                >
+                  <div className="h-32 w-full">
+                    <img
+                      alt=""
+                      className="aspect-square h-full w-full  object-cover"
+                      src={category.complaints[0]?.complaint.images[0].url}
+                    />
+                  </div>
+                  <div className="flex items-center justify-between p-4">
+                    <h3 className="text-lg font-semibold">{category.name}</h3>
+                    <Badge>{category._count.complaints} complaints</Badge>
+                  </div>
+                </Link>
+              ))
+            : null}
+        </div>
       </section>
       <section className="w-full py-12 md:py-24 lg:py-32">
         <div className="container px-4 md:px-6">
@@ -138,7 +204,7 @@ export default async function HomePage({searchParams}: {searchParams: QueryProps
           </div>
         </div>
       </section>
-      <footer className="flex w-full shrink-0 flex-col items-center gap-2 border-t px-4 py-6 sm:flex-row md:px-6">
+      <footer className="flex w-full  flex-col items-center gap-2 border-t px-4 py-6 sm:flex-row md:px-6">
         <p className="text-xs text-gray-500 dark:text-gray-400">
           {new Date().getFullYear()} Quejas de la Comunidad. Reservados todos los derechos.
         </p>

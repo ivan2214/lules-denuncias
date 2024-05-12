@@ -53,9 +53,6 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
               </nav>
             </header>
             {children}
-            <footer className="text-center leading-[4rem] opacity-70">
-              © {new Date().getFullYear()} lules-denuncias
-            </footer>
           </AuthProvider>
         </ThemeProvider>
       </body>

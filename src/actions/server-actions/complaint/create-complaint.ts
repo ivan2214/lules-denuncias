@@ -1,6 +1,6 @@
 "use server";
 
-import {StatusComplaint} from "@prisma/client";
+import {type CategoriesOnComplaint, StatusComplaint, type Complaint} from "@prisma/client";
 
 import {db} from "@/lib/db";
 import {CreateComplainSchema} from "@/schemas";
@@ -22,17 +22,13 @@ export const createComplaint = async (values: CreateComplaimentFormValues) => {
     return {error: "Invalid fields!"};
   }
 
+  let complaint = {};
+
   if (userId && userId !== undefined && userId !== null) {
-    await db.complaint.create({
+    complaint = await db.complaint.create({
       data: {
         title,
         description,
-        categories: {
-          connectOrCreate: categoriesNames.map((category) => ({
-            where: {name: category.name},
-            create: {name: category.name},
-          })),
-        },
         images: {
           connectOrCreate: images.map((imageUrl) => ({
             where: {url: imageUrl.url},
@@ -48,16 +44,10 @@ export const createComplaint = async (values: CreateComplaimentFormValues) => {
   }
 
   if (!userId || userId === undefined || userId === null) {
-    await db.complaint.create({
+    complaint = await db.complaint.create({
       data: {
         title,
         description,
-        categories: {
-          connectOrCreate: categoriesNames.map((category) => ({
-            where: {name: category.name},
-            create: {name: category.name},
-          })),
-        },
         images: {
           connectOrCreate: images.map((imageUrl) => ({
             where: {url: imageUrl.url},
@@ -70,6 +60,47 @@ export const createComplaint = async (values: CreateComplaimentFormValues) => {
       },
     });
   }
+
+  const isAlreadyCreatedCategoryOnComplaint = await db.categoriesOnComplaint.findMany({
+    where: {
+      Category: {
+        name: {
+          in: categoriesNames.map((category) => category.name),
+        },
+      },
+    },
+  });
+
+  const isAlreadyCreatedCategory = await db.category.findMany({
+    where: {
+      name: {
+        in: categoriesNames.map((category) => category.name),
+      },
+    },
+  });
+
+  if (!isAlreadyCreatedCategoryOnComplaint.length && !isAlreadyCreatedCategory.length) {
+    await db.category.createMany({
+      data: categoriesNames.map((category) => ({
+        name: category.name,
+      })),
+    });
+  }
+
+  const categories = await db.category.findMany({
+    where: {
+      name: {
+        in: categoriesNames.map((category) => category.name),
+      },
+    },
+  });
+
+  await db.categoriesOnComplaint.createMany({
+    data: categories.map((category) => ({
+      complaintId: (complaint as Complaint).id,
+      categoryId: category.id,
+    })),
+  });
 
   return {success: "Complaint created successfully!"};
 };

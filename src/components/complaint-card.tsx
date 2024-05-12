@@ -23,8 +23,6 @@ interface ComplaintCardProps {
 }
 
 export const ComplaintCard: React.FC<ComplaintCardProps> = ({complaint}) => {
-  console.log(complaint.categories);
-
   const creatorName = (user: ComplaintExtends["user"]) => {
     if (user) {
       return user.name || user.username || "Anónimo";
