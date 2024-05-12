@@ -44,7 +44,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
               <ModeToggle />
             </nav>
           </header>
-          <main>{children}</main>
+          {children}
           <footer className="text-center leading-[4rem] opacity-70">
             © {new Date().getFullYear()} lules-denuncias
           </footer>
