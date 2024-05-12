@@ -1,5 +1,7 @@
 import type {ComplaintExtends} from "@/actions/complaints/get-filtered-complaints";
 
+import {auth} from "auth";
+
 import {Comment} from "./comment";
 import {CommentForm} from "./comment-form";
 
@@ -8,8 +10,9 @@ interface CommentsProps {
   isAuthorComplaint?: boolean;
 }
 
-export const Comments: React.FC<CommentsProps> = ({complaint, isAuthorComplaint}) => {
-  const userId = 1;
+export const Comments: React.FC<CommentsProps> = async ({complaint, isAuthorComplaint}) => {
+  const session = await auth();
+  const userId = session?.user?.id;
 
   return (
     <div className="space-y-4">

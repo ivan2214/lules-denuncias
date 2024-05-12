@@ -26,7 +26,6 @@ export const CommentForm: React.FC<CommentFormProps> = ({complaintId}) => {
 
   const defaultValues: CreateCommentFormValues = {
     text: "",
-    authorId: undefined,
     complaintId,
   };
 

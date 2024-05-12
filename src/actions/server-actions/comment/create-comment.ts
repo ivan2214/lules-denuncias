@@ -4,20 +4,23 @@ import {revalidatePath} from "next/cache";
 import {db} from "@/lib/db";
 import {CreateCommentSchema} from "@/schemas";
 import {type CreateCommentFormValues} from "@/app/(routes)/complaint/[complaintId]/components/comment/comment-form";
+import {auth} from "auth";
 
 export const createComment = async (values: CreateCommentFormValues) => {
+  const session = await auth();
+  const authorId = session?.user?.id;
   const validatedFields = CreateCommentSchema.safeParse(values);
 
   if (!validatedFields.success) {
     return {error: "Algo salio mal!"};
   }
 
-  const {text, complaintId, authorId} = validatedFields.data;
+  const {text, complaintId} = validatedFields.data;
 
   if (!complaintId) return {error: "Algo salio mal!"};
 
   try {
-    if (!authorId || authorId === undefined || authorId === null || authorId === 0) {
+    if (!authorId || authorId === undefined || authorId === null) {
       await db.comment.create({
         data: {
           text,
@@ -27,7 +30,7 @@ export const createComment = async (values: CreateCommentFormValues) => {
       });
     }
 
-    if (authorId && authorId !== undefined && authorId !== null && authorId !== 0) {
+    if (authorId && authorId !== undefined && authorId !== null) {
       await db.comment.create({
         data: {
           text,

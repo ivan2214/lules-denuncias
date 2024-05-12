@@ -5,21 +5,24 @@ import {StatusComplaint} from "@prisma/client";
 import {db} from "@/lib/db";
 import {CreateComplainSchema} from "@/schemas";
 import {type CreateComplaimentFormValues} from "@/components/complaint/complaint-form";
+import {auth} from "auth";
 
 export const createComplaint = async (values: CreateComplaimentFormValues) => {
+  const session = await auth();
+  const userId = session?.user?.id;
   const validatedFields = CreateComplainSchema.safeParse(values);
 
   if (!validatedFields.success) {
     return {error: "Invalid fields!"};
   }
 
-  const {description, title, address, categoriesNames, images, userId} = validatedFields.data;
+  const {description, title, address, categoriesNames, images} = validatedFields.data;
 
   if (!description || !title || !address || !categoriesNames || !images) {
     return {error: "Invalid fields!"};
   }
 
-  if (userId && userId > 0 && userId !== undefined && userId !== null) {
+  if (userId && userId !== undefined && userId !== null) {
     await db.complaint.create({
       data: {
         title,
@@ -44,7 +47,7 @@ export const createComplaint = async (values: CreateComplaimentFormValues) => {
     });
   }
 
-  if (!userId || userId === 0 || userId === undefined || userId === null || userId < 0) {
+  if (!userId || userId === undefined || userId === null) {
     await db.complaint.create({
       data: {
         title,

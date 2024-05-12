@@ -24,7 +24,6 @@ export const ButtonActionsComments: React.FC<ButtonActionsCommentsProps> = ({com
   const form = useForm<CommentActionFormValues>({
     resolver: zodResolver(CommentActionSchema),
     defaultValues: {
-      authorId: comment.authorId ?? undefined,
       commentId: comment.id,
       complaintId: comment.complaintId,
     },
@@ -51,8 +50,6 @@ export const ButtonActionsComments: React.FC<ButtonActionsCommentsProps> = ({com
         type="button"
         variant="ghost"
         onClick={() => {
-          console.log("like");
-
           form.setValue("action", "like");
 
           onSubmit(form.getValues());
@@ -70,8 +67,6 @@ export const ButtonActionsComments: React.FC<ButtonActionsCommentsProps> = ({com
         type="button"
         variant="ghost"
         onClick={() => {
-          console.log("dislike");
-
           form.setValue("action", "unlike");
 
           onSubmit(form.getValues());

@@ -17,6 +17,7 @@ import {db} from "@/lib/db";
 import {type ComplaintExtends} from "@/actions/complaints/get-filtered-complaints";
 import ImageSkeleton from "@/components/image-skeleton";
 import {type CreateComplaimentFormValues} from "@/components/complaint/complaint-form";
+import {auth} from "auth";
 
 import {ButtonOpenModalEdit} from "./components/button-open-modal-edit";
 import {Comments} from "./components/comment/comments";
@@ -27,7 +28,8 @@ interface ComplaintPageProps {
 }
 
 const ComplaintPage: React.FC<ComplaintPageProps> = async ({params}) => {
-  const userId = "as";
+  const session = await auth();
+  const userId = session?.user?.id;
   const {complaintId} = params;
 
   const complaint: ComplaintExtends | null = await db.complaint.findUnique({
@@ -50,6 +52,8 @@ const ComplaintPage: React.FC<ComplaintPageProps> = async ({params}) => {
     },
   });
 
+  console.log(complaint?.user);
+
   if (!complaint) {
     return <div>Complaint not found</div>;
   }
@@ -68,6 +72,14 @@ const ComplaintPage: React.FC<ComplaintPageProps> = async ({params}) => {
     })),
   };
 
+  const creatorName = (user: ComplaintExtends["user"]) => {
+    if (user) {
+      return user.name || user.username || "Anónimo";
+    }
+
+    return "Anónimo";
+  };
+
   return (
     <main className="p-12">
       <div className="mx-auto max-w-4xl">
@@ -75,7 +87,8 @@ const ComplaintPage: React.FC<ComplaintPageProps> = async ({params}) => {
           <div>
             <h1 className="text-3xl font-bold">{complaint.title}</h1>
             <p className="text-gray-500 dark:text-gray-400">
-              Creado el {new Date(complaint.createdAt).toLocaleDateString()}
+              Repordado por {creatorName(complaint.user)} el{" "}
+              {new Date(complaint.createdAt).toLocaleDateString()}
             </p>
           </div>
           <div className="prose prose-gray dark:prose-invert">

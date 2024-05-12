@@ -3,17 +3,19 @@ import {revalidatePath} from "next/cache";
 
 import {db} from "@/lib/db";
 import {CommentActionSchema} from "@/schemas";
-
-import {type CommentActionFormValues} from "@/app/(routes)/complaint/[complaintId]/components/button-actions-comments";
+import {type CommentActionFormValues} from "@/app/(routes)/complaint/[complaintId]/components/comment/button-actions-comments";
+import {auth} from "auth";
 
 export const actionsComment = async (values: CommentActionFormValues) => {
+  const session = await auth();
+  const authorId = session?.user?.id;
   const validatedFields = CommentActionSchema.safeParse(values);
 
   if (!validatedFields.success) {
     return {error: "Algo salio mal!"};
   }
 
-  const {commentId, action, complaintId, authorId} = validatedFields.data;
+  const {commentId, action, complaintId} = validatedFields.data;
 
   try {
     const comment = await db.comment.findUnique({
@@ -28,53 +30,19 @@ export const actionsComment = async (values: CommentActionFormValues) => {
 
     if (!complaintId) return {error: "Algo salio mal!"};
 
-    if (
-      !authorId ||
-      authorId === undefined ||
-      authorId === null ||
-      (authorId === 0 && action === "like")
-    ) {
-      await db.comment.update({
-        where: {
-          id: commentId,
-        },
-        data: {
-          likes: {
-            increment: 1,
-          },
-          anonymous: true,
-          complaintId,
-        },
-      });
+    //verificar que no puedo darme me gusta a mi mismo
+
+    if (authorId === comment.authorId) return {error: "No puedes dar like a tu propio comentario"};
+
+    //verificar que no pueda dar like a un comentario ya dado like por el mismo usuario
+
+    if (comment.authorId === authorId) return {error: "No puedes dar like a tu propio comentario"};
+
+    if (!authorId || authorId === undefined || authorId === null) {
+      return {error: "Debe iniciar sesion para realizar esta accion!"};
     }
 
-    if (
-      !authorId ||
-      authorId === undefined ||
-      authorId === null ||
-      (authorId === 0 && action === "unlike")
-    ) {
-      await db.comment.update({
-        where: {
-          id: commentId,
-        },
-        data: {
-          likes: {
-            decrement: 1,
-          },
-          anonymous: true,
-          complaintId,
-        },
-      });
-    }
-
-    if (
-      action === "like" &&
-      authorId &&
-      authorId !== undefined &&
-      authorId !== null &&
-      authorId !== 0
-    ) {
+    if (action === "like" && authorId && authorId !== undefined && authorId !== null) {
       await db.comment.update({
         where: {
           id: commentId,
@@ -89,13 +57,7 @@ export const actionsComment = async (values: CommentActionFormValues) => {
       });
     }
 
-    if (
-      action === "unlike" &&
-      authorId &&
-      authorId !== undefined &&
-      authorId !== null &&
-      authorId !== 0
-    ) {
+    if (action === "unlike" && authorId && authorId !== undefined && authorId !== null) {
       await db.comment.update({
         where: {
           id: commentId,

@@ -17,7 +17,9 @@ export const Comment: React.FC<CommentProps> = ({comment, isAuthorComment, isAut
     ? "https://github.com/shadcn.png"
     : comment?.author?.image ?? "https://github.com/shadcn.png";
 
-  const avatarName = isAnonymous ? "Anónimo" : comment?.author?.username ?? "Anónimo";
+  const avatarName = isAnonymous
+    ? "Anónimo"
+    : comment?.author?.username || comment?.author?.name || "Anónimo";
 
   const userReputation: number | undefined = comment?.author?.reputation ?? 0;
 

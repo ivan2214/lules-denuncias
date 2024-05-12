@@ -52,10 +52,11 @@ model User {
   image         String?
   reputation    Int?      @default(0)
 
-  complaints Complaint[]
-  comments   Comment[]
-  votes      Vote[]
-  accounts   Account[]
+  complaints  Complaint[]
+  comments    Comment[]
+  votes       Vote[]
+  accounts    Account[]
+  LikeComment LikeComment[]
 }
 
 model Complaint {
@@ -74,10 +75,11 @@ model Complaint {
   user   User?   @relation(fields: [userId], references: [id])
   userId String?
 
-  comments   Comment[]
-  votes      Vote[]
-  categories Category[]
-  images     Image[]
+  comments    Comment[]
+  votes       Vote[]
+  categories  Category[]
+  images      Image[]
+  LikeComment LikeComment[]
 
   @@index([userId])
 }
@@ -96,15 +98,29 @@ model Comment {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  text      String
-  anonymous Boolean? @default(false)
-  likes     Int      @default(0)
+  text String
+
+  author      User?         @relation(fields: [authorId], references: [id])
+  authorId    String?
+  complaint   Complaint     @relation(fields: [complaintId], references: [id])
+  complaintId Int
+  LikeComment LikeComment[]
+
+  @@index([complaintId])
+  @@index([authorId])
+}
+
+model LikeComment {
+  id Int @id @default(autoincrement())
 
   author      User?     @relation(fields: [authorId], references: [id])
   authorId    String?
   complaint   Complaint @relation(fields: [complaintId], references: [id])
   complaintId Int
+  comment     Comment?  @relation(fields: [commentId], references: [id])
+  commentId   Int
 
+  @@index([commentId])
   @@index([complaintId])
   @@index([authorId])
 }
