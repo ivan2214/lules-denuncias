@@ -1,5 +1,5 @@
 import {faker} from "@faker-js/faker";
-import {type Complaint, StatusComplaint} from "@prisma/client";
+import {type Complaint, StatusComplaint, LikeCommentType} from "@prisma/client";
 import bcrypt from "bcryptjs";
 
 import {db} from "../src/lib/db";
@@ -115,7 +115,7 @@ export const createManyComplaints = async () => {
 
   // Quejas y comentarios
   for (const complaintData of complaintsData) {
-    const anonymous = faker.datatype.boolean();
+    const anonymousPost = faker.datatype.boolean();
     // Seleccionamos un conjunto aleatorio de categorías
     const randomCategories = faker.helpers
       .shuffle(categories)
@@ -138,7 +138,7 @@ export const createManyComplaints = async () => {
 
     let complaint: Complaint | null = null;
 
-    if (!anonymous) {
+    if (!anonymousPost) {
       complaint = await db.complaint.create({
         data: {
           title: complaintData.title,
@@ -181,7 +181,7 @@ export const createManyComplaints = async () => {
       });
     }
 
-    if (anonymous) {
+    if (anonymousPost) {
       complaint = await db.complaint.create({
         data: {
           title: complaintData.title,
@@ -221,31 +221,64 @@ export const createManyComplaints = async () => {
 
     // Comentarios
     const randomComments = faker.number.int({min: 0, max: 20});
+    let comment;
 
     for (let i = 0; i < randomComments; i++) {
-      if (anonymous && complaint?.id) {
-        await db.comment.create({
+      const anonymousComment = faker.datatype.boolean();
+
+      if (anonymousComment && complaint?.id) {
+        comment = await db.comment.create({
           data: {
             text: faker.lorem.paragraphs(3),
-            anonymous,
+            anonymous: anonymousComment,
             complaintId: complaint?.id,
-            likes: faker.number.int({min: 0, max: 55}),
           },
         });
       }
 
-      if (!anonymous && complaint?.id) {
-        await db.comment.create({
+      if (!anonymousComment && complaint?.id) {
+        comment = await db.comment.create({
           data: {
             text: faker.lorem.paragraphs(3),
             authorId: users[Math.floor(Math.random() * users.length)].id,
             complaintId: complaint?.id,
-            likes: faker.number.int({min: 0, max: 55}),
           },
         });
       }
 
       console.log(`Comentario ${i.toString()}/${randomComments.toString()}`);
+      console.log("*-------------------------------------------*");
+    }
+
+    // likes
+
+    const randomLikes = faker.number.int({min: 1, max: 55}); // Número aleatorio de likes
+    const typeCommentLike = faker.helpers.arrayElement([
+      LikeCommentType.LIKE,
+      LikeCommentType.UNLIKE,
+    ]);
+
+    for (let i = 0; i < randomLikes; i++) {
+      const userLikeId = users[Math.floor(Math.random() * users.length)].id;
+      // verificar que no se haya dado like anteriormente a ese comentario con el mismo usuario
+      const likeCommentByUser = await db.likeComment.findFirst({
+        where: {
+          commentId: comment?.id,
+          userLikeId,
+        },
+      });
+
+      if (!anonymousPost && comment?.id && !likeCommentByUser) {
+        await db.likeComment.create({
+          data: {
+            type: typeCommentLike === "LIKE" ? LikeCommentType.LIKE : LikeCommentType.UNLIKE,
+            commentId: comment?.id,
+            userLikeId,
+          },
+        });
+      }
+
+      console.log(`Like ${i.toString()}/${randomLikes.toString()}`);
       console.log("*-------------------------------------------*");
     }
 

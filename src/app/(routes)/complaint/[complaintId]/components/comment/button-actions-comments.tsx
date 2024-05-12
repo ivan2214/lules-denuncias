@@ -25,7 +25,6 @@ export const ButtonActionsComments: React.FC<ButtonActionsCommentsProps> = ({com
     resolver: zodResolver(CommentActionSchema),
     defaultValues: {
       commentId: comment.id,
-      complaintId: comment.complaintId,
     },
   });
 
@@ -57,7 +56,9 @@ export const ButtonActionsComments: React.FC<ButtonActionsCommentsProps> = ({com
       >
         <ThumbsUpIcon className="h-4 w-4" />
         <span className="sr-only">Like</span>
-        {comment.likes >= 0 && comment.likes}
+        {comment?.likeComments && comment?.likeComments?.length >= 0
+          ? comment?.likeComments?.length
+          : null}
       </Button>
 
       <Button

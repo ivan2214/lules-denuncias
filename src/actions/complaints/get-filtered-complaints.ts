@@ -6,6 +6,7 @@ import {
   type Vote,
   type Image,
   type StatusComplaint,
+  type LikeComment,
 } from "@prisma/client";
 
 import {db} from "@/lib/db";
@@ -62,6 +63,7 @@ interface WhereClause {
 
 export interface CommentExtends extends Comment {
   author?: User | null;
+  likeComments?: LikeComment[];
 }
 
 export interface ComplaintExtends extends Complaint {

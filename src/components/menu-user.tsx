@@ -2,9 +2,9 @@
 import Link from "next/link";
 import {type User} from "next-auth";
 import {signOut} from "next-auth/react";
+
 import {Separator} from "@ui/separator";
 import {type IconProps} from "@components/icon";
-
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
 import {Button} from "@/components/ui/button";
 

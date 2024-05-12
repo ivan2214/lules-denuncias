@@ -52,11 +52,11 @@ model User {
   image         String?
   reputation    Int?      @default(0)
 
-  complaints  Complaint[]
-  comments    Comment[]
-  votes       Vote[]
-  accounts    Account[]
-  LikeComment LikeComment[]
+  complaints   Complaint[]
+  comments     Comment[]
+  votes        Vote[]
+  accounts     Account[]
+  likeComments LikeComment[]
 }
 
 model Complaint {
@@ -75,11 +75,10 @@ model Complaint {
   user   User?   @relation(fields: [userId], references: [id])
   userId String?
 
-  comments    Comment[]
-  votes       Vote[]
-  categories  Category[]
-  images      Image[]
-  LikeComment LikeComment[]
+  comments   Comment[]
+  votes      Vote[]
+  categories Category[]
+  images     Image[]
 
   @@index([userId])
 }
@@ -98,13 +97,14 @@ model Comment {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  text String
+  text      String
+  anonymous Boolean? @default(false)
 
-  author      User?         @relation(fields: [authorId], references: [id])
-  authorId    String?
-  complaint   Complaint     @relation(fields: [complaintId], references: [id])
-  complaintId Int
-  LikeComment LikeComment[]
+  author       User?         @relation(fields: [authorId], references: [id])
+  authorId     String?
+  complaint    Complaint     @relation(fields: [complaintId], references: [id])
+  complaintId  Int
+  likeComments LikeComment[]
 
   @@index([complaintId])
   @@index([authorId])
@@ -113,16 +113,16 @@ model Comment {
 model LikeComment {
   id Int @id @default(autoincrement())
 
-  author      User?     @relation(fields: [authorId], references: [id])
-  authorId    String?
-  complaint   Complaint @relation(fields: [complaintId], references: [id])
-  complaintId Int
-  comment     Comment?  @relation(fields: [commentId], references: [id])
-  commentId   Int
+  type LikeCommentType
+
+  userLike   User   @relation(fields: [userLikeId], references: [id])
+  userLikeId String
+
+  comment   Comment @relation(fields: [commentId], references: [id])
+  commentId Int
 
   @@index([commentId])
-  @@index([complaintId])
-  @@index([authorId])
+  @@index([userLikeId])
 }
 
 model Vote {
@@ -153,4 +153,9 @@ enum StatusComplaint {
   RESOLVED
   UNRESOLVED
   PENDING
+}
+
+enum LikeCommentType {
+  LIKE
+  UNLIKE
 }
