@@ -1,5 +1,4 @@
 import {
-  CheckIcon,
   ClockIcon,
   FlagIcon,
   LocateIcon,
@@ -77,10 +76,6 @@ const ComplaintPage: React.FC<ComplaintPageProps> = async ({params}) => {
     }
 
     return "Anónimo";
-  };
-
-  const statusValues = {
-    status: complaint.status,
   };
 
   return (
@@ -163,7 +158,7 @@ const ComplaintPage: React.FC<ComplaintPageProps> = async ({params}) => {
               <div className="flex items-center gap-2">
                 <FlagIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />
                 <span className="text-sm font-medium">Estado:</span>
-                <span className="text-sm text-gray-500 dark:text-gray-400">Open</span>
+                <span className="text-sm text-gray-500 dark:text-gray-400">{complaint.status}</span>
               </div>
               <div className="flex items-center gap-2">
                 <ThumbsUpIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />
@@ -186,7 +181,13 @@ const ComplaintPage: React.FC<ComplaintPageProps> = async ({params}) => {
             {isAuthorComplaint ? (
               <div className="flex gap-2">
                 <ButtonOpenModalEdit complaintId={complaint.id} values={values} />
-                <ButtonChangeStatus complaintId={complaint.id} values={statusValues.status} />
+                <ButtonChangeStatus
+                  complaintId={complaint.id}
+                  values={{
+                    complaintId: complaint.id,
+                    status: complaint.status,
+                  }}
+                />
 
                 <Button className="flex items-center gap-x-2" size="sm" variant="outline">
                   <TrashIcon className="h-4 w-4" />

@@ -57,4 +57,5 @@ export const ChangeStatusSchema = z.object({
     StatusComplaint.RESOLVED,
     StatusComplaint.UNRESOLVED,
   ]),
+  complaintId: z.coerce.number().min(1),
 });

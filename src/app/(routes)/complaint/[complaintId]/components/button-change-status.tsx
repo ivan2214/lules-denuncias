@@ -1,10 +1,32 @@
 "use client";
 
-import {CheckIcon} from "lucide-react";
+import type * as z from "zod";
 
-import {Button} from "@/components/ui/button";
-import {useChangeStatusModal} from "@/store/use-change-status-modal";
-import {type ChangeStatusFormValues} from "@/components/complaint/change-status-form";
+import {useTransition} from "react";
+import {useForm} from "react-hook-form";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {StatusComplaint} from "@prisma/client";
+
+import {ChangeStatusSchema} from "@/schemas";
+import {Form, FormControl, FormField, FormItem, FormMessage} from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+export type ChangeStatusFormValues = z.infer<typeof ChangeStatusSchema>;
+
+const statuses: StatusComplaint[] = [
+  StatusComplaint.CLOSED,
+  StatusComplaint.IN_PROGRESS,
+  StatusComplaint.OPEN,
+  StatusComplaint.PENDING,
+  StatusComplaint.RESOLVED,
+  StatusComplaint.UNRESOLVED,
+];
 
 interface ButtonChangeStatusProps {
   complaintId: number;
@@ -12,17 +34,60 @@ interface ButtonChangeStatusProps {
 }
 
 export const ButtonChangeStatus: React.FC<ButtonChangeStatusProps> = ({complaintId, values}) => {
-  const {openChangeStatus} = useChangeStatusModal();
+  const [isPending, startTransition] = useTransition();
+
+  const defaultValues: ChangeStatusFormValues = {
+    complaintId: complaintId,
+    status: values.status || "PENDING",
+  };
+
+  const form = useForm<ChangeStatusFormValues>({
+    resolver: zodResolver(ChangeStatusSchema),
+    defaultValues,
+  });
+
+  function onSubmit(data: ChangeStatusFormValues) {
+    startTransition(() => {
+      console.log(data);
+    });
+  }
 
   return (
-    <Button
-      className="flex items-center gap-x-2"
-      size="sm"
-      variant="outline"
-      onClick={() => openChangeStatus(complaintId, values)}
-    >
-      <CheckIcon className="h-4 w-4" />
-      Change Status
-    </Button>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <FormField
+          control={form.control}
+          name="status"
+          render={({field}) => (
+            <FormItem>
+              <Select
+                defaultValue={field.value}
+                onValueChange={(value: StatusComplaint) => {
+                  field.onChange(value);
+
+                  form.handleSubmit(onSubmit)();
+                }}
+              >
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Status" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {statuses.map((status) => {
+                    return (
+                      <SelectItem key={status} disabled={isPending} value={status}>
+                        {status}
+                      </SelectItem>
+                    );
+                  })}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </form>
+    </Form>
   );
 };
