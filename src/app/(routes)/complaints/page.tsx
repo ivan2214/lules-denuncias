@@ -4,8 +4,9 @@ import {Separator} from "@/components/ui/separator";
 import {SearchBar} from "@/components/search-bar";
 import SearchBarFallback from "@/components/fallbacks/search-bar-fallback";
 import {type QueryProps, getFilteredComplaints} from "@/actions/complaints/get-filtered-complaints";
-import {ComplaintArticle} from "@/components/complaint-article";
 import {QueryComponent} from "@/app/(routes)/complaints/components/query-component";
+import {ComplaintCard} from "@/components/complaint-card";
+import {ComplaintArticle} from "@/components/complaint-article";
 
 export default async function ComplaintsPage({searchParams}: {searchParams?: QueryProps}) {
   const {complaints} = await getFilteredComplaints(searchParams);
@@ -31,14 +32,9 @@ export default async function ComplaintsPage({searchParams}: {searchParams?: Que
 
         <Separator className="my-4" />
 
-        <section className="grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] place-items-center gap-10">
+        <section className="mx-auto grid max-w-7xl grid-cols-1 gap-6 p-4 md:grid-cols-2 md:p-6 lg:grid-cols-3 xl:grid-cols-4">
           {complaints.map((complaint) => (
-            <ComplaintArticle
-              key={complaint.id}
-              aspectRatio="portrait"
-              className="w-[250px]"
-              complaint={complaint}
-            />
+            <ComplaintArticle key={complaint.id} complaint={complaint} />
           ))}
         </section>
       </section>

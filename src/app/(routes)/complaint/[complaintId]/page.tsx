@@ -136,7 +136,7 @@ const ComplaintPage: React.FC<ComplaintPageProps> = async ({params}) => {
                 <UserIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />
                 <span className="text-sm font-medium">Creado por:</span>
                 <Link className="text-sm text-blue-600 hover:underline dark:text-blue-400" href="#">
-                  {complaint.user?.username}
+                  {creatorName(complaint.user)}
                 </Link>
               </div>
               <div className="flex items-center gap-2">

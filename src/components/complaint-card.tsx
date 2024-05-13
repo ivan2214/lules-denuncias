@@ -22,15 +22,15 @@ interface ComplaintCardProps {
   complaint: ComplaintExtends;
 }
 
+export const creatorName = (user: ComplaintExtends["user"]) => {
+  if (user) {
+    return user.name || user.username || "Anónimo";
+  }
+
+  return "Anónimo";
+};
+
 export const ComplaintCard: React.FC<ComplaintCardProps> = ({complaint}) => {
-  const creatorName = (user: ComplaintExtends["user"]) => {
-    if (user) {
-      return user.name || user.username || "Anónimo";
-    }
-
-    return "Anónimo";
-  };
-
   if (!complaint.images.length) {
     return (
       <Card key={complaint.id} className="relative h-fit">
