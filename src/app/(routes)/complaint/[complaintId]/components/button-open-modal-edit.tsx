@@ -1,18 +1,18 @@
-"use client";
+"use client"
 
-import {PencilIcon} from "lucide-react";
+import {PencilIcon} from "lucide-react"
 
-import {Button} from "@/components/ui/button";
-import {useCreateComplaimentModal} from "@/store/use-create-complaint-modal";
-import {type CreateComplaimentFormValues} from "@/components/complaint/complaint-form";
+import {Button} from "@/components/ui/button"
+import {useCreateComplaimentModal} from "@/store/use-create-complaint-modal"
+import {type CreateComplaimentFormValues} from "@/components/complaint/complaint-form"
 
 interface ButtonOpenModalEditProps {
-  complaintId: number;
-  values: CreateComplaimentFormValues;
+  complaintId: number
+  values: CreateComplaimentFormValues
 }
 
 export const ButtonOpenModalEdit: React.FC<ButtonOpenModalEditProps> = ({complaintId, values}) => {
-  const {openEditModal} = useCreateComplaimentModal();
+  const {openEditModal} = useCreateComplaimentModal()
 
   return (
     <Button
@@ -24,5 +24,5 @@ export const ButtonOpenModalEdit: React.FC<ButtonOpenModalEditProps> = ({complai
       <PencilIcon className="h-4 w-4" />
       Edit Complaint
     </Button>
-  );
-};
+  )
+}

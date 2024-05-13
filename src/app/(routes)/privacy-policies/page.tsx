@@ -86,7 +86,7 @@ const PrivacyPoliciesPage = () => {
         </p>
       </div>
     </main>
-  );
-};
+  )
+}
 
-export default PrivacyPoliciesPage;
+export default PrivacyPoliciesPage

@@ -1,13 +1,13 @@
-"use client";
-import Link from "next/link";
-import {usePathname, useRouter, useSearchParams} from "next/navigation";
-import {Suspense} from "react";
-import {type Category} from "@prisma/client";
+"use client"
+import Link from "next/link"
+import {usePathname, useRouter, useSearchParams} from "next/navigation"
+import {Suspense} from "react"
+import {type Category} from "@prisma/client"
 
-import {cn, createUrl} from "@/lib/utils";
-import {SearchBar} from "@components/search-bar";
-import SearchBarFallback from "@components/fallbacks/search-bar-fallback";
-import AuthButtons from "@/components/auth-options";
+import {cn, createUrl} from "@/lib/utils"
+import {SearchBar} from "@components/search-bar"
+import SearchBarFallback from "@components/fallbacks/search-bar-fallback"
+import AuthButtons from "@/components/auth-options"
 import {
   Menubar,
   MenubarContent,
@@ -18,10 +18,10 @@ import {
   MenubarSubContent,
   MenubarSubTrigger,
   MenubarTrigger,
-} from "@/components/ui/menubar";
-import MenuUser, {type ExtendsUser} from "@components/menu-user";
-import {ButtonOpenModal} from "@components/button-open-modal";
-import ModeToggle from "@components/mode-toggle";
+} from "@/components/ui/menubar"
+import MenuUser, {type ExtendsUser} from "@components/menu-user"
+import {ButtonOpenModal} from "@components/button-open-modal"
+import ModeToggle from "@components/mode-toggle"
 
 const filterOptions = [
   {
@@ -49,7 +49,7 @@ const filterOptions = [
     name: "Mas vendidos",
     value: "most_sold",
   },
-];
+]
 
 const sortOptions = [
   {
@@ -64,61 +64,61 @@ const sortOptions = [
     name: "De mas popular a menos",
     value: "most_popular",
   },
-];
+]
 
 export function Menu({categories, user}: {categories?: Category[]; user?: ExtendsUser | null}) {
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const selectedCategories = searchParams.get("categories")?.split(",") ?? [];
-  const selectedSortValues = searchParams.get("sort")?.split(",");
-  const selectedFilterValues = searchParams.get("filter");
-  const router = useRouter();
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+  const selectedCategories = searchParams.get("categories")?.split(",") ?? []
+  const selectedSortValues = searchParams.get("sort")?.split(",")
+  const selectedFilterValues = searchParams.get("filter")
+  const router = useRouter()
 
   const handleCategoryClick = (categoryValue: string) => {
-    const newParams = new URLSearchParams(searchParams?.toString());
-    const updatedCategories = [...selectedCategories];
-    const categoryIndex = updatedCategories.indexOf(categoryValue);
+    const newParams = new URLSearchParams(searchParams?.toString())
+    const updatedCategories = [...selectedCategories]
+    const categoryIndex = updatedCategories.indexOf(categoryValue)
 
     if (categoryIndex === -1) {
-      updatedCategories.push(categoryValue);
+      updatedCategories.push(categoryValue)
     } else {
-      updatedCategories.splice(categoryIndex, 1);
+      updatedCategories.splice(categoryIndex, 1)
     }
 
     if (updatedCategories.length > 0) {
-      newParams.set("categories", updatedCategories.map((category) => category).join(","));
+      newParams.set("categories", updatedCategories.map((category) => category).join(","))
     } else {
-      newParams.delete("categories");
+      newParams.delete("categories")
     }
 
-    const includesOfferPage = pathname?.includes("complaints");
-    const pathNameDefined = !includesOfferPage ? `/complaints${pathname}` : pathname;
+    const includesOfferPage = pathname?.includes("complaints")
+    const pathNameDefined = !includesOfferPage ? `/complaints${pathname}` : pathname
 
-    router.push(createUrl(pathNameDefined, newParams));
-    router.refresh();
-  };
+    router.push(createUrl(pathNameDefined, newParams))
+    router.refresh()
+  }
 
   const handleSortClick = (sortValue: string) => {
-    const newParams = new URLSearchParams(searchParams?.toString());
+    const newParams = new URLSearchParams(searchParams?.toString())
 
-    newParams.set("sort", sortValue);
-    const includesOfferPage = pathname?.includes("complaints");
-    const pathNameDefined = !includesOfferPage ? `/complaints${pathname}` : pathname;
+    newParams.set("sort", sortValue)
+    const includesOfferPage = pathname?.includes("complaints")
+    const pathNameDefined = !includesOfferPage ? `/complaints${pathname}` : pathname
 
-    router.push(createUrl(pathNameDefined, newParams));
-    router.refresh();
-  };
+    router.push(createUrl(pathNameDefined, newParams))
+    router.refresh()
+  }
 
   const handleFilterClick = (filterValue: string) => {
-    const newParams = new URLSearchParams(searchParams?.toString());
+    const newParams = new URLSearchParams(searchParams?.toString())
 
-    newParams.set("filter", filterValue);
-    const includesOfferPage = pathname?.includes("complaints");
-    const pathNameDefined = !includesOfferPage ? `/complaints${pathname}` : pathname;
+    newParams.set("filter", filterValue)
+    const includesOfferPage = pathname?.includes("complaints")
+    const pathNameDefined = !includesOfferPage ? `/complaints${pathname}` : pathname
 
-    router.push(createUrl(pathNameDefined, newParams));
-    router.refresh();
-  };
+    router.push(createUrl(pathNameDefined, newParams))
+    router.refresh()
+  }
 
   return (
     <Menubar className="container flex w-full items-center justify-between rounded-none border-b border-none px-2 py-8 lg:px-4">
@@ -145,7 +145,7 @@ export function Menu({categories, user}: {categories?: Category[]; user?: Extend
                         "underline decoration-primary underline-offset-4",
                     )}
                     onClick={() => {
-                      handleFilterClick(filter.value);
+                      handleFilterClick(filter.value)
                     }}
                   >
                     {filter.name}
@@ -167,7 +167,7 @@ export function Menu({categories, user}: {categories?: Category[]; user?: Extend
                         "underline decoration-primary underline-offset-4",
                     )}
                     onClick={() => {
-                      handleSortClick(sort.value);
+                      handleSortClick(sort.value)
                     }}
                   >
                     {sort.name}
@@ -188,7 +188,7 @@ export function Menu({categories, user}: {categories?: Category[]; user?: Extend
                         "underline decoration-primary underline-offset-4",
                     )}
                     onClick={() => {
-                      handleCategoryClick(category.name);
+                      handleCategoryClick(category.name)
                     }}
                   >
                     {category.name}
@@ -199,7 +199,7 @@ export function Menu({categories, user}: {categories?: Category[]; user?: Extend
           </MenubarContent>
         </MenubarMenu>
       </div>
-      <section className="flex items-center gap-2">
+      <section className="hidden items-center gap-2 md:flex">
         <Suspense fallback={<SearchBarFallback />}>
           <SearchBar />
         </Suspense>
@@ -209,5 +209,5 @@ export function Menu({categories, user}: {categories?: Category[]; user?: Extend
         <ModeToggle />
       </section>
     </Menubar>
-  );
+  )
 }

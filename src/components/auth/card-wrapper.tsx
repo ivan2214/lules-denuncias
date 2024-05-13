@@ -1,14 +1,14 @@
-import {Card, CardContent, CardFooter, CardHeader} from "@ui/card";
-import {Header} from "@/components/auth/header";
-import {Social} from "@/components/auth/social";
-import {BackButton} from "@/components/auth/back-button";
+import {Card, CardContent, CardFooter, CardHeader} from "@ui/card"
+import {Header} from "@/components/auth/header"
+import {Social} from "@/components/auth/social"
+import {BackButton} from "@/components/auth/back-button"
 
 interface CardWrapperProps {
-  children: React.ReactNode;
-  hederLabel: string;
-  backButtonLabel: string;
-  backButtonHref: string;
-  showSocial?: boolean;
+  children: React.ReactNode
+  hederLabel: string
+  backButtonLabel: string
+  backButtonHref: string
+  showSocial?: boolean
 }
 
 export default function CardWrapper({
@@ -33,5 +33,5 @@ export default function CardWrapper({
         <BackButton href={backButtonHref} label={backButtonLabel} />
       </CardFooter>
     </Card>
-  );
+  )
 }

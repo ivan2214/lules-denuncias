@@ -1,29 +1,29 @@
-"use client";
+"use client"
 
-import type * as z from "zod";
+import type * as z from "zod"
 
-import {useState, useTransition} from "react";
-import {useForm} from "react-hook-form";
-import {zodResolver} from "@hookform/resolvers/zod";
-import {EyeIcon, EyeOffIcon} from "lucide-react";
+import {useState, useTransition} from "react"
+import {useForm} from "react-hook-form"
+import {zodResolver} from "@hookform/resolvers/zod"
+import {EyeIcon, EyeOffIcon} from "lucide-react"
 
-import {RegisterSchema} from "@schemas/index";
-import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@ui/form";
-import CardWrapper from "@components/auth/card-wrapper";
-import {Input} from "@ui/input";
-import {Button} from "@ui/button";
-import {FormError} from "@components/form-error";
-import {FormSucces} from "@components/form-succes";
-import {register} from "@/actions/server-actions/user/register";
+import {RegisterSchema} from "@schemas/index"
+import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@ui/form"
+import CardWrapper from "@components/auth/card-wrapper"
+import {Input} from "@ui/input"
+import {Button} from "@ui/button"
+import {FormError} from "@components/form-error"
+import {FormSucces} from "@components/form-succes"
+import {register} from "@/actions/server-actions/user/register"
 
-export type RegisterFormValues = z.infer<typeof RegisterSchema>;
+export type RegisterFormValues = z.infer<typeof RegisterSchema>
 
 export const RegisterForm = () => {
-  const [error, setError] = useState<string | undefined>("");
-  const [success, setSuccess] = useState<string | undefined>("");
-  const [viewPassword, setViewPassword] = useState(false);
+  const [error, setError] = useState<string | undefined>("")
+  const [success, setSuccess] = useState<string | undefined>("")
+  const [viewPassword, setViewPassword] = useState(false)
 
-  const [isPending, startTransition] = useTransition();
+  const [isPending, startTransition] = useTransition()
 
   const form = useForm<RegisterFormValues>({
     defaultValues: {
@@ -34,18 +34,18 @@ export const RegisterForm = () => {
       username: "",
     },
     resolver: zodResolver(RegisterSchema),
-  });
+  })
 
   function onSubmit(values: RegisterFormValues) {
-    setError("");
-    setSuccess("");
+    setError("")
+    setSuccess("")
 
     startTransition(() => {
       register(values).then((res) => {
-        setError(res.error);
-        setSuccess(res.success);
-      });
-    });
+        setError(res.error)
+        setSuccess(res.success)
+      })
+    })
   }
 
   return (
@@ -187,5 +187,5 @@ export const RegisterForm = () => {
         </form>
       </Form>
     </CardWrapper>
-  );
-};
+  )
+}

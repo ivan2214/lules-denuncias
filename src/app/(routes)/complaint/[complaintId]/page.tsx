@@ -7,30 +7,30 @@ import {
   TagIcon,
   ThumbsUpIcon,
   UserIcon,
-} from "lucide-react";
-import Link from "next/link";
+} from "lucide-react"
+import Link from "next/link"
 
-import {Button} from "@/components/ui/button";
-import {db} from "@/lib/db";
-import {type ComplaintExtends} from "@/actions/complaints/get-filtered-complaints";
-import ImageSkeleton from "@/components/image-skeleton";
-import {type CreateComplaimentFormValues} from "@/components/complaint/complaint-form";
-import {auth} from "auth";
+import {Button} from "@/components/ui/button"
+import {db} from "@/lib/db"
+import {type ComplaintExtends} from "@/actions/complaints/get-filtered-complaints"
+import ImageSkeleton from "@/components/image-skeleton"
+import {type CreateComplaimentFormValues} from "@/components/complaint/complaint-form"
+import {auth} from "auth"
 
-import {ButtonOpenModalEdit} from "./components/button-open-modal-edit";
-import {Comments} from "./components/comment/comments";
-import {ButtonVotes} from "./components/vote/button-votes";
-import {ButtonChangeStatus} from "./components/button-change-status";
-import {ButtonDeleteComplaint} from "./components/button-delete-complaint";
+import {ButtonOpenModalEdit} from "./components/button-open-modal-edit"
+import {Comments} from "./components/comment/comments"
+import {ButtonVotes} from "./components/vote/button-votes"
+import {ButtonChangeStatus} from "./components/button-change-status"
+import {ButtonDeleteComplaint} from "./components/button-delete-complaint"
 
 interface ComplaintPageProps {
-  params: {complaintId: string};
+  params: {complaintId: string}
 }
 
 const ComplaintPage: React.FC<ComplaintPageProps> = async ({params}) => {
-  const session = await auth();
-  const userId = session?.user?.id;
-  const {complaintId} = params;
+  const session = await auth()
+  const userId = session?.user?.id
+  const {complaintId} = params
 
   const complaint: ComplaintExtends | null = await db.complaint.findUnique({
     where: {
@@ -54,13 +54,13 @@ const ComplaintPage: React.FC<ComplaintPageProps> = async ({params}) => {
       user: true,
       votes: true,
     },
-  });
+  })
 
   if (!complaint) {
-    return <div>Complaint not found</div>;
+    return <div>Complaint not found</div>
   }
 
-  const isAuthorComplaint = userId === complaint.user?.id;
+  const isAuthorComplaint = userId === complaint.user?.id
 
   const values: CreateComplaimentFormValues = {
     description: complaint.description,
@@ -72,15 +72,15 @@ const ComplaintPage: React.FC<ComplaintPageProps> = async ({params}) => {
     images: complaint.images.map((image) => ({
       url: image.url || "https://via.placeholder.com/600x400",
     })),
-  };
+  }
 
   const creatorName = (user: ComplaintExtends["user"]) => {
     if (user) {
-      return user.name || user.username || "Anónimo";
+      return user.name || user.username || "Anónimo"
     }
 
-    return "Anónimo";
-  };
+    return "Anónimo"
+  }
 
   return (
     <main className="p-12">
@@ -213,7 +213,7 @@ const ComplaintPage: React.FC<ComplaintPageProps> = async ({params}) => {
         </div>
       </div>
     </main>
-  );
-};
+  )
+}
 
-export default ComplaintPage;
+export default ComplaintPage

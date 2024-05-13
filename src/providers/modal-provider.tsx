@@ -1,25 +1,25 @@
-"use client";
+"use client"
 
-import {useEffect, useState} from "react";
+import {useEffect, useState} from "react"
 
-import {CreateComplaimentModal} from "@/components/modals/create-complaiment-modal";
-import {ManageAccountUserModal} from "@/components/modals/manage-account-user-modal";
+import {CreateComplaimentModal} from "@/components/modals/create-complaiment-modal"
+import {ManageAccountUserModal} from "@/components/modals/manage-account-user-modal"
 
 export const ModalProvider = () => {
-  const [isMounted, setIsMounted] = useState(false);
+  const [isMounted, setIsMounted] = useState(false)
 
   useEffect(() => {
-    setIsMounted(true);
-  }, []);
+    setIsMounted(true)
+  }, [])
 
   if (!isMounted) {
-    return null;
+    return null
   }
 
   return (
     <>
-      <CreateComplaimentModal />;
+      <CreateComplaimentModal />
       <ManageAccountUserModal />
     </>
-  );
-};
+  )
+}

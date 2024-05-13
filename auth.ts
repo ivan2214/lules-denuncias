@@ -1,10 +1,10 @@
-import NextAuth from "next-auth";
-import {PrismaAdapter} from "@auth/prisma-adapter";
+import NextAuth from "next-auth"
+import {PrismaAdapter} from "@auth/prisma-adapter"
 
-import {db} from "@/lib/db";
-import {getUserById} from "@/data/user";
+import {db} from "@/lib/db"
+import {getUserById} from "@/data/user"
 
-import authConfig from "./auth.config";
+import authConfig from "./auth.config"
 
 export const {handlers, auth, signIn, signOut} = NextAuth({
   pages: {
@@ -20,7 +20,7 @@ export const {handlers, auth, signIn, signOut} = NextAuth({
         data: {
           emailVerified: new Date(),
         },
-      });
+      })
     },
   },
   callbacks: {
@@ -28,10 +28,10 @@ export const {handlers, auth, signIn, signOut} = NextAuth({
       //allow Oauth without  email verification
 
       if (account?.provider !== "credentials") {
-        return true;
+        return true
       }
 
-      if (!user.id) return false;
+      if (!user.id) return false
 
       /* const existingUser = await getUserById(user.id);
 
@@ -40,31 +40,31 @@ export const {handlers, auth, signIn, signOut} = NextAuth({
 
       // TODO: Add 2FA Check */
 
-      return true;
+      return true
     },
     async session({session, token}) {
       if (session.user && token.sub) {
-        session.user.id = token.sub;
+        session.user.id = token.sub
       }
 
       /* if (token.role && session.user) {
         session.user.role = token.role;
       } */
 
-      return session;
+      return session
     },
     async jwt({token}) {
-      if (!token.sub) return token;
-      const existingUser = await getUserById(token.sub);
+      if (!token.sub) return token
+      const existingUser = await getUserById(token.sub)
 
-      if (!existingUser) return token;
+      if (!existingUser) return token
 
       /* token.role = existingUser.role; */
 
-      return token;
+      return token
     },
   },
   adapter: PrismaAdapter(db),
   session: {strategy: "jwt"},
   ...authConfig,
-});
+})

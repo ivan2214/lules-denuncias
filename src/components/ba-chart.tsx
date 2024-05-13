@@ -1,13 +1,13 @@
-"use client";
-import {ResponsiveBar} from "@nivo/bar";
-import {type HTMLAttributes} from "react";
+"use client"
+import {ResponsiveBar} from "@nivo/bar"
+import {type HTMLAttributes} from "react"
 
-import {cn} from "@/lib/utils";
-import {type ComplaintExtends} from "@/actions/complaints/get-filtered-complaints";
+import {cn} from "@/lib/utils"
+import {type ComplaintExtends} from "@/actions/complaints/get-filtered-complaints"
 
 interface BaChartProp {
-  data: ComplaintExtends[];
-  className?: HTMLAttributes<HTMLDivElement>["className"];
+  data: ComplaintExtends[]
+  className?: HTMLAttributes<HTMLDivElement>["className"]
 }
 
 export function BarChart({data, className}: BaChartProp) {
@@ -15,8 +15,8 @@ export function BarChart({data, className}: BaChartProp) {
     return {
       name: complaint.categories.map((category) => category.Category.name).join(", "),
       count: complaint.categories.length,
-    };
-  });
+    }
+  })
 
   return (
     <div className={cn("flex flex-col", className)}>
@@ -60,5 +60,5 @@ export function BarChart({data, className}: BaChartProp) {
         tooltipLabel={({id}) => `${id.toString()}:`}
       />
     </div>
-  );
+  )
 }

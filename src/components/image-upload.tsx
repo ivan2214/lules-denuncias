@@ -1,55 +1,55 @@
-"use client";
-import {useState} from "react";
-import {useDropzone} from "react-dropzone";
-import {Image, Loader, Trash} from "lucide-react";
-import {toast} from "sonner";
+"use client"
+import {useState} from "react"
+import {useDropzone} from "react-dropzone"
+import {Image, Loader, Trash} from "lucide-react"
+import {toast} from "sonner"
 
-import {Button} from "./ui/button";
+import {Button} from "./ui/button"
 
 interface ImageUploadProps {
-  onChange: (value: string) => void;
-  onRemove: (value: string) => void;
-  value?: string[];
+  onChange: (value: string) => void
+  onRemove: (value: string) => void
+  value?: string[]
 }
 
-const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10MB
 
 const ImageUpload: React.FC<ImageUploadProps> = ({onChange, onRemove, value}) => {
-  const [isUploading, setIsUploading] = useState(false);
+  const [isUploading, setIsUploading] = useState(false)
 
   const onDrop = (acceptedFiles: File[]) => {
-    setIsUploading(true);
-    const file = acceptedFiles[0];
+    setIsUploading(true)
+    const file = acceptedFiles[0]
 
     if (file.size > MAX_FILE_SIZE) {
-      setIsUploading(false);
+      setIsUploading(false)
 
       return toast("Error", {
         description: "La imagen supera el tamaño máximo permitido (10MB)",
-      });
+      })
     }
 
-    const reader = new FileReader();
+    const reader = new FileReader()
 
     reader.onload = async () => {
       try {
         const res = await fetch("/api/cloudinary", {
           method: "POST",
           body: JSON.stringify({image: {data: reader.result as string}}),
-        });
-        const data: {url: string} = await res.json();
+        })
+        const data: {url: string} = await res.json()
 
-        onChange(data.url);
+        onChange(data.url)
       } catch (error) {
-        console.log(error);
+        console.log(error)
       } finally {
-        setIsUploading(false);
+        setIsUploading(false)
       }
-    };
-    reader.readAsDataURL(file);
-  };
+    }
+    reader.readAsDataURL(file)
+  }
 
-  const {getRootProps, getInputProps} = useDropzone({onDrop});
+  const {getRootProps, getInputProps} = useDropzone({onDrop})
 
   return (
     <section className="flex flex-col items-center gap-y-10">
@@ -62,7 +62,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({onChange, onRemove, value}) =>
                 type="button"
                 variant="destructive"
                 onClick={() => {
-                  onRemove(url);
+                  onRemove(url)
                 }}
               >
                 <Trash className="h-4 w-4" />
@@ -105,7 +105,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({onChange, onRemove, value}) =>
         </div>
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default ImageUpload;
+export default ImageUpload

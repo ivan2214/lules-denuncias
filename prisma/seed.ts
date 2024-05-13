@@ -1,15 +1,12 @@
-import {randomUUID} from "crypto";
+import {PrismaClient} from "@prisma/client"
 
-import {type Prisma, PrismaClient} from "@prisma/client";
-import {faker} from "@faker-js/faker";
+import {createManyComplaints} from "./createManyComplaints"
+import {createManyUsers} from "./createManyUsers"
+import {createManyCategories} from "./createManyCategories"
+import {createManyComments} from "./createManyComments"
+import {createManyVotes} from "./createManyVotes"
 
-import {createManyComplaints} from "./createManyComplaints";
-import {createManyUsers} from "./createManyUsers";
-import {createManyCategories} from "./createManyCategories";
-import {createManyComments} from "./createManyComments";
-import {createManyVotes} from "./createManyVotes";
-
-const prismaDb = new PrismaClient();
+const prismaDb = new PrismaClient()
 
 async function main() {
   // limpia la base de datos
@@ -21,27 +18,27 @@ async function main() {
     prismaDb.vote.deleteMany({}),
     prismaDb.image.deleteMany({}),
     prismaDb.categoriesOnComplaint.deleteMany({}),
-  ]);
+  ])
 
   // Crear usuarios
-  const users = await createManyUsers();
+  const users = await createManyUsers()
 
-  const categories = await createManyCategories();
+  const categories = await createManyCategories()
 
-  const complaintIds: number[] = await createManyComplaints(users, categories);
+  const complaintIds: number[] = await createManyComplaints(users, categories)
 
   for (const complaintId of complaintIds) {
-    await createManyComments(users, complaintId);
-    await createManyVotes(users, complaintId);
+    await createManyComments(users, complaintId)
+    await createManyVotes(users, complaintId)
   }
 }
 
 main()
   .then(async () => {
-    await prismaDb.$disconnect();
+    await prismaDb.$disconnect()
   })
   .catch(async (e: unknown) => {
-    console.error(e);
-    await prismaDb.$disconnect();
-    process.exit(1);
-  });
+    console.error(e)
+    await prismaDb.$disconnect()
+    process.exit(1)
+  })

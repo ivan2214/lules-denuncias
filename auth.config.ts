@@ -1,13 +1,13 @@
-import type {NextAuthConfig} from "next-auth";
+import type {NextAuthConfig} from "next-auth"
 
-import GitHub from "next-auth/providers/github";
-import google from "next-auth/providers/google";
-import Credentials from "next-auth/providers/credentials";
-import bcrypt from "bcryptjs";
-import {type User} from "@prisma/client";
+import GitHub from "next-auth/providers/github"
+import google from "next-auth/providers/google"
+import Credentials from "next-auth/providers/credentials"
+import bcrypt from "bcryptjs"
+import {type User} from "@prisma/client"
 
-import {LoginSchema} from "@/schemas";
-import {getUserByEmail} from "@/data/user";
+import {LoginSchema} from "@/schemas"
+import {getUserByEmail} from "@/data/user"
 
 export default {
   providers: [
@@ -21,27 +21,27 @@ export default {
     }),
     Credentials({
       async authorize(credentials) {
-        const validatedFields = LoginSchema.safeParse(credentials);
+        const validatedFields = LoginSchema.safeParse(credentials)
 
         if (validatedFields.success) {
-          const {email, password} = validatedFields.data;
+          const {email, password} = validatedFields.data
 
-          const user = await getUserByEmail(email);
+          const user = await getUserByEmail(email)
 
           if (!user?.hashPassword) {
-            return null;
+            return null
           }
 
-          const {hashPassword}: User = user;
-          const isValid = await bcrypt.compare(password, hashPassword);
+          const {hashPassword}: User = user
+          const isValid = await bcrypt.compare(password, hashPassword)
 
           if (isValid) {
-            return user;
+            return user
           }
         }
 
-        return null;
+        return null
       },
     }),
   ],
-} satisfies NextAuthConfig;
+} satisfies NextAuthConfig

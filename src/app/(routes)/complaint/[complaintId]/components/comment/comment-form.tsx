@@ -1,38 +1,38 @@
-"use client";
+"use client"
 
-import type * as z from "zod";
+import type * as z from "zod"
 
-import {PlusIcon} from "lucide-react";
-import {useState, useTransition} from "react";
-import {useForm} from "react-hook-form";
-import {zodResolver} from "@hookform/resolvers/zod";
-import {toast} from "sonner";
+import {PlusIcon} from "lucide-react"
+import {useState, useTransition} from "react"
+import {useForm} from "react-hook-form"
+import {zodResolver} from "@hookform/resolvers/zod"
+import {toast} from "sonner"
 
-import {Button} from "@/components/ui/button";
-import {CreateCommentSchema} from "@/schemas";
-import {Form, FormControl, FormField, FormItem, FormMessage} from "@/components/ui/form";
-import {Input} from "@/components/ui/input";
-import {createComment} from "@/actions/server-actions/comment/create-comment";
+import {Button} from "@/components/ui/button"
+import {CreateCommentSchema} from "@/schemas"
+import {Form, FormControl, FormField, FormItem, FormMessage} from "@/components/ui/form"
+import {Input} from "@/components/ui/input"
+import {createComment} from "@/actions/server-actions/comment/create-comment"
 
 interface CommentFormProps {
-  complaintId: number;
+  complaintId: number
 }
 
-export type CreateCommentFormValues = z.infer<typeof CreateCommentSchema>;
+export type CreateCommentFormValues = z.infer<typeof CreateCommentSchema>
 
 export const CommentForm: React.FC<CommentFormProps> = ({complaintId}) => {
-  const [addComment, setAddComment] = useState(false);
-  const [isPending, startTransition] = useTransition();
+  const [addComment, setAddComment] = useState(false)
+  const [isPending, startTransition] = useTransition()
 
   const defaultValues: CreateCommentFormValues = {
     text: "",
     complaintId,
-  };
+  }
 
   const form = useForm<CreateCommentFormValues>({
     resolver: zodResolver(CreateCommentSchema),
     defaultValues,
-  });
+  })
 
   const onSubmit = (values: CreateCommentFormValues) => {
     startTransition(() => {
@@ -41,21 +41,21 @@ export const CommentForm: React.FC<CommentFormProps> = ({complaintId}) => {
           if (res.error) {
             toast("Error", {
               description: res.error,
-            });
+            })
           }
 
           if (res.succes) {
             toast("Comentario creado", {
               description: res.succes,
-            });
+            })
           }
         })
         .finally(() => {
-          setAddComment(false);
-          form.reset();
-        });
-    });
-  };
+          setAddComment(false)
+          form.reset()
+        })
+    })
+  }
 
   return (
     <div className="flex flex-col items-center gap-y-5">
@@ -102,5 +102,5 @@ export const CommentForm: React.FC<CommentFormProps> = ({complaintId}) => {
         </Form>
       ) : null}
     </div>
-  );
-};
+  )
+}

@@ -4,13 +4,13 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import {useCreateComplaimentModal} from "@/store/use-create-complaint-modal";
+} from "@/components/ui/dialog"
+import {useCreateComplaimentModal} from "@/store/use-create-complaint-modal"
 
-import {ComplaintForm} from "../complaint/complaint-form";
+import {ComplaintForm} from "../complaint/complaint-form"
 
 export const CreateComplaimentModal = () => {
-  const {isOpen, close} = useCreateComplaimentModal();
+  const {isOpen, close} = useCreateComplaimentModal()
 
   return (
     <Dialog open={isOpen} onOpenChange={close}>
@@ -24,5 +24,5 @@ export const CreateComplaimentModal = () => {
         <ComplaintForm />
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}

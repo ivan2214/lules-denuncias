@@ -1,46 +1,46 @@
-"use client";
+"use client"
 
-import {type Category} from "@prisma/client";
-import Link from "next/link";
-import {usePathname, useSearchParams} from "next/navigation";
+import {type Category} from "@prisma/client"
+import Link from "next/link"
+import {usePathname, useSearchParams} from "next/navigation"
 
-import {cn, createUrl} from "@/lib/utils";
+import {cn, createUrl} from "@/lib/utils"
 
 interface SideBarItemProps {
-  category: Category;
+  category: Category
 }
 
 export const SideBarItem: React.FC<SideBarItemProps> = ({category}) => {
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const active = searchParams.get("categories")?.split(",").includes(category.name);
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+  const active = searchParams.get("categories")?.split(",").includes(category.name)
   const activeParams =
     searchParams.get("categories") === null ||
     searchParams.get("categories") === "" ||
     searchParams.get("categories") === undefined
       ? false
-      : true;
-  const selectedCategories = searchParams.get("categories")?.split(",") ?? [];
+      : true
+  const selectedCategories = searchParams.get("categories")?.split(",") ?? []
 
-  const newParams = new URLSearchParams(searchParams.toString());
+  const newParams = new URLSearchParams(searchParams.toString())
 
   if (!activeParams) {
-    newParams.delete("categories");
+    newParams.delete("categories")
   }
 
   if (!active) {
-    const newCategories = [...selectedCategories, category.name];
+    const newCategories = [...selectedCategories, category.name]
 
-    newParams.set("categories", newCategories.join(","));
+    newParams.set("categories", newCategories.join(","))
   } else {
-    const cleanedCategories = selectedCategories.filter((c) => c !== category.name);
+    const cleanedCategories = selectedCategories.filter((c) => c !== category.name)
 
     if (cleanedCategories.length === 0) {
-      newParams.delete("categories");
+      newParams.delete("categories")
     }
 
     if (cleanedCategories.length > 0) {
-      newParams.set("categories", cleanedCategories.join(","));
+      newParams.set("categories", cleanedCategories.join(","))
     }
   }
 
@@ -56,5 +56,5 @@ export const SideBarItem: React.FC<SideBarItemProps> = ({category}) => {
     >
       {category.name}
     </Link>
-  );
-};
+  )
+}

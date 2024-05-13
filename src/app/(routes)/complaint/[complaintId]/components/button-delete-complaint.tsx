@@ -1,11 +1,11 @@
-"use client";
+"use client"
 
-import {LoaderIcon, TrashIcon} from "lucide-react";
-import {useTransition} from "react";
-import {toast} from "sonner";
+import {LoaderIcon, TrashIcon} from "lucide-react"
+import {useTransition} from "react"
+import {toast} from "sonner"
 
-import {Button} from "@/components/ui/button";
-import {deleteComplaint} from "@/actions/server-actions/complaint/delete-complaint";
+import {Button} from "@/components/ui/button"
+import {deleteComplaint} from "@/actions/server-actions/complaint/delete-complaint"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -16,30 +16,30 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+} from "@/components/ui/alert-dialog"
 
 interface ButtonDeleteComplaintProps {
-  complaintId: number;
+  complaintId: number
 }
 
 export const ButtonDeleteComplaint: React.FC<ButtonDeleteComplaintProps> = ({complaintId}) => {
-  const [isPending, startTransition] = useTransition();
+  const [isPending, startTransition] = useTransition()
   const onClick = () => {
     startTransition(() => {
       deleteComplaint(complaintId).then((res) => {
         if (res?.error) {
           toast("Error", {
             description: res?.error,
-          });
+          })
         }
         if (res?.success) {
           toast("Complaint deleted", {
             description: res?.success,
-          });
+          })
         }
-      });
-    });
-  };
+      })
+    })
+  }
 
   return (
     <AlertDialog>
@@ -66,8 +66,8 @@ export const ButtonDeleteComplaint: React.FC<ButtonDeleteComplaintProps> = ({com
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  );
-};
+  )
+}
 /* <Button
       className="flex items-center gap-x-2"
       disabled={isPending}

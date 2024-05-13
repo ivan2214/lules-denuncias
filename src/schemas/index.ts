@@ -1,10 +1,10 @@
-import {StatusComplaint} from "@prisma/client";
-import * as z from "zod";
+import {StatusComplaint} from "@prisma/client"
+import * as z from "zod"
 
 export const LoginSchema = z.object({
   email: z.string().email({message: "Email is required"}),
   password: z.string().min(1, {message: "Password is required"}),
-});
+})
 
 export const RegisterSchema = z
   .object({
@@ -17,7 +17,7 @@ export const RegisterSchema = z
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
     path: ["confirmPassword"],
-  });
+  })
 
 export const CreateComplainSchema = z.object({
   title: z.string(),
@@ -31,22 +31,22 @@ export const CreateComplainSchema = z.object({
     .optional(),
   images: z.object({url: z.string()}).array().optional(),
   address: z.string().optional(),
-});
+})
 
-export const UpdateComplainSchema = CreateComplainSchema.partial();
+export const UpdateComplainSchema = CreateComplainSchema.partial()
 
 export const CreateCommentSchema = z.object({
   text: z.string().min(1).max(500, {
     message: "El texto del comentario no puede superar los 500 caracteres",
   }),
   complaintId: z.coerce.number().min(1),
-});
+})
 
 export const CommentActionSchema = z.object({
   commentId: z.coerce.number().min(1),
   action: z.enum(["like", "unlike"]),
   complaintId: z.coerce.number(),
-});
+})
 
 export const ChangeStatusSchema = z.object({
   status: z.enum([
@@ -58,7 +58,7 @@ export const ChangeStatusSchema = z.object({
     StatusComplaint.UNRESOLVED,
   ]),
   complaintId: z.coerce.number().min(1),
-});
+})
 
 export const ManageAccountUserSchema = z.object({
   name: z.string().min(1, {message: "Name is required"}).optional().nullable(),
@@ -66,4 +66,4 @@ export const ManageAccountUserSchema = z.object({
   username: z.string().optional().nullable(),
   image: z.string().optional().nullable(),
   accountIds: z.array(z.coerce.string()).optional().nullable(),
-});
+})

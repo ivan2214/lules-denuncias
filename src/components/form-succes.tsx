@@ -1,12 +1,12 @@
-import {CheckCheckIcon} from "lucide-react";
+import {CheckCheckIcon} from "lucide-react"
 
 interface FormSuccesProps {
-  message?: string;
+  message?: string
 }
 
 export const FormSucces: React.FC<FormSuccesProps> = ({message}) => {
   if (!message) {
-    return null;
+    return null
   }
 
   return (
@@ -14,5 +14,5 @@ export const FormSucces: React.FC<FormSuccesProps> = ({message}) => {
       <CheckCheckIcon className="h-4 w-4" />
       <p>{message}</p>
     </div>
-  );
-};
+  )
+}

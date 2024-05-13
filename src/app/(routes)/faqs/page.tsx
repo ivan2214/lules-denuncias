@@ -1,12 +1,11 @@
-import {MountainIcon} from "lucide-react";
+import {MountainIcon} from "lucide-react"
 
-import {CardContent, Card} from "@/components/ui/card";
 import {
   AccordionTrigger,
   AccordionContent,
   AccordionItem,
   Accordion,
-} from "@/components/ui/accordion";
+} from "@/components/ui/accordion"
 
 const FaqsPage = () => {
   return (
@@ -111,7 +110,7 @@ const FaqsPage = () => {
         </div>
       </main>
     </>
-  );
-};
+  )
+}
 
-export default FaqsPage;
+export default FaqsPage

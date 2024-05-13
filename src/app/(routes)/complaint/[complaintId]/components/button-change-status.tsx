@@ -1,25 +1,19 @@
-"use client";
+"use client"
 
-import type * as z from "zod";
+import type * as z from "zod"
 
-import {useTransition} from "react";
-import {useForm} from "react-hook-form";
-import {zodResolver} from "@hookform/resolvers/zod";
-import {StatusComplaint} from "@prisma/client";
-import {toast} from "sonner";
+import {useTransition} from "react"
+import {useForm} from "react-hook-form"
+import {zodResolver} from "@hookform/resolvers/zod"
+import {StatusComplaint} from "@prisma/client"
+import {toast} from "sonner"
 
-import {ChangeStatusSchema} from "@/schemas";
-import {Form, FormControl, FormField, FormItem, FormMessage} from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {changeStatus} from "@/actions/server-actions/complaint/change-status";
+import {ChangeStatusSchema} from "@/schemas"
+import {Form, FormControl, FormField, FormItem, FormMessage} from "@/components/ui/form"
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select"
+import {changeStatus} from "@/actions/server-actions/complaint/change-status"
 
-export type ChangeStatusFormValues = z.infer<typeof ChangeStatusSchema>;
+export type ChangeStatusFormValues = z.infer<typeof ChangeStatusSchema>
 
 const statuses: StatusComplaint[] = [
   StatusComplaint.CLOSED,
@@ -28,25 +22,25 @@ const statuses: StatusComplaint[] = [
   StatusComplaint.PENDING,
   StatusComplaint.RESOLVED,
   StatusComplaint.UNRESOLVED,
-];
+]
 
 interface ButtonChangeStatusProps {
-  complaintId: number;
-  values: ChangeStatusFormValues;
+  complaintId: number
+  values: ChangeStatusFormValues
 }
 
 export const ButtonChangeStatus: React.FC<ButtonChangeStatusProps> = ({complaintId, values}) => {
-  const [isPending, startTransition] = useTransition();
+  const [isPending, startTransition] = useTransition()
 
   const defaultValues: ChangeStatusFormValues = {
     complaintId: complaintId,
     status: values.status || "PENDING",
-  };
+  }
 
   const form = useForm<ChangeStatusFormValues>({
     resolver: zodResolver(ChangeStatusSchema),
     defaultValues,
-  });
+  })
 
   function onSubmit(data: ChangeStatusFormValues) {
     startTransition(() => {
@@ -54,16 +48,16 @@ export const ButtonChangeStatus: React.FC<ButtonChangeStatusProps> = ({complaint
         if (res?.error) {
           toast("Error", {
             description: res?.error,
-          });
+          })
         }
 
         if (res?.success) {
           toast("Status cambiado", {
             description: res?.success,
-          });
+          })
         }
-      });
-    });
+      })
+    })
   }
 
   return (
@@ -77,9 +71,9 @@ export const ButtonChangeStatus: React.FC<ButtonChangeStatusProps> = ({complaint
               <Select
                 defaultValue={field.value}
                 onValueChange={(value: StatusComplaint) => {
-                  field.onChange(value);
+                  field.onChange(value)
 
-                  form.handleSubmit(onSubmit)();
+                  form.handleSubmit(onSubmit)()
                 }}
               >
                 <FormControl>
@@ -93,7 +87,7 @@ export const ButtonChangeStatus: React.FC<ButtonChangeStatusProps> = ({complaint
                       <SelectItem key={status} disabled={isPending} value={status}>
                         {status}
                       </SelectItem>
-                    );
+                    )
                   })}
                 </SelectContent>
               </Select>
@@ -103,5 +97,5 @@ export const ButtonChangeStatus: React.FC<ButtonChangeStatusProps> = ({complaint
         />
       </form>
     </Form>
-  );
-};
+  )
+}

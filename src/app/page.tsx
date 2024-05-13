@@ -1,18 +1,18 @@
-import Link from "next/link";
-import {LinkedinIcon, TwitterIcon, FacebookIcon, ShareIcon} from "lucide-react";
-import {StatusComplaint} from "@prisma/client";
+import Link from "next/link"
+import {LinkedinIcon, TwitterIcon, FacebookIcon, ShareIcon} from "lucide-react"
+import {StatusComplaint} from "@prisma/client"
 
-import {CardTitle, CardHeader, CardContent, Card, CardFooter} from "@/components/ui/card";
-import {type QueryProps, getFilteredComplaints} from "@/actions/complaints/get-filtered-complaints";
-import {Button} from "@ui/button";
-import {Badge} from "@ui/badge";
-import {ButtonOpenModal} from "@components/button-open-modal";
-import {ComplaintsHome} from "@components/complaints-home";
-import {ChartFilterHome} from "@components/chart-filter-home";
-import {db} from "@/lib/db";
+import {CardTitle, CardHeader, CardContent, Card, CardFooter} from "@/components/ui/card"
+import {type QueryProps, getFilteredComplaints} from "@/actions/complaints/get-filtered-complaints"
+import {Button} from "@ui/button"
+import {Badge} from "@ui/badge"
+import {ButtonOpenModal} from "@components/button-open-modal"
+import {ComplaintsHome} from "@components/complaints-home"
+import {ChartFilterHome} from "@components/chart-filter-home"
+import {db} from "@/lib/db"
 
 export default async function HomePage({searchParams}: {searchParams: QueryProps}) {
-  const {complaints} = await getFilteredComplaints(searchParams);
+  const {complaints} = await getFilteredComplaints(searchParams)
 
   const categoriesMostResolved = await db.category?.findMany({
     where: {
@@ -52,7 +52,7 @@ export default async function HomePage({searchParams}: {searchParams: QueryProps
         _count: "desc",
       },
     },
-  });
+  })
 
   return (
     <main className="container h-full w-full">
@@ -210,5 +210,5 @@ export default async function HomePage({searchParams}: {searchParams: QueryProps
         </div>
       </section>
     </main>
-  );
+  )
 }

@@ -1,17 +1,17 @@
-import {create} from "zustand";
+import {create} from "zustand"
 
-import {type CreateComplaimentFormValues} from "@/components/complaint/complaint-form";
+import {type CreateComplaimentFormValues} from "@/components/complaint/complaint-form"
 
 interface CreateComplaimentModalStore {
-  isOpen: boolean;
-  open: () => void;
-  close: () => void;
-  openEditModal: (complaintId: number, data: CreateComplaimentFormValues) => void;
-  clearData: () => void;
+  isOpen: boolean
+  open: () => void
+  close: () => void
+  openEditModal: (complaintId: number, data: CreateComplaimentFormValues) => void
+  clearData: () => void
   data?: {
-    complaintId: number;
-    values: CreateComplaimentFormValues;
-  };
+    complaintId: number
+    values: CreateComplaimentFormValues
+  }
 }
 
 export const useCreateComplaimentModal = create<CreateComplaimentModalStore>((set) => ({
@@ -32,4 +32,4 @@ export const useCreateComplaimentModal = create<CreateComplaimentModalStore>((se
         },
       },
     }),
-}));
+}))

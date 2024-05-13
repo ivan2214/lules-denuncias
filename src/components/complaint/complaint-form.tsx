@@ -1,16 +1,16 @@
-"use client";
+"use client"
 
-import {toast} from "sonner";
-import {useRouter} from "next/navigation";
-import {useEffect, useState, useTransition} from "react";
-import {zodResolver} from "@hookform/resolvers/zod";
-import {type z} from "zod";
-import {useFieldArray, useForm} from "react-hook-form";
-import {Loader} from "lucide-react";
+import {toast} from "sonner"
+import {useRouter} from "next/navigation"
+import {useEffect, useState, useTransition} from "react"
+import {zodResolver} from "@hookform/resolvers/zod"
+import {type z} from "zod"
+import {useFieldArray, useForm} from "react-hook-form"
+import {Loader} from "lucide-react"
 
-import {DialogFooter} from "@/components/ui/dialog";
-import {Button} from "@/components/ui/button";
-import {useCreateComplaimentModal} from "@/store/use-create-complaint-modal";
+import {DialogFooter} from "@/components/ui/dialog"
+import {Button} from "@/components/ui/button"
+import {useCreateComplaimentModal} from "@/store/use-create-complaint-modal"
 import {
   Form,
   FormControl,
@@ -19,38 +19,38 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import {CreateComplainSchema, type UpdateComplainSchema} from "@/schemas";
-import {Input} from "@/components/ui/input";
-import {cn} from "@/lib/utils";
-import {createComplaint} from "@/actions/server-actions/complaint/create-complaint";
-import {updateComplaint} from "@/actions/server-actions/complaint/update-complaint";
+} from "@/components/ui/form"
+import {CreateComplainSchema, type UpdateComplainSchema} from "@/schemas"
+import {Input} from "@/components/ui/input"
+import {cn} from "@/lib/utils"
+import {createComplaint} from "@/actions/server-actions/complaint/create-complaint"
+import {updateComplaint} from "@/actions/server-actions/complaint/update-complaint"
 
-import {Textarea} from "../ui/textarea";
-import ImageUpload from "../image-upload";
+import {Textarea} from "../ui/textarea"
+import ImageUpload from "../image-upload"
 
-export type CreateComplaimentFormValues = z.infer<typeof CreateComplainSchema>;
+export type CreateComplaimentFormValues = z.infer<typeof CreateComplainSchema>
 
-export type UpdateComplaimentFormValues = z.infer<typeof UpdateComplainSchema>;
+export type UpdateComplaimentFormValues = z.infer<typeof UpdateComplainSchema>
 
 export const ComplaintForm = () => {
-  const {close, data} = useCreateComplaimentModal();
-  const [isPending, startTransition] = useTransition();
+  const {close, data} = useCreateComplaimentModal()
+  const [isPending, startTransition] = useTransition()
   const defaultValues: CreateComplaimentFormValues = {
     title: data?.values?.title ?? "",
     description: data?.values?.description ?? "",
     categoriesNames: data?.values?.categoriesNames ?? [],
     images: data?.values?.images ?? [],
     address: data?.values?.address ?? "",
-  };
+  }
 
   const form = useForm<CreateComplaimentFormValues>({
     resolver: zodResolver(CreateComplainSchema),
     defaultValues,
     mode: "onChange",
-  });
-  const router = useRouter();
-  const [isClient, setIsClient] = useState(false);
+  })
+  const router = useRouter()
+  const [isClient, setIsClient] = useState(false)
 
   const {
     fields: categoryFields,
@@ -59,20 +59,20 @@ export const ComplaintForm = () => {
   } = useFieldArray({
     name: "categoriesNames",
     control: form.control,
-  });
+  })
 
   useEffect(() => {
-    setIsClient(true);
-  }, []);
+    setIsClient(true)
+  }, [])
 
   useEffect(() => {
     if (data?.values) {
-      form.reset(data?.values);
+      form.reset(data?.values)
     }
-  }, [data?.values, form]);
+  }, [data?.values, form])
 
   if (!isClient) {
-    return null;
+    return null
   }
 
   function onSubmit(values: CreateComplaimentFormValues) {
@@ -85,20 +85,20 @@ export const ComplaintForm = () => {
               action: {
                 label: "Reintentar",
                 onClick: () => {
-                  onSubmit(values);
+                  onSubmit(values)
                 },
               },
-            });
+            })
           }
 
           if (res.success) {
             toast("Success", {
               description: "Queja creada correctamente",
-            });
-            close();
-            router.refresh();
+            })
+            close()
+            router.refresh()
           }
-        });
+        })
       }
 
       if (data?.complaintId && data.values) {
@@ -107,25 +107,25 @@ export const ComplaintForm = () => {
             if (res.error) {
               toast("Error", {
                 description: res.error,
-              });
+              })
             }
             if (res.success) {
               toast("Success", {
                 description: "Queja actualizada correctamente",
                 closeButton: true,
                 position: "top-center",
-              });
+              })
             }
-          });
-        });
+          })
+        })
       }
-    });
+    })
   }
 
-  const categories = form.watch("categoriesNames") as {name: string}[];
+  const categories = form.watch("categoriesNames") as {name: string}[]
 
-  const buttonTitle = data?.complaintId ? "Actualizar Queja" : "Crear Queja";
-  const buttonLoadingTitle = data?.complaintId ? "Actualizando Queja" : "Creando Queja";
+  const buttonTitle = data?.complaintId ? "Actualizar Queja" : "Crear Queja"
+  const buttonLoadingTitle = data?.complaintId ? "Actualizando Queja" : "Creando Queja"
 
   return (
     <Form {...form}>
@@ -235,18 +235,18 @@ export const ComplaintForm = () => {
                     <ImageUpload
                       value={field.value?.map((image) => image?.url)}
                       onChange={(url) => {
-                        if (!field?.value) return;
-                        field.onChange([...field?.value, {url}]);
+                        if (!field?.value) return
+                        field.onChange([...field?.value, {url}])
                       }}
                       onRemove={(url) => {
-                        if (!field?.value) return;
-                        field.onChange([...field?.value.filter((current) => current?.url !== url)]);
+                        if (!field?.value) return
+                        field.onChange([...field?.value.filter((current) => current?.url !== url)])
                       }}
                     />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
-              );
+              )
             }}
           />
         </section>
@@ -262,5 +262,5 @@ export const ComplaintForm = () => {
         </DialogFooter>
       </form>
     </Form>
-  );
-};
+  )
+}

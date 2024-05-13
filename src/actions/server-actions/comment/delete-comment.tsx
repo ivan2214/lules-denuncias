@@ -1,8 +1,8 @@
-"use server";
+"use server"
 
-import {revalidatePath} from "next/cache";
+import {revalidatePath} from "next/cache"
 
-import {db} from "@/lib/db";
+import {db} from "@/lib/db"
 
 export const deleteComment = async (commentId: number) => {
   try {
@@ -10,12 +10,12 @@ export const deleteComment = async (commentId: number) => {
       where: {
         id: commentId,
       },
-    });
+    })
 
-    return {success: "Comentario eliminado"};
+    return {success: "Comentario eliminado"}
   } catch (error) {
-    return {error: "Algo salio mal!"};
+    return {error: "Algo salio mal!"}
   } finally {
-    revalidatePath("/complaint/[complaintId]");
+    revalidatePath("/complaint/[complaintId]")
   }
-};
+}

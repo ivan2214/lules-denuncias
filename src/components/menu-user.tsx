@@ -1,18 +1,18 @@
-"use client";
-import Link from "next/link";
-import {signOut} from "next-auth/react";
-import {type Account, type User} from "@prisma/client";
+"use client"
+import Link from "next/link"
+import {signOut} from "next-auth/react"
+import {type Account, type User} from "@prisma/client"
 
-import {Separator} from "@ui/separator";
-import Icon, {type IconProps} from "@components/icon";
-import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
-import {Button} from "@/components/ui/button";
-import {useManageAccountUserModal} from "@/store/use-manage-account-user-modal";
+import {Separator} from "@ui/separator"
+import Icon, {type IconProps} from "@components/icon"
+import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover"
+import {Button} from "@/components/ui/button"
+import {useManageAccountUserModal} from "@/store/use-manage-account-user-modal"
 
 export interface Route {
-  name: string;
-  icon?: IconProps["name"];
-  href: string;
+  name: string
+  icon?: IconProps["name"]
+  href: string
 }
 
 const routesUser: Route[] = [
@@ -21,14 +21,14 @@ const routesUser: Route[] = [
     icon: "badge-help",
     href: "/faqs",
   },
-];
+]
 
 export interface ExtendsUser extends User {
-  accounts: Account[];
+  accounts: Account[]
 }
 
 const MenuUser = ({user}: {user: ExtendsUser}) => {
-  const {openEditModal} = useManageAccountUserModal();
+  const {openEditModal} = useManageAccountUserModal()
 
   return (
     <Popover>
@@ -87,7 +87,7 @@ const MenuUser = ({user}: {user: ExtendsUser}) => {
           <Separator />
           <Button
             onClick={async () => {
-              await signOut();
+              await signOut()
             }}
           >
             Cerrar sesión
@@ -95,7 +95,7 @@ const MenuUser = ({user}: {user: ExtendsUser}) => {
         </div>
       </PopoverContent>
     </Popover>
-  );
-};
+  )
+}
 
-export default MenuUser;
+export default MenuUser

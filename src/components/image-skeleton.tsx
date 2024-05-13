@@ -1,14 +1,14 @@
-"use client";
+"use client"
 
-import {useState, useEffect, useRef, type HTMLAttributes} from "react";
+import {useState, useEffect, useRef, type HTMLAttributes} from "react"
 
-import {cn} from "@/lib/utils";
+import {cn} from "@/lib/utils"
 
 interface ImageSkeletonProps {
-  src: string;
-  alt?: string;
-  className?: HTMLAttributes<HTMLDivElement>["className"];
-  classNameDiv?: HTMLAttributes<HTMLDivElement>["className"];
+  src: string
+  alt?: string
+  className?: HTMLAttributes<HTMLDivElement>["className"]
+  classNameDiv?: HTMLAttributes<HTMLDivElement>["className"]
 }
 
 const ImageSkeleton: React.FC<ImageSkeletonProps> = ({
@@ -17,33 +17,33 @@ const ImageSkeleton: React.FC<ImageSkeletonProps> = ({
   className = "",
   classNameDiv,
 }) => {
-  const [loading, setLoading] = useState(true);
-  const imageRef = useRef<HTMLImageElement>(null);
+  const [loading, setLoading] = useState(true)
+  const imageRef = useRef<HTMLImageElement>(null)
 
   useEffect(() => {
-    if (!src) return;
+    if (!src) return
 
-    const image = new Image();
+    const image = new Image()
 
-    image.src = src;
+    image.src = src
 
     const onLoad = () => {
-      setLoading(false);
-    };
+      setLoading(false)
+    }
 
     const onError = () => {
-      setLoading(false);
+      setLoading(false)
       // Manejar el error de carga de la imagen
-    };
+    }
 
-    image.addEventListener("load", onLoad);
-    image.addEventListener("error", onError);
+    image.addEventListener("load", onLoad)
+    image.addEventListener("error", onError)
 
     return () => {
-      image.removeEventListener("load", onLoad);
-      image.removeEventListener("error", onError);
-    };
-  }, [src]);
+      image.removeEventListener("load", onLoad)
+      image.removeEventListener("error", onError)
+    }
+  }, [src])
 
   return (
     <div className={cn(classNameDiv)}>
@@ -58,7 +58,7 @@ const ImageSkeleton: React.FC<ImageSkeletonProps> = ({
         src={src}
       />
     </div>
-  );
-};
+  )
+}
 
-export default ImageSkeleton;
+export default ImageSkeleton

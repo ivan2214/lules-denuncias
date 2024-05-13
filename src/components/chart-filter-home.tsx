@@ -1,11 +1,11 @@
-import {StatusComplaint} from "@prisma/client";
+import {StatusComplaint} from "@prisma/client"
 
-import {type ComplaintExtends} from "@/actions/complaints/get-filtered-complaints";
+import {type ComplaintExtends} from "@/actions/complaints/get-filtered-complaints"
 
-import {Input} from "./ui/input";
-import {Label} from "./ui/label";
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "./ui/select";
-import {BarChart} from "./ba-chart";
+import {Input} from "./ui/input"
+import {Label} from "./ui/label"
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "./ui/select"
+import {BarChart} from "./ba-chart"
 
 const statusOptions = [
   {label: "Cerrado", value: StatusComplaint.CLOSED},
@@ -14,10 +14,10 @@ const statusOptions = [
   {label: "Pendiente", value: StatusComplaint.PENDING},
   {label: "Resuelto", value: StatusComplaint.RESOLVED},
   {label: "No resuelto", value: StatusComplaint.UNRESOLVED},
-];
+]
 
 interface ChartFilterHomeProps {
-  complaints: ComplaintExtends[];
+  complaints: ComplaintExtends[]
 }
 
 export const ChartFilterHome: React.FC<ChartFilterHomeProps> = ({complaints}) => {
@@ -59,5 +59,5 @@ export const ChartFilterHome: React.FC<ChartFilterHomeProps> = ({complaints}) =>
         <BarChart className="aspect-[4/3] w-full" data={complaints} />
       </div>
     </div>
-  );
-};
+  )
+}

@@ -1,32 +1,32 @@
-import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
-import {type CommentExtends} from "@/actions/complaints/get-filtered-complaints";
+import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar"
+import {type CommentExtends} from "@/actions/complaints/get-filtered-complaints"
 
-import {ButtonActionsComments} from "./button-actions-comments";
-import {ButtonCommentDelete} from "./button-comment-delete";
+import {ButtonActionsComments} from "./button-actions-comments"
+import {ButtonCommentDelete} from "./button-comment-delete"
 
 interface CommentProps {
-  comment: CommentExtends;
-  isAuthorComment?: boolean;
-  isAuthorComplaint?: boolean;
+  comment: CommentExtends
+  isAuthorComment?: boolean
+  isAuthorComplaint?: boolean
 }
 
 export const Comment: React.FC<CommentProps> = ({comment, isAuthorComment, isAuthorComplaint}) => {
-  const isAnonymous = comment?.anonymous === true;
+  const isAnonymous = comment?.anonymous === true
 
   const avatarImage = isAnonymous
     ? "https://github.com/shadcn.png"
-    : comment?.author?.image ?? "https://github.com/shadcn.png";
+    : comment?.author?.image ?? "https://github.com/shadcn.png"
 
   const avatarName = isAnonymous
     ? "Anónimo"
-    : comment?.author?.username || comment?.author?.name || "Anónimo";
+    : comment?.author?.username || comment?.author?.name || "Anónimo"
 
-  const userReputation: number | undefined = comment?.author?.reputation ?? 0;
+  const userReputation: number | undefined = comment?.author?.reputation ?? 0
 
   const textReputation =
-    userReputation < 50 ? "Inaceptable" : userReputation < 100 ? "Aceptable" : "Muy aceptable";
+    userReputation < 50 ? "Inaceptable" : userReputation < 100 ? "Aceptable" : "Muy aceptable"
 
-  const permitedDelete = Boolean(isAuthorComment) || Boolean(isAuthorComplaint);
+  const permitedDelete = Boolean(isAuthorComment) || Boolean(isAuthorComplaint)
 
   return (
     <div className="flex gap-4">
@@ -50,5 +50,5 @@ export const Comment: React.FC<CommentProps> = ({comment, isAuthorComment, isAut
       {permitedDelete ? <ButtonCommentDelete commentId={comment.id} /> : null}
       <ButtonActionsComments comment={comment} />
     </div>
-  );
-};
+  )
+}

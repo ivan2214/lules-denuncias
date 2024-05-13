@@ -1,26 +1,20 @@
-"use client";
-import Link from "next/link";
-import {LocateIcon, ThumbsUpIcon} from "lucide-react";
+"use client"
+import Link from "next/link"
+import {LocateIcon, ThumbsUpIcon} from "lucide-react"
 
-import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@ui/card";
-import {cn} from "@/lib/utils";
-import ImageSkeleton from "@/components/image-skeleton";
-import {type ComplaintExtends} from "@/actions/complaints/get-filtered-complaints";
+import {cn} from "@/lib/utils"
+import ImageSkeleton from "@/components/image-skeleton"
+import {type ComplaintExtends} from "@/actions/complaints/get-filtered-complaints"
 
-import {Badge} from "./ui/badge";
-import {creatorName} from "./complaint-card";
-import {Button} from "./ui/button";
+import {Badge} from "./ui/badge"
+import {creatorName} from "./complaint-card"
+import {Button} from "./ui/button"
 
 interface ComplaintArticleProps extends React.HTMLAttributes<HTMLDivElement> {
-  complaint: ComplaintExtends;
-  aspectRatio?: "portrait" | "square";
+  complaint: ComplaintExtends
 }
 
-export function ComplaintArticle({
-  complaint,
-  aspectRatio = "portrait",
-  className,
-}: ComplaintArticleProps) {
+export function ComplaintArticle({complaint}: ComplaintArticleProps) {
   return (
     <div
       className={cn(
@@ -93,5 +87,5 @@ export function ComplaintArticle({
         </div>
       </div>
     </div>
-  );
+  )
 }

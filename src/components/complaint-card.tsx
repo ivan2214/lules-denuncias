@@ -1,7 +1,7 @@
-import Link from "next/link";
-import {FlagIcon, MapPinIcon} from "lucide-react";
-import {StatusComplaint} from "@prisma/client";
-import React from "react";
+import Link from "next/link"
+import {FlagIcon, MapPinIcon} from "lucide-react"
+import {StatusComplaint} from "@prisma/client"
+import React from "react"
 
 import {
   Card,
@@ -10,25 +10,25 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import {Badge} from "@/components/ui/badge";
-import {cn} from "@/lib/utils";
-import {type ComplaintExtends} from "@/actions/complaints/get-filtered-complaints";
+} from "@/components/ui/card"
+import {Badge} from "@/components/ui/badge"
+import {cn} from "@/lib/utils"
+import {type ComplaintExtends} from "@/actions/complaints/get-filtered-complaints"
 
-import ImageSkeleton from "./image-skeleton";
-import {ArrowPrioriry} from "./arrow-priority";
+import ImageSkeleton from "./image-skeleton"
+import {ArrowPrioriry} from "./arrow-priority"
 
 interface ComplaintCardProps {
-  complaint: ComplaintExtends;
+  complaint: ComplaintExtends
 }
 
 export const creatorName = (user: ComplaintExtends["user"]) => {
   if (user) {
-    return user.name || user.username || "Anónimo";
+    return user.name || user.username || "Anónimo"
   }
 
-  return "Anónimo";
-};
+  return "Anónimo"
+}
 
 export const ComplaintCard: React.FC<ComplaintCardProps> = ({complaint}) => {
   if (!complaint.images.length) {
@@ -102,7 +102,7 @@ export const ComplaintCard: React.FC<ComplaintCardProps> = ({complaint}) => {
           />
         </div>
       </Card>
-    );
+    )
   }
 
   return (
@@ -187,5 +187,5 @@ export const ComplaintCard: React.FC<ComplaintCardProps> = ({complaint}) => {
         />
       </div>
     </Card>
-  );
-};
+  )
+}

@@ -1,10 +1,10 @@
-import {faker} from "@faker-js/faker";
-import {type Complaint, StatusComplaint, type User, type Category} from "@prisma/client";
+import {faker} from "@faker-js/faker"
+import {type Complaint, StatusComplaint, type User, type Category} from "@prisma/client"
 
-import {db} from "../src/lib/db";
+import {db} from "../src/lib/db"
 
 export const createManyComplaints = async (users: User[], categories: Category[]) => {
-  const complaintIds: number[] = [];
+  const complaintIds: number[] = []
   // Títulos y descripciones realistas de quejas
   const complaintsData = [
     {
@@ -66,24 +66,24 @@ export const createManyComplaints = async (users: User[], categories: Category[]
       description:
         "Las luces de la calle en el vecindario están defectuosas, lo que aumenta la inseguridad durante la noche.",
     },
-  ];
+  ]
 
   // Quejas y comentarios
   for (let i = 0; i < complaintsData.length; i++) {
-    const complaintData = complaintsData[i];
-    const anonymousPost = faker.datatype.boolean();
-    const status = faker.helpers.enumValue(StatusComplaint);
+    const complaintData = complaintsData[i]
+    const anonymousPost = faker.datatype.boolean()
+    const status = faker.helpers.enumValue(StatusComplaint)
     const randomCategories = faker.helpers
       .shuffle(categories)
-      .slice(0, faker.datatype.number({min: 1, max: 3}));
+      .slice(0, faker.datatype.number({min: 1, max: 3}))
 
     const images = faker.helpers.uniqueArray(() => {
       return {
         url: faker.image.urlPicsumPhotos(),
-      };
-    }, 3);
+      }
+    }, 3)
 
-    let complaint: Complaint | null = null;
+    let complaint: Complaint | null = null
 
     if (!anonymousPost) {
       complaint = await db.complaint.create({
@@ -102,7 +102,7 @@ export const createManyComplaints = async (users: User[], categories: Category[]
                 create: {
                   url: image.url,
                 },
-              };
+              }
             }),
           },
           user: {
@@ -117,12 +117,12 @@ export const createManyComplaints = async (users: User[], categories: Category[]
               data: randomCategories.map((category) => {
                 return {
                   categoryId: category.id,
-                };
+                }
               }),
             },
           },
         },
-      });
+      })
     }
 
     if (anonymousPost) {
@@ -142,7 +142,7 @@ export const createManyComplaints = async (users: User[], categories: Category[]
                 create: {
                   url: image.url,
                 },
-              };
+              }
             }),
           },
           anonymous: true,
@@ -152,21 +152,21 @@ export const createManyComplaints = async (users: User[], categories: Category[]
               data: randomCategories.map((category) => {
                 return {
                   categoryId: category.id,
-                };
+                }
               }),
             },
           },
         },
-      });
+      })
     }
 
     if (complaint) {
-      complaintIds.push(complaint.id);
+      complaintIds.push(complaint.id)
     }
 
-    console.log(`Queja ${i.toString()}/${complaintsData.length.toString()}`);
-    console.log("*-------------------------------------------*");
+    console.log(`Queja ${i.toString()}/${complaintsData.length.toString()}`)
+    console.log("*-------------------------------------------*")
   }
 
-  return complaintIds; // Devolvemos todos los IDs de las quejas creadas
-};
+  return complaintIds // Devolvemos todos los IDs de las quejas creadas
+}

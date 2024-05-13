@@ -1,107 +1,54 @@
-"use client";
+"use client"
 
-import {useEffect, useState, useTransition} from "react";
-import {zodResolver} from "@hookform/resolvers/zod";
-import {type z} from "zod";
-import {useForm} from "react-hook-form";
-import Link from "next/link";
-import {ArrowRightIcon, PlusIcon} from "lucide-react";
+import {useEffect, useState} from "react"
+import {zodResolver} from "@hookform/resolvers/zod"
+import {type z} from "zod"
+import {useForm} from "react-hook-form"
+import {ArrowRightIcon, PlusIcon} from "lucide-react"
 
-import {useManageAccountUserModal} from "@/store/use-manage-account-user-modal";
-import {Form} from "@/components/ui/form";
-import {ManageAccountUserSchema} from "@/schemas";
-import Icon, {type IconProps} from "@components/icon";
+import {useManageAccountUserModal} from "@/store/use-manage-account-user-modal"
+import {ManageAccountUserSchema} from "@/schemas"
+import Icon from "@components/icon"
 import {
   AccordionTrigger,
   AccordionContent,
   AccordionItem,
   Accordion,
-} from "@/components/ui/accordion";
+} from "@/components/ui/accordion"
 
-import {Separator} from "../ui/separator";
-import {Button} from "../ui/button";
-/* import {createManageAccountUser} from "@/actions/server-actions/complaint/create-complaint";
-import {updateManageAccountUser} from "@/actions/server-actions/complaint/update-complaint"; */
+import {Button} from "../ui/button"
 
-export type ManageAccountUserFormValues = z.infer<typeof ManageAccountUserSchema>;
+export type ManageAccountUserFormValues = z.infer<typeof ManageAccountUserSchema>
 
 export const ManageAccountUserForm = () => {
-  const {close, data} = useManageAccountUserModal();
-  const [isPending, startTransition] = useTransition();
+  const {data} = useManageAccountUserModal()
   const defaultValues: ManageAccountUserFormValues = {
     name: data?.values.name,
     email: data?.values.email,
     username: data?.values.username,
     accountIds: data?.values.accountIds ?? [],
     image: data?.values.image,
-  };
+  }
 
   const form = useForm<ManageAccountUserFormValues>({
     resolver: zodResolver(ManageAccountUserSchema),
     defaultValues,
-  });
+  })
 
-  const [isClient, setIsClient] = useState(false);
+  const [isClient, setIsClient] = useState(false)
 
   useEffect(() => {
-    setIsClient(true);
-  }, []);
+    setIsClient(true)
+  }, [])
 
   useEffect(() => {
     if (data?.values) {
-      form.reset(data?.values);
+      form.reset(data?.values)
     }
-  }, [data?.values, form]);
+  }, [data?.values, form])
 
   if (!isClient) {
-    return null;
-  }
-
-  function onSubmit(values: ManageAccountUserFormValues) {
-    startTransition(() => {
-      /*   if (!data?.userId) {
-        createManageAccountUser(values).then((res) => {
-          if (res.error) {
-            toast("Error", {
-              description: "Error al crear la queja",
-              action: {
-                label: "Reintentar",
-                onClick: () => {
-                  onSubmit(values);
-                },
-              },
-            });
-          }
-
-          if (res.success) {
-            toast("Success", {
-              description: "Queja creada correctamente",
-            });
-            close();
-            router.refresh();
-          }
-        });
-      }
-
-      if (data?.userId && data.values) {
-        startTransition(() => {
-          updateManageAccountUser(values, data.userId).then((res) => {
-            if (res.error) {
-              toast("Error", {
-                description: res.error,
-              });
-            }
-            if (res.success) {
-              toast("Success", {
-                description: "Queja actualizada correctamente",
-                closeButton: true,
-                position: "top-center",
-              });
-            }
-          });
-        });
-      } */
-    });
+    return null
   }
 
   return (
@@ -168,7 +115,7 @@ export const ManageAccountUserForm = () => {
                         type="button"
                         variant="link"
                         onClick={() => {
-                          console.log("remover cuenta");
+                          console.log("remover cuenta")
                         }}
                       >
                         Remove connected account
@@ -185,7 +132,7 @@ export const ManageAccountUserForm = () => {
           className="flex w-full items-center justify-between transition hover:bg-blue-500/70"
           variant="outline"
           onClick={() => {
-            console.log("conectar cuenta");
+            console.log("conectar cuenta")
           }}
         >
           <div className="flex items-center gap-x-3">
@@ -205,7 +152,7 @@ export const ManageAccountUserForm = () => {
             <Button
               variant="destructive"
               onClick={() => {
-                console.log("Eliminar cuenta");
+                console.log("Eliminar cuenta")
               }}
             >
               Eliminar cuenta
@@ -214,5 +161,5 @@ export const ManageAccountUserForm = () => {
         </div>
       </section>
     </section>
-  );
-};
+  )
+}

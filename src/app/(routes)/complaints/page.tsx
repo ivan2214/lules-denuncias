@@ -1,17 +1,16 @@
-import {Suspense} from "react";
+import {Suspense} from "react"
 
-import {Separator} from "@/components/ui/separator";
-import {SearchBar} from "@/components/search-bar";
-import SearchBarFallback from "@/components/fallbacks/search-bar-fallback";
-import {type QueryProps, getFilteredComplaints} from "@/actions/complaints/get-filtered-complaints";
-import {QueryComponent} from "@/app/(routes)/complaints/components/query-component";
-import {ComplaintCard} from "@/components/complaint-card";
-import {ComplaintArticle} from "@/components/complaint-article";
+import {Separator} from "@/components/ui/separator"
+import {SearchBar} from "@/components/search-bar"
+import SearchBarFallback from "@/components/fallbacks/search-bar-fallback"
+import {type QueryProps, getFilteredComplaints} from "@/actions/complaints/get-filtered-complaints"
+import {QueryComponent} from "@/app/(routes)/complaints/components/query-component"
+import {ComplaintArticle} from "@/components/complaint-article"
 
 export default async function ComplaintsPage({searchParams}: {searchParams?: QueryProps}) {
-  const {complaints} = await getFilteredComplaints(searchParams);
+  const {complaints} = await getFilteredComplaints(searchParams)
 
-  const hasQuery = searchParams && Object.keys(searchParams).length > 0;
+  const hasQuery = searchParams && Object.keys(searchParams).length > 0
 
   return (
     <main className="col-span-5 border-t lg:col-span-4 lg:border-l">
@@ -39,5 +38,5 @@ export default async function ComplaintsPage({searchParams}: {searchParams?: Que
         </section>
       </section>
     </main>
-  );
+  )
 }

@@ -1,6 +1,6 @@
-const {resolve} = require("node:path");
+const {resolve} = require("node:path")
 
-const project = resolve(__dirname, "tsconfig.json");
+const project = resolve(__dirname, "tsconfig.json")
 
 module.exports = {
   root: true,
@@ -29,7 +29,7 @@ module.exports = {
         printWidth: 100,
         trailingComma: "all",
         tabWidth: 2,
-        semi: true,
+        semi: false,
         singleQuote: false,
         bracketSpacing: false,
         arrowParens: "always",
@@ -56,7 +56,11 @@ module.exports = {
       "warn",
       {blankLine: "always", prev: "*", next: ["return", "export"]},
       {blankLine: "always", prev: ["const", "let", "var"], next: "*"},
-      {blankLine: "any", prev: ["const", "let", "var"], next: ["const", "let", "var"]},
+      {
+        blankLine: "any",
+        prev: ["const", "let", "var"],
+        next: ["const", "let", "var"],
+      },
     ],
     "no-console": "warn",
     "react/prop-types": "off",
@@ -101,4 +105,4 @@ module.exports = {
     "@typescript-eslint/prefer-nullish-coalescing": "off",
     "no-var": "off",
   },
-};
+}

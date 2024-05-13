@@ -1,9 +1,9 @@
-import {type ComplaintExtends} from "@/actions/complaints/get-filtered-complaints";
+import {type ComplaintExtends} from "@/actions/complaints/get-filtered-complaints"
 
-import {ComplaintCard} from "./complaint-card";
+import {ComplaintCard} from "./complaint-card"
 
 interface ComplaintsHomeProps {
-  complaints: ComplaintExtends[];
+  complaints: ComplaintExtends[]
 }
 
 export const ComplaintsHome: React.FC<ComplaintsHomeProps> = ({complaints}) => {
@@ -15,5 +15,5 @@ export const ComplaintsHome: React.FC<ComplaintsHomeProps> = ({complaints}) => {
         <p>No hay quejas</p>
       )}
     </section>
-  );
-};
+  )
+}

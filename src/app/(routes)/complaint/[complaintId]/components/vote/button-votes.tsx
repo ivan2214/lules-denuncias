@@ -1,23 +1,23 @@
-"use client";
+"use client"
 
-import {useTransition} from "react";
-import {toast} from "sonner";
-import {ChevronUpIcon} from "lucide-react";
-import {useSession} from "next-auth/react";
+import {useTransition} from "react"
+import {toast} from "sonner"
+import {ChevronUpIcon} from "lucide-react"
+import {useSession} from "next-auth/react"
 
-import {Button} from "@/components/ui/button";
-import {type ComplaintExtends} from "@/actions/complaints/get-filtered-complaints";
-import {voteAction} from "@/actions/server-actions/vote/vote-action";
-import {Badge} from "@/components/ui/badge";
+import {Button} from "@/components/ui/button"
+import {type ComplaintExtends} from "@/actions/complaints/get-filtered-complaints"
+import {voteAction} from "@/actions/server-actions/vote/vote-action"
+import {Badge} from "@/components/ui/badge"
 
 interface ButtonVotesProps {
-  complaint: ComplaintExtends;
+  complaint: ComplaintExtends
 }
 
 export const ButtonVotes: React.FC<ButtonVotesProps> = ({complaint}) => {
-  const session = useSession();
+  const session = useSession()
 
-  const [isPending, startTransition] = useTransition();
+  const [isPending, startTransition] = useTransition()
 
   const onClick = () => {
     startTransition(() => {
@@ -25,17 +25,17 @@ export const ButtonVotes: React.FC<ButtonVotesProps> = ({complaint}) => {
         if (res?.error) {
           toast("Error", {
             description: res?.error,
-          });
+          })
         }
 
         if (res?.success) {
           toast("Voto registrado", {
             description: res?.success,
-          });
+          })
         }
-      });
-    });
-  };
+      })
+    })
+  }
 
   return (
     <section className="flex flex-col gap-2">
@@ -50,5 +50,5 @@ export const ButtonVotes: React.FC<ButtonVotesProps> = ({complaint}) => {
         </Button>
       </div>
     </section>
-  );
-};
+  )
+}
