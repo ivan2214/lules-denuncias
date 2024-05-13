@@ -104,43 +104,16 @@ export const ManageAccountUserForm = () => {
     });
   }
 
-  const sideNavAccountModal: {
-    icon?: IconProps["name"];
-    section: string;
-  }[] = [
-    {
-      icon: "user",
-      section: "Información",
-    },
-    {
-      icon: "server",
-      section: "Cuentas",
-    },
-    {
-      icon: "lock",
-      section: "Seguridad",
-    },
-  ];
-
   return (
-    <section className="flex h-full w-full justify-between gap-x-4">
-      <div className="sticky top-0 flex h-full flex-col gap-y-5">
-        {sideNavAccountModal.map((item) => (
-          <Link key={item.section} className="flex items-center gap-x-3" href={`#${item.section}`}>
-            {item.icon ? <Icon className="h-4 w-4" name={item.icon} /> : null}
-            {item.section}
-          </Link>
-        ))}
-      </div>
-      <Separator orientation="vertical" />
-      <section className="flex w-full flex-1 flex-col items-start gap-y-5 overflow-y-auto px-10">
-        <div className="flex w-full flex-col gap-y-2" id="Información">
+    <section className="h-full w-full gap-x-4 overflow-y-auto">
+      <section className="flex w-full flex-1 flex-col items-start gap-y-5 px-10">
+        <div className="flex w-full flex-col gap-y-2">
           <h2 className="text-3xl font-bold">Cuenta</h2>
           <p className="text-sm font-light">Manege la informacion de su cuenta</p>
         </div>
 
         {/* perfil */}
-        <div className="flex w-full flex-col gap-y-5" id="Información">
+        <div className="flex w-full flex-col gap-y-5">
           <h4 className="text-lg">Perfil</h4>
           <Button className="group flex w-full justify-between border-none pl-5" variant="outline">
             <div className="flex items-center gap-x-3">
@@ -154,7 +127,7 @@ export const ManageAccountUserForm = () => {
         </div>
 
         {/* Cuentas conectaadas */}
-        <div className="flex w-fit flex-col gap-y-2">
+        <div className="flex w-full flex-col gap-y-2">
           <h4 className="text-lg">Cuentas conectadas</h4>
           <Accordion collapsible className="w-full" type="single">
             {data.accounts.map((account) => (
@@ -190,7 +163,14 @@ export const ManageAccountUserForm = () => {
                     <div className="flex flex-col items-start gap-y-3">
                       <h4>Remove</h4>
                       <p>Remove this connected account from your account</p>
-                      <Button className="p-0 text-destructive" type="button" variant="link">
+                      <Button
+                        className="p-0 text-destructive"
+                        type="button"
+                        variant="link"
+                        onClick={() => {
+                          console.log("remover cuenta");
+                        }}
+                      >
                         Remove connected account
                       </Button>
                     </div>
@@ -204,6 +184,9 @@ export const ManageAccountUserForm = () => {
         <Button
           className="flex w-full items-center justify-between transition hover:bg-blue-500/70"
           variant="outline"
+          onClick={() => {
+            console.log("conectar cuenta");
+          }}
         >
           <div className="flex items-center gap-x-3">
             <PlusIcon className="h-4 w-4" /> Connect account
@@ -212,7 +195,7 @@ export const ManageAccountUserForm = () => {
         </Button>
 
         {/* danger  */}
-        <div className="mt-auto flex w-full flex-col gap-y-2" id="Seguridad">
+        <div className="mt-auto flex w-full flex-col gap-y-2">
           <h4 className="text-lg">Danger</h4>
           <div className="flex items-center justify-between pl-10">
             <div className="flex flex-col items-start gap-y-3">

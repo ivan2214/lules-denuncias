@@ -7,7 +7,7 @@ export const ManageAccountUserModal = () => {
 
   return (
     <Dialog open={isOpen} onOpenChange={close}>
-      <DialogContent className="max-w-screen-md">
+      <DialogContent className="h-[calc(100%-5rem)] max-w-screen-md">
         <ManageAccountUserForm />
       </DialogContent>
     </Dialog>
