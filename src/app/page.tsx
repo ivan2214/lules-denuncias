@@ -97,13 +97,13 @@ export default async function HomePage({searchParams}: {searchParams: QueryProps
                   className="flex flex-col gap-y-4 overflow-hidden rounded-md shadow-md transition-shadow duration-300 hover:shadow-2xl"
                 >
                   {category?.complaints?.[0]?.complaint?.images ? (
-                    <div className="h-32 w-full">
+                    <Link className="h-32 w-full" href={`/complaints?categories=${category?.name}`}>
                       <img
                         alt=""
                         className="aspect-square h-full w-full  object-cover"
                         src={category?.complaints[0]?.complaint.images[0]?.url}
                       />
-                    </div>
+                    </Link>
                   ) : null}
                   <div className="flex items-center justify-between p-4">
                     <h3 className="text-lg font-semibold">{category?.name}</h3>
