@@ -3,7 +3,6 @@ import Link from "next/link";
 import {usePathname, useRouter, useSearchParams} from "next/navigation";
 import {Suspense} from "react";
 import {type Category} from "@prisma/client";
-import {type User} from "next-auth";
 
 import {cn, createUrl} from "@/lib/utils";
 import {SearchBar} from "@components/search-bar";
@@ -20,8 +19,9 @@ import {
   MenubarSubTrigger,
   MenubarTrigger,
 } from "@/components/ui/menubar";
-
-import MenuUser from "./menu-user";
+import MenuUser, {type ExtendsUser} from "@components/menu-user";
+import {ButtonOpenModal} from "@components/button-open-modal";
+import ModeToggle from "@components/mode-toggle";
 
 const filterOptions = [
   {
@@ -66,7 +66,7 @@ const sortOptions = [
   },
 ];
 
-export function Menu({categories, user}: {categories?: Category[]; user?: User | null}) {
+export function Menu({categories, user}: {categories?: Category[]; user?: ExtendsUser | null}) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const selectedCategories = searchParams.get("categories")?.split(",") ?? [];
@@ -205,6 +205,8 @@ export function Menu({categories, user}: {categories?: Category[]; user?: User |
         </Suspense>
         {!user && <AuthButtons />}
         {user ? <MenuUser user={user} /> : null}
+        <ButtonOpenModal />
+        <ModeToggle />
       </section>
     </Menubar>
   );

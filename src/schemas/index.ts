@@ -59,3 +59,11 @@ export const ChangeStatusSchema = z.object({
   ]),
   complaintId: z.coerce.number().min(1),
 });
+
+export const ManageAccountUserSchema = z.object({
+  name: z.string().min(1, {message: "Name is required"}).optional().nullable(),
+  email: z.string().email({message: "Email is required"}).email(),
+  username: z.string().optional().nullable(),
+  image: z.string().optional().nullable(),
+  accountIds: z.array(z.coerce.string()).optional().nullable(),
+});

@@ -9,7 +9,7 @@ const ComlpaintsLayout: React.FC<ComlpaintsLayoutProps> = async ({children}) => 
   const categories = await db.category.findMany();
 
   return (
-    <div className="grid grid-cols-5">
+    <div className="container grid grid-cols-5">
       <Sidebar categories={categories} className="hidden lg:block" />
       {children}
     </div>

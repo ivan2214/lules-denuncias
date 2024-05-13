@@ -6,10 +6,10 @@ import {Button} from "./ui/button";
 const AuthButtons = () => {
   return (
     <section className="flex items-center gap-2">
-      <Button>
+      <Button role="link" type="button">
         <Link href="/auth/login">Iniciar Sesion</Link>
       </Button>
-      <Button variant="outline">
+      <Button role="link" type="button" variant="outline">
         <Link href="/auth/register">Registrarse</Link>
       </Button>
     </section>

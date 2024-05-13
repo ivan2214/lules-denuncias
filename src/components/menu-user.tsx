@@ -1,12 +1,13 @@
 "use client";
 import Link from "next/link";
-import {type User} from "next-auth";
 import {signOut} from "next-auth/react";
+import {type Account, type User} from "@prisma/client";
 
 import {Separator} from "@ui/separator";
 import Icon, {type IconProps} from "@components/icon";
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
 import {Button} from "@/components/ui/button";
+import {useManageAccountUserModal} from "@/store/use-manage-account-user-modal";
 
 export interface Route {
   name: string;
@@ -16,18 +17,19 @@ export interface Route {
 
 const routesUser: Route[] = [
   {
-    name: "Cuenta",
-    icon: "user",
-    href: "/account",
-  },
-  {
     name: "Ayuda",
     icon: "badge-help",
     href: "/faqs",
   },
 ];
 
-const MenuUser = ({user}: {user?: User}) => {
+export interface ExtendsUser extends User {
+  accounts: Account[];
+}
+
+const MenuUser = ({user}: {user: ExtendsUser}) => {
+  const {openEditModal} = useManageAccountUserModal();
+
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -53,6 +55,22 @@ const MenuUser = ({user}: {user?: User}) => {
       <PopoverContent align="end" className="p-0" side="bottom">
         <div className="flex flex-col gap-3 p-4">
           <p className="text-base font-light">{user?.email}</p>
+
+          <Button
+            variant="outline"
+            onClick={() =>
+              openEditModal(user?.id, {
+                name: user?.name,
+                email: user?.email,
+                username: user?.username,
+                accountIds: user?.accounts.map((account) => account.id),
+                image: user?.image,
+                accounts: user?.accounts,
+              })
+            }
+          >
+            Cuenta
+          </Button>
 
           <Separator />
 

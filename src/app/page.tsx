@@ -209,19 +209,6 @@ export default async function HomePage({searchParams}: {searchParams: QueryProps
           </div>
         </div>
       </section>
-      <footer className="flex w-full  flex-col items-center gap-2 border-t px-4 py-6 sm:flex-row md:px-6">
-        <p className="text-xs text-gray-500 dark:text-gray-400">
-          {new Date().getFullYear()} Quejas de la Comunidad. Reservados todos los derechos.
-        </p>
-        <nav className="flex gap-4 sm:ml-auto sm:gap-6">
-          <Link className="text-xs underline-offset-4 hover:underline" href="#">
-            Términos de servicio
-          </Link>
-          <Link className="text-xs underline-offset-4 hover:underline" href="#">
-            política de privacidad
-          </Link>
-        </nav>
-      </footer>
     </main>
   );
 }
