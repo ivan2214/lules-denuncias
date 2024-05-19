@@ -1,8 +1,7 @@
-
 services:
   postgres:
     image: postgres
-    container_name: postgres-lules-denuncias-container
+    container_name: ${POSTGRES_DB}
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -10,4 +9,8 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./docker-data/db:/var/lib/postgresql/data
+      - db-lules-denuncias:/var/lib/postgresql/data
+    
+volumes:
+  db-lules-denuncias:
+    external: true
