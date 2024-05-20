@@ -9,6 +9,20 @@ import {createManyVotes} from "./createManyVotes"
 const prismaDb = new PrismaClient()
 
 async function main() {
+  const usersAlready = await prismaDb.user.findMany()
+  const categoriesAlready = await prismaDb.category.findMany()
+  const complaintsAlready = await prismaDb.complaint.findMany()
+
+  if (usersAlready.length > 0 && categoriesAlready.length > 0 && complaintsAlready.length > 0) {
+    console.log("❗La base de datos ya ha sido inicializada. No se creará nada.❗")
+
+    return
+  }
+
+  console.log(
+    "❗La base de datos no ha sido inicializada. Se creará la base de datos. Espere... ❗",
+  )
+
   // limpia la base de datos
   await prismaDb.$transaction([
     prismaDb.comment.deleteMany({}),

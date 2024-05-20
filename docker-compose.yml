@@ -4,8 +4,8 @@ services:
     ports:
       - 3000:3000
     environment:
-      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/lules-denuncias-db?schema=public
-      - POSTGRES_HOST=postgres # Nueva variable de entorno
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?schema=public
+      - POSTGRES_HOST=${POSTGRES_HOST}
     depends_on:
       - postgres
 
@@ -14,12 +14,12 @@ services:
     ports:
       - 5432:5432
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=lules-denuncias-db
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
     volumes:
       - lules-denuncias-db:/var/lib/postgresql/data
 
 volumes:
   lules-denuncias-db:
-    external: true
+    driver: "local"

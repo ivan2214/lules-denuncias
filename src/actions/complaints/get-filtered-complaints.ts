@@ -49,8 +49,6 @@ export const getFilteredComplaints = async (
 
     const where: Prisma.ComplaintFindManyArgs["where"] = {}
 
-    console.log(categories)
-
     // Función para normalizar una cadena de texto (convertir a minúsculas y eliminar acentos)
     const normalizeString = (str: string): string => {
       return str
